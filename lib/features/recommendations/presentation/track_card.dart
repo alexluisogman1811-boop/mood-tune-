@@ -1,0 +1,100 @@
+import 'package:material_ui/material_ui.dart';
+
+import '../../../shared/widgets/artwork.dart';
+import '../domain/match_scorer.dart';
+
+class TrackCard extends StatelessWidget {
+  const TrackCard({required this.match, required this.onTap, super.key});
+
+  final TrackMatch match;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final t = match.track;
+    final subtitle = [t.artist, ?t.album].join(' · ');
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Artwork(url: t.artworkUrl, seed: t.id),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      t.title,
+                      style: theme.textTheme.titleMedium,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      subtitle,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      match.explanation,
+                      style: theme.textTheme.bodySmall,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              ScoreBadge(score: match.score),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ScoreBadge extends StatelessWidget {
+  const ScoreBadge({required this.score, this.size = 48, super.key});
+
+  final int score;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Semantics(
+      label: 'Match score $score out of 100',
+      excludeSemantics: true,
+      child: SizedBox.square(
+        dimension: size,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            SizedBox.expand(
+              child: CircularProgressIndicator(
+                value: score / 100,
+                strokeWidth: 3,
+                backgroundColor: scheme.surfaceContainerHighest,
+              ),
+            ),
+            Text(
+              '$score',
+              style: Theme.of(context).textTheme.labelLarge
+                  ?.copyWith(fontWeight: FontWeight.w700),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

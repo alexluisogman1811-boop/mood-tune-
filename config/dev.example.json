@@ -1,0 +1,6 @@
+{
+  "SPOTIFY_CLIENT_ID": "",
+  "SPOTIFY_REDIRECT_URI": "moodscape://spotify-callback",
+  "ANALYSIS_BACKEND_URL": "",
+  "APPLE_MUSIC_DEVELOPER_TOKEN_URL": ""
+}

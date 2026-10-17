@@ -1,0 +1,12 @@
+# Keep LF line endings everywhere (dart format writes LF), so diffs stay
+# clean between Windows and macOS (needed for iOS builds).
+* text=auto eol=lf
+
+# Windows-only scripts keep CRLF.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary assets.
+*.png binary
+*.jpg binary
+*.jar binary
