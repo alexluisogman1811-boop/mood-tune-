@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +7,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../app/router.dart';
 import '../../../core/errors/app_failure.dart';
+import '../../../shared/platform/temp_file.dart';
 import '../../../shared/widgets/gradient_background.dart';
 import '../../atmosphere/application/analysis_controller.dart';
 import '../application/camera_providers.dart';
@@ -127,11 +126,7 @@ class _CaptureScreenState extends ConsumerState<CaptureScreen>
       final file = await camera.takePicture();
       final raw = await file.readAsBytes();
       // The plugin writes a temp file; remove it so no copy lingers.
-      try {
-        await File(file.path).delete();
-      } on FileSystemException {
-        // Already gone or not deletable; nothing sensitive is retained by us.
-      }
+      await deleteTempFile(file.path);
       await _processAndReview(raw, PhotoOrigin.camera);
     } on CameraException catch (e) {
       _showError(_cameraMessage(e.code));

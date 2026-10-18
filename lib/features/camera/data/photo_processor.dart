@@ -1,4 +1,5 @@
-import 'dart:isolate';
+import 'package:flutter/foundation.dart' show compute;
+
 import 'dart:math' as math;
 import 'dart:typed_data';
 
@@ -14,7 +15,8 @@ abstract final class PhotoProcessor {
   static const jpegQuality = 80;
 
   static Future<Uint8List> prepare(Uint8List raw) async {
-    final out = await Isolate.run(() => prepareSync(raw));
+    // compute(): a background isolate on phones, inline on the web.
+    final out = await compute(prepareSync, raw);
     if (out == null) {
       throw const InvalidResponseFailure(
         'That file could not be read as a photo.',

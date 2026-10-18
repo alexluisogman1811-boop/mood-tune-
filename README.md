@@ -11,6 +11,34 @@ can be saved to a playlist.
 > whatever you tell it. Match scores estimate how well a song fits; they are
 > not a scientific measure of emotion.
 
+## Use it now: one link for iPhone and Android
+
+**https://alexluisogman1811-boop.github.io/moodscape/**
+
+Open the link in **Safari** (iPhone) or **Chrome** (Android), then:
+- **iPhone:** tap Share › **Add to Home Screen**.
+- **Android:** tap ⋮ › **Add to Home screen** (or **Install app**).
+
+MoodScape then opens full-screen from its own icon, like a normal app. No
+store, APK or IPA is needed, so it isn't affected by Android's 2026
+developer-verification rules or iOS signing.
+
+**Web version differences:** the browser asks before using the camera;
+photos are analysed in the browser and never uploaded. Apple Music
+sign-in isn't available on the web, but "Open in Spotify/Apple Music"
+works everywhere.
+
+**Publishing an update:** the site is the built app in the public repo
+`alexluisogman1811-boop/moodscape` (built files only; this source repo
+stays private). To update it, build the app:
+
+```bash
+flutter build web --release --base-href /moodscape/
+```
+
+Then copy `build/web/` into that repo (keep its `.nojekyll` file), commit
+and push. GitHub Pages republishes within a minute or two.
+
 - Flutter 3.47 (stable), Dart 3.13, built and tested on Windows with VS Code
 - Riverpod 3, GoRouter 18, Dio, flutter_secure_storage, SharedPreferences,
   camera, image_picker, url_launcher, flutter_web_auth_2, just_audio

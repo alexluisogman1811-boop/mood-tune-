@@ -1,4 +1,5 @@
-import 'dart:isolate';
+import 'package:flutter/foundation.dart' show compute;
+
 import 'dart:math' as math;
 import 'dart:typed_data';
 
@@ -22,7 +23,8 @@ class OnDeviceImageAnalysisService implements ImageAnalysisService {
 
   @override
   Future<SceneFeatures> analyzeEnvironment(Uint8List jpegBytes) async {
-    final stats = await Isolate.run(() => computeStats(jpegBytes));
+    // compute(): a background isolate on phones, inline on the web.
+    final stats = await compute(computeStats, jpegBytes);
     if (stats == null) {
       throw const InvalidResponseFailure('The photo could not be read.');
     }
