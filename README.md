@@ -113,6 +113,32 @@ Build an Android APK:
 flutter build apk --debug --dart-define-from-file=config/dev.json
 ```
 
+Build a release APK to install on your own phone:
+
+```bash
+flutter build apk --release
+```
+
+The release build is currently signed with the debug key, which is fine
+for sideloading but not for the Google Play Store. Before publishing,
+create an upload keystore and configure `signingConfigs` in
+`android/app/build.gradle.kts`, keeping the keystore and its passwords out
+of Git.
+
+The app icon is generated from `tool/generate_icon.dart`:
+
+```bash
+dart run tool/generate_icon.dart
+```
+
+```bash
+dart run flutter_launcher_icons
+```
+
+After regenerating, revert any change the icon tool makes to
+`ios/Runner.xcodeproj/project.pbxproj`: it rewrites an unrelated build
+setting to an invalid value.
+
 Run the end-to-end test on a connected device or emulator. It drives the
 real app from Welcome to Settings using in-memory storage, so it never
 touches data from manual use of the app:
