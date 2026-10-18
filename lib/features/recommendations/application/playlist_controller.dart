@@ -87,6 +87,45 @@ class PlaylistController extends Notifier<Map<MusicProvider, String>> {
     }
   }
 
+  /// Keeps this session's saved playlist in step with a dislike (or its
+  /// undo): removes [removed] and adds [added]. Returns null when no
+  /// playlist was saved for that service, so there is nothing to update.
+  Future<PlaylistResult?> swap({Track? removed, Track? added}) async {
+    final provider = (removed ?? added)?.provider;
+    if (provider == null) return null;
+    final playlistId = state[provider];
+    if (playlistId == null || !ref.read(canSavePlaylistProvider(provider))) {
+      return null;
+    }
+    final removeIds = removed == null
+        ? const <String>[]
+        : _ids([removed], provider);
+    final addIds = added == null ? const <String>[] : _ids([added], provider);
+    try {
+      switch (provider) {
+        case MusicProvider.spotify:
+          final client = ref.read(spotifyApiClientProvider)!;
+          if (removeIds.isNotEmpty) {
+            await client.removeItems(playlistId, removeIds);
+          }
+          if (addIds.isNotEmpty) await client.addItems(playlistId, addIds);
+          return const PlaylistResult('Your Spotify playlist was updated too.');
+        case MusicProvider.appleMusic:
+          // Apple Music's API can add to library playlists but not remove.
+          if (addIds.isNotEmpty) await _append(provider, playlistId, addIds);
+          if (removeIds.isEmpty) return null;
+          return const PlaylistResult(
+            'Apple Music doesn\'t let apps remove songs from playlists — '
+            'remove it in the Music app.',
+          );
+        case MusicProvider.demo:
+          return null;
+      }
+    } on AppFailure catch (e) {
+      return PlaylistResult('Playlist not updated: ${e.message}');
+    }
+  }
+
   static List<String> _ids(Iterable<Track> tracks, MusicProvider? provider) => [
     for (final t in tracks)
       if (t.provider == provider && t.providerUri != null) t.providerUri!,

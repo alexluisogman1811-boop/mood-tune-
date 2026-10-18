@@ -8,6 +8,7 @@ import '../application/recommendations_controller.dart';
 import '../data/track_links.dart';
 import '../domain/match_scorer.dart';
 import '../domain/track.dart';
+import 'dislike_action.dart';
 import 'preview_player.dart';
 import 'track_card.dart';
 
@@ -142,6 +143,17 @@ class _Details extends ConsumerWidget {
         ),
         const SizedBox(height: 8),
         _AddToPlaylistButton(track: t),
+        const SizedBox(height: 8),
+        TextButton.icon(
+          style: TextButton.styleFrom(minimumSize: const Size.fromHeight(48)),
+          onPressed: () {
+            // Leave the details first: the song is about to be removed.
+            Navigator.of(context).pop();
+            dislikeTrack(context, ref, t.id);
+          },
+          icon: const Icon(Icons.thumb_down_alt_outlined),
+          label: const Text('Not for me — suggest another'),
+        ),
       ],
     );
   }

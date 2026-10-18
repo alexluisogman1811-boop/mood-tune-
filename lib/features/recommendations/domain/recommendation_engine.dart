@@ -26,29 +26,43 @@ class RecommendationEngine {
           t,
     ];
     final scored = [for (final t in eligible) scorer.score(t, ctx)]
-      ..sort((a, b) {
-        final byScore = b.score.compareTo(a.score);
-        return byScore != 0
-            ? byScore
-            : a.track.title.toLowerCase().compareTo(
-                b.track.title.toLowerCase(),
-              );
-      });
+      ..sort(compare);
     return scored.take(limit).toList(growable: false);
   }
 
+  /// Playlist order: highest score first, ties broken by title so the
+  /// output is stable.
+  static int compare(TrackMatch a, TrackMatch b) {
+    final byScore = b.score.compareTo(a.score);
+    return byScore != 0
+        ? byScore
+        : a.track.title.toLowerCase().compareTo(b.track.title.toLowerCase());
+  }
+
   /// A fresh batch that avoids [shown] where possible, topped up with the
-  /// best of the rest when the catalogue runs short.
+  /// best of the rest when the catalogue runs short. [exclude]d ids (e.g.
+  /// disliked songs) are never used, not even to top up.
   List<TrackMatch> regenerate(
     Iterable<Track> candidates,
     MatchContext ctx, {
     required int limit,
     required Set<String> shown,
+    Set<String> exclude = const {},
   }) {
-    final fresh = rank(candidates, ctx, limit: limit, exclude: shown);
+    final fresh = rank(
+      candidates,
+      ctx,
+      limit: limit,
+      exclude: {...shown, ...exclude},
+    );
     if (fresh.length >= limit) return fresh;
     final freshIds = {for (final m in fresh) m.track.id};
-    final topUp = rank(candidates, ctx, limit: limit, exclude: freshIds);
+    final topUp = rank(
+      candidates,
+      ctx,
+      limit: limit,
+      exclude: {...freshIds, ...exclude},
+    );
     return [...fresh, ...topUp.take(limit - fresh.length)];
   }
 }

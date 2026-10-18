@@ -290,6 +290,21 @@ matchScore = moodMatch·0.40 + atmosphereMatch·0.25 + preferenceMatch·0.20 + e
 Each result shows a plain-language explanation. The track details screen
 shows each component's score and the weight it was given.
 
+### "Not for me"
+Every song has a 👎 **Not for me** button, on its card and on the details
+screen. Tapping it:
+1. removes the song and fills its place with the best-scoring song not
+   already shown;
+2. remembers the dislike on the device, so the song is never suggested
+   again, including after **New picks** (refresh) and app restarts;
+3. if a playlist was saved this session, updates it: on **Spotify**, the
+   song is removed and the replacement added. Apple Music's API can't
+   remove songs from playlists, so the app says to remove it in the Music
+   app;
+4. offers **Undo**.
+
+Settings › *Forget disliked songs* clears the list.
+
 ### Where songs come from
 | Source | When | Feature quality |
 | --- | --- | --- |

@@ -8,6 +8,8 @@ import '../../../core/privacy/photo_consent.dart';
 import '../../../shared/widgets/gradient_background.dart';
 import '../../music_platform/application/apple_music_providers.dart';
 import '../../music_platform/application/platform_providers.dart';
+import '../../recommendations/application/disliked_tracks.dart';
+import '../../recommendations/application/recommendations_controller.dart';
 import '../application/data_controls.dart';
 import '../application/theme_controller.dart';
 
@@ -266,17 +268,44 @@ class _DataCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final disliked = ref.watch(dislikedTracksProvider).length;
     return Card(
-      child: ListTile(
-        leading: Icon(
-          Icons.delete_outline,
-          color: Theme.of(context).colorScheme.error,
-        ),
-        title: const Text('Clear all data'),
-        subtitle: const Text(
-          'Preferences, consent choices, tokens, photo and mood',
-        ),
-        onTap: () => _confirmAndClear(context, ref),
+      child: Column(
+        children: [
+          ListTile(
+            leading: const Icon(Icons.thumb_down_alt_outlined),
+            title: const Text('Forget disliked songs'),
+            subtitle: Text(
+              disliked == 0
+                  ? 'No songs marked "Not for me"'
+                  : '$disliked ${disliked == 1 ? 'song' : 'songs'} hidden from '
+                        'recommendations',
+            ),
+            enabled: disliked > 0,
+            onTap: () async {
+              final messenger = ScaffoldMessenger.of(context);
+              await ref.read(dislikedTracksProvider.notifier).clear();
+              ref.invalidate(recommendationsProvider);
+              messenger.showSnackBar(
+                const SnackBar(
+                  content: Text('Disliked songs can be recommended again.'),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.delete_outline,
+              color: Theme.of(context).colorScheme.error,
+            ),
+            title: const Text('Clear all data'),
+            subtitle: const Text(
+              'Preferences, consent choices, tokens, disliked songs, photo '
+              'and mood',
+            ),
+            onTap: () => _confirmAndClear(context, ref),
+          ),
+        ],
       ),
     );
   }

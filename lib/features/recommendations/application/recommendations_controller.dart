@@ -13,6 +13,7 @@ import '../data/track_source.dart';
 import '../domain/match_scorer.dart';
 import '../domain/recommendation_engine.dart';
 import '../domain/track.dart';
+import 'disliked_tracks.dart';
 
 final demoTrackSourceProvider = Provider<TrackSource>(
   (ref) => DemoTrackSource(),
@@ -120,14 +121,21 @@ class RecommendationsController extends AsyncNotifier<Recommendations> {
     return Recommendations(
       matches: ref
           .read(recommendationEngineProvider)
-          .rank(_candidates, ctx, limit: ctx.preferences.playlistLength),
+          .rank(
+            _candidates,
+            ctx,
+            limit: ctx.preferences.playlistLength,
+            // Read, not watch: dislikes update the list in place below.
+            exclude: ref.read(dislikedTracksProvider),
+          ),
       sourceLabel: source.label,
       isDemo: source.isDemo,
       notice: notice,
     );
   }
 
-  /// New batch that avoids the songs currently shown where possible.
+  /// New batch that avoids the songs currently shown where possible, and
+  /// never brings back disliked songs.
   void regenerate() {
     final current = state.value;
     if (current == null) return;
@@ -141,10 +149,74 @@ class RecommendationsController extends AsyncNotifier<Recommendations> {
               ctx,
               limit: ctx.preferences.playlistLength,
               shown: {for (final m in current.matches) m.track.id},
+              exclude: ref.read(dislikedTracksProvider),
             ),
       ),
     );
   }
+
+  /// "Not for me": removes [trackId], remembers the dislike, and fills the
+  /// gap with the best song not already shown or disliked (if any remain).
+  /// Returns null when the song isn't in the current list.
+  Future<DislikeOutcome?> dislike(String trackId) async {
+    final current = state.value;
+    final removed = current?.byId(trackId);
+    if (current == null || removed == null) return null;
+
+    await ref.read(dislikedTracksProvider.notifier).add(trackId);
+    final remaining = [
+      for (final m in current.matches)
+        if (m.track.id != trackId) m,
+    ];
+    final replacement = ref
+        .read(recommendationEngineProvider)
+        .rank(
+          _candidates,
+          ref.read(matchContextProvider),
+          limit: 1,
+          exclude: {
+            ...ref.read(dislikedTracksProvider),
+            for (final m in remaining) m.track.id,
+          },
+        )
+        .firstOrNull;
+
+    state = AsyncData(
+      current.withMatches(
+        [...remaining, ?replacement]..sort(RecommendationEngine.compare),
+      ),
+    );
+    return DislikeOutcome(removed: removed, replacement: replacement);
+  }
+
+  /// Reverses [dislike]: forgets the dislike, restores the song and drops
+  /// the replacement that was added for it.
+  Future<void> undoDislike(DislikeOutcome outcome) async {
+    final current = state.value;
+    if (current == null) return;
+    await ref
+        .read(dislikedTracksProvider.notifier)
+        .remove(outcome.removed.track.id);
+    final replacementId = outcome.replacement?.track.id;
+    state = AsyncData(
+      current.withMatches(
+        [
+          for (final m in current.matches)
+            if (m.track.id != replacementId) m,
+          outcome.removed,
+        ]..sort(RecommendationEngine.compare),
+      ),
+    );
+  }
+}
+
+class DislikeOutcome {
+  const DislikeOutcome({required this.removed, this.replacement});
+
+  final TrackMatch removed;
+
+  /// Null when the catalogue has no other suitable song left.
+  final TrackMatch? replacement;
 }
 
 final resultFilterProvider =

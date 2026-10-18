@@ -112,6 +112,8 @@ void main() {
   testWidgets('cancelling "clear all data" keeps everything', (tester) async {
     final (c, sp, secure) = await _pump(tester);
 
+    await tester.ensureVisible(find.text('Clear all data'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Clear all data'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Cancel'));
@@ -128,6 +130,8 @@ void main() {
     final (c, sp, secure) = await _pump(tester);
     expect(c.read(musicPreferencesProvider).genres, isNotEmpty);
 
+    await tester.ensureVisible(find.text('Clear all data'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Clear all data'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Clear data'));

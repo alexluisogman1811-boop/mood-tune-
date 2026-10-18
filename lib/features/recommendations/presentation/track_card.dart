@@ -4,10 +4,18 @@ import '../../../shared/widgets/artwork.dart';
 import '../domain/match_scorer.dart';
 
 class TrackCard extends StatelessWidget {
-  const TrackCard({required this.match, required this.onTap, super.key});
+  const TrackCard({
+    required this.match,
+    required this.onTap,
+    this.onDislike,
+    super.key,
+  });
 
   final TrackMatch match;
   final VoidCallback onTap;
+
+  /// "Not for me": removes the song and suggests another.
+  final VoidCallback? onDislike;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +62,17 @@ class TrackCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              ScoreBadge(score: match.score),
+              Column(
+                children: [
+                  ScoreBadge(score: match.score),
+                  if (onDislike case final dislike?)
+                    IconButton(
+                      tooltip: 'Not for me',
+                      onPressed: dislike,
+                      icon: const Icon(Icons.thumb_down_alt_outlined),
+                    ),
+                ],
+              ),
             ],
           ),
         ),

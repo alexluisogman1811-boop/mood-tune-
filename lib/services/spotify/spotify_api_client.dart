@@ -80,6 +80,24 @@ class SpotifyApiClient {
     }
   }
 
+  /// Removes every occurrence of the given track URIs from a playlist the
+  /// user owns. `DELETE /playlists/{id}/items` with `{"items": [{"uri"}]}`
+  /// (the body key was renamed from `tracks` in February 2026).
+  Future<void> removeItems(String playlistId, List<String> uris) async {
+    for (var i = 0; i < uris.length; i += maxItemsPerAdd) {
+      final chunk = uris.sublist(i, (i + maxItemsPerAdd).clamp(0, uris.length));
+      await _send(
+        'DELETE',
+        '/v1/playlists/${Uri.encodeComponent(playlistId)}/items',
+        body: {
+          'items': [
+            for (final uri in chunk) {'uri': uri},
+          ],
+        },
+      );
+    }
+  }
+
   /// Sends an authorised request; on 401 refreshes once and retries.
   Future<Object?> _send(
     String method,

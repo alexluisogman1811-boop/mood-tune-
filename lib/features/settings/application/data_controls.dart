@@ -8,6 +8,7 @@ import '../../mood/application/mood_controller.dart';
 import '../../music_platform/application/apple_music_providers.dart';
 import '../../music_platform/application/platform_providers.dart';
 import '../../preferences/application/preferences_controller.dart';
+import '../../recommendations/application/disliked_tracks.dart';
 import '../../recommendations/application/playlist_controller.dart';
 import '../../recommendations/application/recommendations_controller.dart';
 import 'theme_controller.dart';
@@ -39,6 +40,7 @@ class DataControls {
       ..invalidate(spotifyConnectionProvider)
       ..invalidate(appleMusicConnectionProvider)
       ..invalidate(playlistControllerProvider)
+      ..invalidate(dislikedTracksProvider)
       ..invalidate(resultFilterProvider)
       ..invalidate(recommendationsProvider);
   }

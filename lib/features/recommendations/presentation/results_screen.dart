@@ -12,6 +12,7 @@ import '../application/recommendations_controller.dart';
 import '../domain/match_scorer.dart';
 import '../domain/recommendation_engine.dart';
 import '../domain/track.dart';
+import 'dislike_action.dart';
 import 'track_card.dart';
 
 class ResultsScreen extends ConsumerWidget {
@@ -158,8 +159,12 @@ class _ResultsBody extends ConsumerWidget {
               itemCount: visible.length,
               separatorBuilder: (_, _) => const SizedBox(height: 8),
               itemBuilder: (context, i) => TrackCard(
+                // Keyed so a removed card doesn't hand its state to the next.
+                key: ValueKey(visible[i].track.id),
                 match: visible[i],
                 onTap: () => context.push(AppRoutes.track(visible[i].track.id)),
+                onDislike: () =>
+                    dislikeTrack(context, ref, visible[i].track.id),
               ),
             ),
           ),
