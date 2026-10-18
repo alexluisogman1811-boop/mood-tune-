@@ -69,6 +69,38 @@ Flutter/Xcode toolchain can't build or sign them on Windows. Your options:
 MusicKit doesn't work in the iOS Simulator, so test Apple Music on a real
 device.
 
+### iPhone without paying (sideloading from Windows)
+This project's GitHub Actions build produces an **unsigned
+`MoodScape-unsigned.ipa`** on every push to `main`. You can sign and
+install it with a **free Apple ID** using a sideloading tool:
+
+1. **Download the .ipa.** On GitHub, open the repository › **Actions** ›
+   the latest green **CI** run › **Artifacts** ›
+   `MoodScape-unsigned-ipa`. You get a zip; extract it to find
+   `MoodScape-unsigned.ipa`. Artifacts are kept for 7 days; push again or
+   re-run the workflow for a fresh one.
+2. **Install Sideloadly** from its official site (sideloadly.io). It needs
+   Apple's iTunes and iCloud for Windows; follow Sideloadly's setup
+   page for the right versions.
+3. **Connect the iPhone** by USB, unlock it and tap **Trust** on the
+   phone.
+4. In Sideloadly, drop in the `.ipa`, enter your Apple ID and click
+   **Start**. Your Apple ID password goes only to Apple, through
+   Sideloadly; consider using a secondary Apple ID.
+5. **On the iPhone:**
+   - **Settings › General › VPN & Device Management** → trust your Apple
+     ID's developer profile.
+   - On iOS 16 and later, enable **Settings › Privacy & Security ›
+     Developer Mode** and restart when asked.
+
+**Limits of the free route:**
+- The app stops opening after **7 days**. Sideload it again, or use
+  AltStore (altstore.io), which can refresh it automatically over Wi-Fi.
+- A free Apple ID can have at most 3 sideloaded apps.
+- **Apple Music sign-in and playlist saving don't work.** MusicKit
+  requires Apple's paid Developer Program. The app falls back to the demo
+  catalogue and explains why. "Open in Apple Music/Spotify" links work.
+
 ### Keep the project path short
 Native-asset build hooks can fail on Windows with
 `Failed to canonicalize path … OS error 122` when the project lives in a very
