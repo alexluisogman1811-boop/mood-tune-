@@ -232,7 +232,8 @@ class _CaptureScreenState extends ConsumerState<CaptureScreen>
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(24),
                     child: ColoredBox(
-                      color: Colors.black26,
+                      // Theme surface keeps overlay text readable in light and dark.
+                      color: Theme.of(context).colorScheme.surfaceContainerHigh,
                       child: review != null
                           ? Image.memory(
                               review,
