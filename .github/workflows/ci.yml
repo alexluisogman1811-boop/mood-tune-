@@ -5,6 +5,8 @@
 #   compiles the Swift MusicKit bridge in ios/Runner/AppDelegate.swift.
 #   Installing on an iPhone additionally needs an Apple Developer account
 #   and signing; this job only proves the iOS project builds.
+# - android-e2e (Linux): runs integration_test/app_flow_test.dart on an
+#   Android API 34 emulator, driving the real app end to end.
 #
 # Private repositories spend GitHub Actions minutes; macOS minutes count 10x.
 name: CI
@@ -71,3 +73,41 @@ jobs:
 
       - name: Build iOS app (unsigned)
         run: flutter build ios --debug --no-codesign
+
+  android-e2e:
+    name: Android end-to-end test (emulator)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # Hardware acceleration for the emulator on Linux runners.
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Run integration_test on an Android emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          disable-animations: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: flutter test integration_test -d emulator-5554
