@@ -74,8 +74,29 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build iOS app (unsigned)
-        run: flutter build ios --debug --no-codesign
+      # Release mode: iOS won't launch Flutter debug builds from the home
+      # screen. Unsigned, so it also proves the project compiles.
+      - name: Build iOS app (release, unsigned)
+        run: flutter build ios --release --no-codesign
+
+      # An .ipa is a zip of Payload/Runner.app. Unsigned, it can be
+      # sideloaded with AltStore or Sideloadly, which sign it with the
+      # user's own (free) Apple ID. See README › iPhone without paying.
+      - name: Package unsigned .ipa
+        run: |
+          mkdir -p build/ipa/Payload
+          cp -R build/ios/iphoneos/Runner.app build/ipa/Payload/
+          cd build/ipa && zip -qry ../MoodScape-unsigned.ipa Payload
+          ls -lh ../MoodScape-unsigned.ipa
+
+      - name: Upload .ipa
+        uses: actions/upload-artifact@v5
+        with:
+          name: MoodScape-unsigned-ipa
+          path: build/MoodScape-unsigned.ipa
+          if-no-files-found: error
+          # Short retention keeps storage within the free allowance.
+          retention-days: 7
 
   android-e2e:
     name: Android end-to-end test (emulator)
