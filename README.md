@@ -13,7 +13,7 @@ can be saved to a playlist.
 
 - Flutter 3.47 (stable), Dart 3.13, built and tested on Windows with VS Code
 - Riverpod 3, GoRouter 18, Dio, flutter_secure_storage, SharedPreferences,
-  camera, image_picker, url_launcher, flutter_web_auth_2
+  camera, image_picker, url_launcher, flutter_web_auth_2, just_audio
 - Material components come from the `material_ui` package. Flutter 3.47
   moved Material out of the core SDK.
 
@@ -314,4 +314,8 @@ test/
 - Android builds need the SDK command-line tools and accepted licences (see
   `flutter doctor`).
 - Spotify Development Mode limits only allow-listed accounts to sign in.
-- Previews open externally; there is no in-app audio player.
+- Song previews play inside the app (just_audio, HTTPS only) when the
+  service provides one: Apple Music does; Spotify no longer gives previews
+  to new apps and the demo catalogue has none. In-app playback is covered
+  by widget tests but has not yet been heard on a device, because that
+  needs Apple Music configured.

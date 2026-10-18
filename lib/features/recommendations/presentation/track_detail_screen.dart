@@ -8,6 +8,7 @@ import '../application/recommendations_controller.dart';
 import '../data/track_links.dart';
 import '../domain/match_scorer.dart';
 import '../domain/track.dart';
+import 'preview_player.dart';
 import 'track_card.dart';
 
 class TrackDetailScreen extends ConsumerWidget {
@@ -113,10 +114,9 @@ class _Details extends ConsumerWidget {
         ),
         const SizedBox(height: 16),
         if (t.previewUrl case final preview?)
-          TextButton.icon(
-            onPressed: () => _open(context, ref, preview),
-            icon: const Icon(Icons.play_circle_outline),
-            label: const Text('Listen to preview'),
+          PreviewPlayer(
+            url: preview,
+            onOpenExternally: () => _open(context, ref, preview),
           )
         else
           Text(
