@@ -307,8 +307,12 @@ test/
 - The camera plugin requests `WRITE_EXTERNAL_STORAGE` (Android ≤ 9 only),
   which makes the build tools add an implied `READ_EXTERNAL_STORAGE`. This
   was left in place because old devices that would need it weren't tested.
-- The Swift MusicKit bridge hasn't been compiled. That needs macOS and
-  Xcode.
+- GitHub Actions (`.github/workflows/ci.yml`) runs on every push to `main`:
+  formatting, analyze and all tests on Linux, plus an **unsigned iOS
+  build on macOS** that compiles the whole iOS app, including the Swift
+  MusicKit bridge. Both pass. The iOS app hasn't run on an iPhone yet:
+  that needs an Apple Developer account for signing, and Apple Music
+  features need a real device.
 - Neither Spotify nor Apple Music has been exercised with real credentials
   in this environment.
 - Android builds need the SDK command-line tools and accepted licences (see
