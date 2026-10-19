@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../../../core/l10n/l10n.dart';
 import '../../../services/image_analysis/scene_features.dart';
 
 /// Read-only summary of what the analysis found in the scene.
@@ -12,11 +13,13 @@ class SceneSummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final f = features;
-    String label(Enum e) => e.name[0].toUpperCase() + e.name.substring(1);
+    String label(Enum e) =>
+        context.tr(e.name[0].toUpperCase() + e.name.substring(1));
 
     final tags = [
       if (f.setting != SceneSetting.unknown) label(f.setting),
-      if (f.lighting != SceneLighting.unknown) '${label(f.lighting)} light',
+      if (f.lighting != SceneLighting.unknown)
+        context.tr('{light} light', {'light': label(f.lighting)}),
       for (final c in f.cues) label(c),
       for (final a in f.atmosphere) label(a),
     ];
@@ -27,17 +30,23 @@ class SceneSummaryCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Your atmosphere', style: theme.textTheme.titleLarge),
+            Text(
+              context.tr('Your atmosphere'),
+              style: theme.textTheme.titleLarge,
+            ),
             const SizedBox(height: 4),
             Text(
-              '${f.source.label} · confidence ${(f.confidence * 100).round()}%',
+              context.tr('{source} · confidence {percent}%', {
+                'source': context.tr(f.source.label),
+                'percent': (f.confidence * 100).round(),
+              }),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: 16),
             if (tags.isEmpty)
-              const Text('No strong atmosphere detected.')
+              Text(context.tr('No strong atmosphere detected.'))
             else
               Wrap(
                 spacing: 8,
@@ -45,10 +54,12 @@ class SceneSummaryCard extends StatelessWidget {
                 children: [for (final t in tags) Chip(label: Text(t))],
               ),
             const SizedBox(height: 16),
-            Text('Scene energy', style: theme.textTheme.titleSmall),
+            Text(context.tr('Scene energy'), style: theme.textTheme.titleSmall),
             const SizedBox(height: 6),
             Semantics(
-              label: 'Scene energy ${f.energy} out of 100',
+              label: context.tr('Scene energy {energy} out of 100', {
+                'energy': f.energy,
+              }),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: LinearProgressIndicator(
@@ -59,7 +70,10 @@ class SceneSummaryCard extends StatelessWidget {
             ),
             if (f.palette.isNotEmpty) ...[
               const SizedBox(height: 16),
-              Text('Colour palette', style: theme.textTheme.titleSmall),
+              Text(
+                context.tr('Colour palette'),
+                style: theme.textTheme.titleSmall,
+              ),
               const SizedBox(height: 8),
               Row(
                 children: [

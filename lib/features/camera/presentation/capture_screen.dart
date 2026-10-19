@@ -7,6 +7,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../app/router.dart';
 import '../../../core/errors/app_failure.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../shared/platform/temp_file.dart';
 import '../../../shared/widgets/gradient_background.dart';
 import '../../atmosphere/application/analysis_controller.dart';
@@ -176,7 +177,7 @@ class _CaptureScreenState extends ConsumerState<CaptureScreen>
     if (!mounted) return;
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(message)));
+      ..showSnackBar(SnackBar(content: Text(context.tr(message))));
   }
 
   void _retake() {
@@ -209,7 +210,7 @@ class _CaptureScreenState extends ConsumerState<CaptureScreen>
     final review = _review;
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(title: const Text('Capture your surroundings')),
+      appBar: AppBar(title: Text(context.tr('Capture your surroundings'))),
       body: GradientBackground(
         child: SafeArea(
           child: Padding(
@@ -217,8 +218,10 @@ class _CaptureScreenState extends ConsumerState<CaptureScreen>
             child: Column(
               children: [
                 Text(
-                  'Point at your environment — the sky, the room, the street. '
-                  'We look at light, colour and atmosphere, not people.',
+                  context.tr(
+                    'Point at your environment — the sky, the room, the street. '
+                    'We look at light, colour and atmosphere, not people.',
+                  ),
                   style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.center,
                 ),
@@ -233,7 +236,7 @@ class _CaptureScreenState extends ConsumerState<CaptureScreen>
                           ? Image.memory(
                               review,
                               fit: BoxFit.contain,
-                              semanticLabel: 'Photo you selected',
+                              semanticLabel: context.tr('Photo you selected'),
                             )
                           : _buildViewfinder(),
                     ),
@@ -268,13 +271,13 @@ class _CaptureScreenState extends ConsumerState<CaptureScreen>
               const Icon(Icons.no_photography_outlined, size: 48),
               const SizedBox(height: 12),
               Text(
-                error ?? 'The camera is paused.',
+                context.tr(error ?? 'The camera is paused.'),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 12),
               TextButton(
                 onPressed: _initCamera,
-                child: const Text('Try camera again'),
+                child: Text(context.tr('Try camera again')),
               ),
             ],
           ),
@@ -291,7 +294,7 @@ class _CaptureScreenState extends ConsumerState<CaptureScreen>
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           IconButton.filledTonal(
-            tooltip: 'Choose from gallery',
+            tooltip: context.tr('Choose from gallery'),
             iconSize: 28,
             onPressed: _busy ? null : _pickFromGallery,
             icon: const Icon(Icons.photo_library_outlined),
@@ -300,7 +303,7 @@ class _CaptureScreenState extends ConsumerState<CaptureScreen>
             width: 76,
             height: 76,
             child: IconButton.filled(
-              tooltip: 'Take photo',
+              tooltip: context.tr('Take photo'),
               iconSize: 36,
               onPressed: canShoot && !_busy ? _takePicture : null,
               icon: _busy
@@ -317,18 +320,21 @@ class _CaptureScreenState extends ConsumerState<CaptureScreen>
       const SizedBox(height: 8),
       TextButton(
         onPressed: _skip,
-        child: const Text('Continue without a photo'),
+        child: Text(context.tr('Continue without a photo')),
       ),
     ];
   }
 
   List<Widget> _reviewActions() => [
-    FilledButton(onPressed: _usePhoto, child: const Text('Use this photo')),
+    FilledButton(
+      onPressed: _usePhoto,
+      child: Text(context.tr('Use this photo')),
+    ),
     const SizedBox(height: 8),
     OutlinedButton(
       onPressed: _retake,
       style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(48)),
-      child: const Text('Retake'),
+      child: Text(context.tr('Retake')),
     ),
   ];
 }

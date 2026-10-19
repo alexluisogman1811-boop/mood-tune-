@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../core/l10n/l10n.dart';
 import '../application/preview_audio.dart';
 
 /// Play/pause control with progress for a provider-supplied preview clip.
@@ -77,9 +78,9 @@ class _PreviewPlayerState extends ConsumerState<PreviewPlayer> {
         children: [
           const Icon(Icons.error_outline),
           const SizedBox(width: 12),
-          const Expanded(child: Text('The preview could not be played.')),
+          Expanded(child: Text(context.tr('The preview could not be played.'))),
           if (widget.onOpenExternally case final open?)
-            TextButton(onPressed: open, child: const Text('Open')),
+            TextButton(onPressed: open, child: Text(context.tr('Open'))),
         ],
       );
     }
@@ -94,7 +95,7 @@ class _PreviewPlayerState extends ConsumerState<PreviewPlayer> {
     return Row(
       children: [
         IconButton.filledTonal(
-          tooltip: playing ? 'Pause preview' : 'Play preview',
+          tooltip: context.tr(playing ? 'Pause preview' : 'Play preview'),
           onPressed: loading ? null : _toggle,
           icon: loading
               ? const SizedBox.square(
@@ -108,10 +109,12 @@ class _PreviewPlayerState extends ConsumerState<PreviewPlayer> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Preview', style: theme.textTheme.labelLarge),
+              Text(context.tr('Preview'), style: theme.textTheme.labelLarge),
               const SizedBox(height: 6),
               Semantics(
-                label: 'Preview progress ${(progress * 100).round()} percent',
+                label: context.tr('Preview progress {percent} percent', {
+                  'percent': (progress * 100).round(),
+                }),
                 child: LinearProgressIndicator(
                   value: progress,
                   minHeight: 4,

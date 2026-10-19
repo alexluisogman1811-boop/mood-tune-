@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../core/l10n/l10n.dart';
 import '../../../shared/widgets/artwork.dart';
 import '../../../shared/widgets/gradient_background.dart';
 import '../application/playlist_controller.dart';
@@ -26,8 +27,10 @@ class TrackDetailScreen extends ConsumerWidget {
       body: GradientBackground(
         child: SafeArea(
           child: match == null
-              ? const Center(
-                  child: Text('This song is no longer in your list.'),
+              ? Center(
+                  child: Text(
+                    context.tr('This song is no longer in your list.'),
+                  ),
                 )
               : _Details(match: match),
         ),
@@ -42,11 +45,10 @@ class _Details extends ConsumerWidget {
 
   Future<void> _open(BuildContext context, WidgetRef ref, Uri uri) async {
     final messenger = ScaffoldMessenger.of(context);
+    final failed = context.tr('Could not open the link.');
     final ok = await ref.read(urlOpenerProvider)(uri);
     if (!ok) {
-      messenger.showSnackBar(
-        const SnackBar(content: Text('Could not open the link.')),
-      );
+      messenger.showSnackBar(SnackBar(content: Text(failed)));
     }
   }
 
@@ -76,9 +78,9 @@ class _Details extends ConsumerWidget {
             ),
           ),
         if (t.isExplicit ?? false)
-          const Padding(
-            padding: EdgeInsets.only(top: 6),
-            child: Text('Explicit'),
+          Padding(
+            padding: const EdgeInsets.only(top: 6),
+            child: Text(context.tr('Explicit')),
           ),
         const SizedBox(height: 20),
         Card(
@@ -91,7 +93,9 @@ class _Details extends ConsumerWidget {
                   children: [
                     ScoreBadge(score: match.score, size: 56),
                     const SizedBox(width: 16),
-                    Expanded(child: Text(match.explanation)),
+                    Expanded(
+                      child: Text(match.explanationIn(context.languageCode)),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -103,8 +107,10 @@ class _Details extends ConsumerWidget {
                   ),
                 const SizedBox(height: 8),
                 Text(
-                  'Missing information is left out and its weight shared by '
-                  'the rest. This is an estimate, not a measure of emotion.',
+                  context.tr(
+                    'Missing information is left out and its weight shared by '
+                    'the rest. This is an estimate, not a measure of emotion.',
+                  ),
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -121,16 +127,18 @@ class _Details extends ConsumerWidget {
           )
         else
           Text(
-            t.provider == MusicProvider.demo
-                ? 'Previews are not available in demo mode.'
-                : 'No preview is available for this song.',
+            context.tr(
+              t.provider == MusicProvider.demo
+                  ? 'Previews are not available in demo mode.'
+                  : 'No preview is available for this song.',
+            ),
             style: theme.textTheme.bodySmall,
           ),
         const SizedBox(height: 12),
         FilledButton.icon(
           onPressed: () => _open(context, ref, TrackLinks.spotify(t)),
           icon: const Icon(Icons.open_in_new),
-          label: const Text('Open in Spotify'),
+          label: Text(context.tr('Open in Spotify')),
         ),
         const SizedBox(height: 8),
         OutlinedButton.icon(
@@ -139,7 +147,7 @@ class _Details extends ConsumerWidget {
             minimumSize: const Size.fromHeight(48),
           ),
           icon: const Icon(Icons.open_in_new),
-          label: const Text('Open in Apple Music'),
+          label: Text(context.tr('Open in Apple Music')),
         ),
         const SizedBox(height: 8),
         _AddToPlaylistButton(track: t),
@@ -152,7 +160,7 @@ class _Details extends ConsumerWidget {
             dislikeTrack(context, ref, t.id);
           },
           icon: const Icon(Icons.thumb_down_alt_outlined),
-          label: const Text('Not for me — suggest another'),
+          label: Text(context.tr('Not for me — suggest another')),
         ),
       ],
     );
@@ -174,11 +182,12 @@ class _AddToPlaylistButtonState extends ConsumerState<_AddToPlaylistButton> {
   Future<void> _add() async {
     setState(() => _busy = true);
     final messenger = ScaffoldMessenger.of(context);
+    final lang = context.languageCode;
     final result = await ref
         .read(playlistControllerProvider.notifier)
         .add(widget.track);
     if (mounted) setState(() => _busy = false);
-    messenger.showSnackBar(SnackBar(content: Text(result.message)));
+    messenger.showSnackBar(SnackBar(content: Text(result.wordedIn(lang))));
   }
 
   @override
@@ -190,11 +199,18 @@ class _AddToPlaylistButtonState extends ConsumerState<_AddToPlaylistButton> {
       onPressed: supported && !_busy ? _add : null,
       icon: const Icon(Icons.playlist_add),
       label: Text(switch ((provider, supported)) {
-        (MusicProvider.spotify, true) => 'Add to Spotify playlist',
-        (MusicProvider.appleMusic, true) => 'Add to Apple Music playlist',
-        (MusicProvider.demo, _) => 'Demo songs cannot be added to playlists',
-        _ =>
-          'Add to playlist — connect ${provider == MusicProvider.spotify ? 'Spotify' : 'Apple Music'} first',
+        (MusicProvider.spotify, true) => context.tr('Add to Spotify playlist'),
+        (MusicProvider.appleMusic, true) => context.tr(
+          'Add to Apple Music playlist',
+        ),
+        (MusicProvider.demo, _) => context.tr(
+          'Demo songs cannot be added to playlists',
+        ),
+        _ => context.tr('Add to playlist — connect {service} first', {
+          'service': provider == MusicProvider.spotify
+              ? 'Spotify'
+              : 'Apple Music',
+        }),
       }),
     );
   }
@@ -223,11 +239,14 @@ class _ComponentRow extends StatelessWidget {
         children: [
           Row(
             children: [
-              Expanded(child: Text(component.label)),
+              Expanded(child: Text(context.tr(component.label))),
               Text(
                 v == null || w == null
-                    ? 'not available'
-                    : '${v.round()} · weight ${(w * 100).round()}%',
+                    ? context.tr('not available')
+                    : context.tr('{score} · weight {percent}%', {
+                        'score': v.round(),
+                        'percent': (w * 100).round(),
+                      }),
                 style: theme.textTheme.bodySmall,
               ),
             ],

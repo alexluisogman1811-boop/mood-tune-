@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../app/router.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../shared/widgets/gradient_background.dart';
 import '../application/apple_music_providers.dart';
 import '../application/platform_providers.dart';
@@ -17,11 +18,11 @@ class PlatformScreen extends ConsumerWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text('Music platform'),
+        title: Text(context.tr('Music platform')),
         actions: [
           TextButton(
             onPressed: () => context.push(AppRoutes.analysis),
-            child: const Text('Skip for now'),
+            child: Text(context.tr('Skip for now')),
           ),
         ],
       ),
@@ -31,13 +32,15 @@ class PlatformScreen extends ConsumerWidget {
             padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
             children: [
               Text(
-                'Where do you listen?',
+                context.tr('Where do you listen?'),
                 style: theme.textTheme.headlineSmall,
               ),
               const SizedBox(height: 4),
               Text(
-                'Without a connected service, MoodScape uses its demo '
-                'catalogue.',
+                context.tr(
+                  'Without a connected service, MoodScape uses its demo '
+                  'catalogue.',
+                ),
                 style: theme.textTheme.bodyMedium,
               ),
               const SizedBox(height: 20),
@@ -57,7 +60,7 @@ class PlatformScreen extends ConsumerWidget {
               const SizedBox(height: 24),
               FilledButton(
                 onPressed: () => context.push(AppRoutes.analysis),
-                child: const Text('Continue'),
+                child: Text(context.tr('Continue')),
               ),
             ],
           ),
@@ -102,7 +105,7 @@ class _PlatformCard extends ConsumerWidget {
               onTap: () =>
                   ref.read(selectedPlatformProvider.notifier).select(platform),
               leading: Icon(icon, size: 32),
-              title: Text(platform.label),
+              title: Text(context.tr(platform.label)),
               trailing: Icon(
                 selected ? Icons.radio_button_checked : Icons.radio_button_off,
               ),
@@ -120,12 +123,13 @@ class _SpotifyStatus extends ConsumerWidget {
 
   Future<void> _connect(BuildContext context, WidgetRef ref) async {
     final messenger = ScaffoldMessenger.of(context);
+    final lang = context.languageCode;
     await ref
         .read(selectedPlatformProvider.notifier)
         .select(MusicPlatform.spotify);
     final error = await ref.read(spotifyConnectionProvider.notifier).connect();
     if (error != null) {
-      messenger.showSnackBar(SnackBar(content: Text(error)));
+      messenger.showSnackBar(SnackBar(content: Text(translate(error, lang))));
     }
   }
 
@@ -141,27 +145,31 @@ class _SpotifyStatus extends ConsumerWidget {
           Expanded(
             child: Text(
               value.displayName == null
-                  ? 'Connected'
-                  : 'Connected as ${value.displayName}',
+                  ? context.tr('Connected')
+                  : context.tr('Connected as {name}', {
+                      'name': value.displayName,
+                    }),
             ),
           ),
           TextButton(
             onPressed: () =>
                 ref.read(spotifyConnectionProvider.notifier).disconnect(),
-            child: const Text('Disconnect'),
+            child: Text(context.tr('Disconnect')),
           ),
         ],
       ),
       AsyncData() => Row(
         children: [
-          const Expanded(child: Text('Not connected')),
+          Expanded(child: Text(context.tr('Not connected'))),
           FilledButton.tonal(
             onPressed: () => _connect(context, ref),
-            child: const Text('Connect'),
+            child: Text(context.tr('Connect')),
           ),
         ],
       ),
-      AsyncError() => const Text('Could not read the Spotify connection.'),
+      AsyncError() => Text(
+        context.tr('Could not read the Spotify connection.'),
+      ),
       _ => const LinearProgressIndicator(),
     };
   }
@@ -175,17 +183,21 @@ class _SetupHelp extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Spotify is not set up in this build, so results use the demo '
-          'catalogue.',
+        Text(
+          context.tr(
+            'Spotify is not set up in this build, so results use the demo '
+            'catalogue.',
+          ),
         ),
         const SizedBox(height: 8),
         Text(
-          'To enable it: create an app at developer.spotify.com, add the '
-          'redirect URI moodscape://spotify-callback, then run with '
-          '--dart-define-from-file=config/dev.json containing '
-          'SPOTIFY_CLIENT_ID and SPOTIFY_REDIRECT_URI. In Development Mode '
-          'only allow-listed Spotify accounts can sign in.',
+          context.tr(
+            'To enable it: create an app at developer.spotify.com, add the '
+            'redirect URI moodscape://spotify-callback, then run with '
+            '--dart-define-from-file=config/dev.json containing '
+            'SPOTIFY_CLIENT_ID and SPOTIFY_REDIRECT_URI. In Development Mode '
+            'only allow-listed Spotify accounts can sign in.',
+          ),
           style: Theme.of(context).textTheme.bodySmall,
         ),
       ],
@@ -198,6 +210,7 @@ class _AppleMusicStatus extends ConsumerWidget {
 
   Future<void> _connect(BuildContext context, WidgetRef ref) async {
     final messenger = ScaffoldMessenger.of(context);
+    final lang = context.languageCode;
     await ref
         .read(selectedPlatformProvider.notifier)
         .select(MusicPlatform.appleMusic);
@@ -205,7 +218,7 @@ class _AppleMusicStatus extends ConsumerWidget {
         .read(appleMusicConnectionProvider.notifier)
         .connect();
     if (error != null) {
-      messenger.showSnackBar(SnackBar(content: Text(error)));
+      messenger.showSnackBar(SnackBar(content: Text(translate(error, lang))));
     }
   }
 
@@ -216,22 +229,28 @@ class _AppleMusicStatus extends ConsumerWidget {
       AsyncData(:final value) when !value.catalogAvailable => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Apple Music is not set up in this build, so results use the '
-            'demo catalogue.',
+          Text(
+            context.tr(
+              'Apple Music is not set up in this build, so results use the '
+              'demo catalogue.',
+            ),
           ),
           const SizedBox(height: 8),
           Text(
-            'iOS: enable the MusicKit App Service for the app\'s bundle ID in '
-            'the Apple Developer portal. Android: run a token service and set '
-            'APPLE_MUSIC_DEVELOPER_TOKEN_URL (HTTPS).',
+            context.tr(
+              'iOS: enable the MusicKit App Service for the app\'s bundle ID in '
+              'the Apple Developer portal. Android: run a token service and set '
+              'APPLE_MUSIC_DEVELOPER_TOKEN_URL (HTTPS).',
+            ),
             style: small,
           ),
         ],
       ),
       AsyncData(:final value) when !value.librarySupported => Text(
-        'Catalogue search is available. Saving playlists to your Apple Music '
-        'library needs the iOS app; here you can open songs in Apple Music.',
+        context.tr(
+          'Catalogue search is available. Saving playlists to your Apple Music '
+          'library needs the iOS app; here you can open songs in Apple Music.',
+        ),
         style: small,
       ),
       AsyncData(:final value) when value.authorized => Row(
@@ -240,31 +259,35 @@ class _AppleMusicStatus extends ConsumerWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              value.canPlayCatalog == false
-                  ? 'Connected — no active subscription, so saving to your '
-                        'library may fail'
-                  : 'Connected',
+              context.tr(
+                value.canPlayCatalog == false
+                    ? 'Connected — no active subscription, so saving to your '
+                          'library may fail'
+                    : 'Connected',
+              ),
             ),
           ),
           TextButton(
             onPressed: () =>
                 ref.read(appleMusicConnectionProvider.notifier).disconnect(),
-            child: const Text('Disconnect'),
+            child: Text(context.tr('Disconnect')),
           ),
         ],
       ),
       AsyncData() => Row(
         children: [
-          const Expanded(
-            child: Text('Catalogue ready · library not connected'),
+          Expanded(
+            child: Text(context.tr('Catalogue ready · library not connected')),
           ),
           FilledButton.tonal(
             onPressed: () => _connect(context, ref),
-            child: const Text('Connect'),
+            child: Text(context.tr('Connect')),
           ),
         ],
       ),
-      AsyncError() => const Text('Could not read the Apple Music connection.'),
+      AsyncError() => Text(
+        context.tr('Could not read the Apple Music connection.'),
+      ),
       _ => const LinearProgressIndicator(),
     };
   }

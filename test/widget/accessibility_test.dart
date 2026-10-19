@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:moodscape/app/router.dart';
 import 'package:moodscape/app/theme/app_theme.dart';
+import 'package:moodscape/core/l10n/app_language.dart';
 import 'package:moodscape/core/storage/storage_providers.dart';
 import 'package:moodscape/features/atmosphere/presentation/analysis_screen.dart';
 import 'package:moodscape/features/camera/application/camera_providers.dart';
@@ -16,6 +17,7 @@ import 'package:moodscape/features/music_platform/presentation/platform_screen.d
 import 'package:moodscape/features/onboarding/presentation/privacy_screen.dart';
 import 'package:moodscape/features/onboarding/presentation/welcome_screen.dart';
 import 'package:moodscape/features/preferences/presentation/preferences_screen.dart';
+import 'package:moodscape/features/reading/presentation/reading_screen.dart';
 import 'package:moodscape/features/recommendations/application/recommendations_controller.dart';
 import 'package:moodscape/features/recommendations/data/track_source.dart';
 import 'package:moodscape/features/recommendations/domain/match_scorer.dart';
@@ -27,7 +29,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// Checks every main screen against Flutter's accessibility guidelines:
 /// minimum tap-target sizes (Android 48dp, iOS 44pt), labelled tap targets
-/// for screen readers, and WCAG text contrast — in dark and light themes.
+/// for screen readers, and WCAG text contrast — in dark and light themes,
+/// and in Thai.
 
 class _Source implements TrackSource {
   @override
@@ -54,6 +57,7 @@ class _Source implements TrackSource {
 final _screens = <String, (String, Widget)>{
   'welcome': (AppRoutes.welcome, const WelcomeScreen()),
   'privacy': (AppRoutes.privacy, const PrivacyScreen()),
+  'reading': (AppRoutes.reading, const ReadingScreen()),
   'capture': (AppRoutes.capture, const CaptureScreen()),
   'mood': (AppRoutes.mood, const MoodScreen()),
   'preferences': (AppRoutes.preferences, const PreferencesScreen()),
@@ -64,7 +68,12 @@ final _screens = <String, (String, Widget)>{
   'settings': (AppRoutes.settings, const SettingsScreen()),
 };
 
-Future<void> _pump(WidgetTester tester, String name, ThemeMode mode) async {
+Future<void> _pump(
+  WidgetTester tester,
+  String name,
+  ThemeMode mode,
+  Locale locale,
+) async {
   SharedPreferences.setMockInitialValues({});
   FlutterSecureStorage.setMockInitialValues({});
   final sp = await SharedPreferences.getInstance();
@@ -98,6 +107,9 @@ Future<void> _pump(WidgetTester tester, String name, ThemeMode mode) async {
         theme: AppTheme.light(),
         darkTheme: AppTheme.dark(),
         themeMode: mode,
+        locale: locale,
+        supportedLocales: AppLanguage.supportedLocales,
+        localizationsDelegates: GlobalMaterialLocalizations.delegates,
         routerConfig: router,
       ),
     ),
@@ -109,13 +121,16 @@ Future<void> _pump(WidgetTester tester, String name, ThemeMode mode) async {
 }
 
 void main() {
-  for (final mode in [ThemeMode.dark, ThemeMode.light]) {
+  for (final (mode, locale) in [
+    (ThemeMode.dark, const Locale('en')),
+    (ThemeMode.light, const Locale('en')),
+    (ThemeMode.dark, const Locale('th')),
+  ]) {
     for (final name in _screens.keys) {
-      testWidgets('$name meets accessibility guidelines (${mode.name})', (
-        tester,
-      ) async {
+      testWidgets('$name meets accessibility guidelines '
+          '(${mode.name}, ${locale.languageCode})', (tester) async {
         final handle = tester.ensureSemantics();
-        await _pump(tester, name, mode);
+        await _pump(tester, name, mode, locale);
 
         await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
         await expectLater(tester, meetsGuideline(iOSTapTargetGuideline));

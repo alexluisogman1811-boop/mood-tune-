@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../core/l10n/l10n.dart';
 import '../data/track_links.dart';
 import '../domain/playlist_export.dart';
 import '../domain/track.dart';
@@ -47,40 +48,50 @@ class _ExportSheet extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'Make this a Spotify playlist',
+              context.tr('Make this a Spotify playlist'),
               style: theme.textTheme.titleLarge,
             ),
             const SizedBox(height: 4),
             Text(
-              'Works with free Spotify. Takes about a minute.',
+              context.tr('Works with free Spotify. Takes about a minute.'),
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: 16),
-            step(1, 'Tap "Copy song list" (${tracks.length} songs).'),
+            step(
+              1,
+              context.tr('Tap "Copy song list" ({count} songs).', {
+                'count': tracks.length,
+              }),
+            ),
             step(
               2,
-              'Tap "Open TuneMyMusic", choose "Free text" as the source and '
-              'paste the list.',
+              context.tr(
+                'Tap "Open TuneMyMusic", choose "Free text" as the source and '
+                'paste the list.',
+              ),
             ),
             step(
               3,
-              'Choose Spotify as the destination, sign in, and start the '
-              'transfer. The playlist appears in your Spotify.',
+              context.tr(
+                'Choose Spotify as the destination, sign in, and start the '
+                'transfer. The playlist appears in your Spotify.',
+              ),
             ),
             const SizedBox(height: 8),
             FilledButton.icon(
               onPressed: () async {
+                final copied = context.tr('Copied {count} songs.', {
+                  'count': tracks.length,
+                });
                 await Clipboard.setData(
                   ClipboardData(text: PlaylistExport.asText(tracks)),
                 );
-                messenger.showSnackBar(
-                  SnackBar(content: Text('Copied ${tracks.length} songs.')),
-                );
+                messenger.showSnackBar(SnackBar(content: Text(copied)));
               },
               icon: const Icon(Icons.copy),
-              label: const Text('Copy song list'),
+              label: Text(context.tr('Copy song list')),
             ),
             const SizedBox(height: 8),
             OutlinedButton.icon(
@@ -88,23 +99,24 @@ class _ExportSheet extends ConsumerWidget {
                 minimumSize: const Size.fromHeight(48),
               ),
               onPressed: () async {
+                final failed = context.tr('Could not open the link.');
                 final ok = await ref.read(urlOpenerProvider)(
                   PlaylistExport.transferToolUrl,
                 );
                 if (!ok) {
-                  messenger.showSnackBar(
-                    const SnackBar(content: Text('Could not open the link.')),
-                  );
+                  messenger.showSnackBar(SnackBar(content: Text(failed)));
                 }
               },
               icon: const Icon(Icons.open_in_new),
-              label: const Text('Open TuneMyMusic'),
+              label: Text(context.tr('Open TuneMyMusic')),
             ),
             const SizedBox(height: 12),
             Text(
-              'TuneMyMusic is a separate free service (up to 500 songs). You '
-              'sign in to Spotify on their site; MoodScape never sees your '
-              'Spotify password.',
+              context.tr(
+                'TuneMyMusic is a separate free service (up to 500 songs). You '
+                'sign in to Spotify on their site; MoodScape never sees your '
+                'Spotify password.',
+              ),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),

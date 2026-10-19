@@ -8,6 +8,7 @@ import '../features/music_platform/presentation/platform_screen.dart';
 import '../features/onboarding/presentation/privacy_screen.dart';
 import '../features/onboarding/presentation/welcome_screen.dart';
 import '../features/preferences/presentation/preferences_screen.dart';
+import '../features/reading/presentation/reading_screen.dart';
 import '../features/recommendations/presentation/results_screen.dart';
 import '../features/recommendations/presentation/track_detail_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
@@ -16,6 +17,7 @@ import '../features/settings/presentation/settings_screen.dart';
 abstract final class AppRoutes {
   static const welcome = '/';
   static const privacy = '/privacy';
+  static const reading = '/reading';
   static const capture = '/capture';
   static const mood = '/mood';
   static const preferences = '/preferences';
@@ -41,6 +43,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.settings,
         builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.reading,
+        builder: (context, state) => const ReadingScreen(),
       ),
       GoRoute(
         path: AppRoutes.capture,

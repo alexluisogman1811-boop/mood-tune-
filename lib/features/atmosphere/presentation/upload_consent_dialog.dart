@@ -1,5 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../../../core/l10n/l10n.dart';
+
 class UploadConsentResult {
   const UploadConsentResult({required this.allow, required this.remember});
   final bool allow;
@@ -30,16 +32,18 @@ class _UploadConsentDialogState extends State<_UploadConsentDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Send photo for AI analysis?'),
+      title: Text(context.tr('Send photo for AI analysis?')),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Your resized photo (location data removed) is sent over HTTPS to '
-            'the MoodScape analysis service to describe the scene. It is not '
-            'stored after the analysis.\n\nIf you decline, we use basic '
-            'on-device analysis instead.',
+          Text(
+            context.tr(
+              'Your resized photo (location data removed) is sent over HTTPS to '
+              'the MoodScape analysis service to describe the scene. It is not '
+              'stored after the analysis.\n\nIf you decline, we use basic '
+              'on-device analysis instead.',
+            ),
           ),
           const SizedBox(height: 8),
           CheckboxListTile(
@@ -47,7 +51,7 @@ class _UploadConsentDialogState extends State<_UploadConsentDialog> {
             onChanged: (v) => setState(() => _remember = v ?? false),
             contentPadding: EdgeInsets.zero,
             controlAffinity: ListTileControlAffinity.leading,
-            title: const Text('Remember my choice'),
+            title: Text(context.tr('Remember my choice')),
           ),
         ],
       ),
@@ -56,13 +60,13 @@ class _UploadConsentDialogState extends State<_UploadConsentDialog> {
           onPressed: () =>
               Navigator.of(context)
                   .pop(UploadConsentResult(allow: false, remember: _remember)),
-          child: const Text('On device only'),
+          child: Text(context.tr('On device only')),
         ),
         FilledButton(
           onPressed: () =>
               Navigator.of(context)
                   .pop(UploadConsentResult(allow: true, remember: _remember)),
-          child: const Text('Allow upload'),
+          child: Text(context.tr('Allow upload')),
         ),
       ],
     );

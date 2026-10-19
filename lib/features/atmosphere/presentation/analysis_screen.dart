@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../app/router.dart';
 import '../../../app/theme/app_theme.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../core/privacy/photo_consent.dart';
 import '../../../shared/widgets/gradient_background.dart';
 import '../../camera/application/captured_photo_controller.dart';
@@ -63,21 +64,23 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
     final state = ref.watch(analysisControllerProvider);
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(title: const Text('Your atmosphere')),
+      appBar: AppBar(title: Text(context.tr('Your atmosphere'))),
       body: GradientBackground(
         child: SafeArea(
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 300),
             child: switch (state) {
-              AnalysisIdle() => const _Progress(
-                key: ValueKey('idle'),
-                label: 'Getting ready…',
+              AnalysisIdle() => _Progress(
+                key: const ValueKey('idle'),
+                label: context.tr('Getting ready…'),
               ),
               AnalysisRunning(:final remote) => _Progress(
                 key: const ValueKey('running'),
-                label: remote
-                    ? 'Sending your photo for AI scene analysis…'
-                    : 'Reading light and colour on your device…',
+                label: context.tr(
+                  remote
+                      ? 'Sending your photo for AI scene analysis…'
+                      : 'Reading light and colour on your device…',
+                ),
               ),
               AnalysisDone(:final outcome) => ListView(
                 key: const ValueKey('done'),
@@ -90,14 +93,14 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                     Card(
                       child: ListTile(
                         leading: const Icon(Icons.info_outline),
-                        title: Text(notice),
+                        title: Text(context.tr(notice)),
                       ),
                     ),
                   ],
                   const SizedBox(height: 24),
                   FilledButton(
                     onPressed: () => context.push(AppRoutes.results),
-                    child: const Text('See my music'),
+                    child: Text(context.tr('See my music')),
                   ),
                   if (outcome.usedFallback) ...[
                     const SizedBox(height: 8),
@@ -106,7 +109,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                       style: OutlinedButton.styleFrom(
                         minimumSize: const Size.fromHeight(48),
                       ),
-                      child: const Text('Try analysis again'),
+                      child: Text(context.tr('Try analysis again')),
                     ),
                   ],
                 ],

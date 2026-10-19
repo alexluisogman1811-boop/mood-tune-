@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../app/router.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../shared/widgets/gradient_background.dart';
 import '../application/mood_controller.dart';
 import '../domain/mood.dart';
@@ -39,19 +40,19 @@ class _MoodScreenState extends ConsumerState<MoodScreen> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(title: const Text('Your mood')),
+      appBar: AppBar(title: Text(context.tr('Your mood'))),
       body: GradientBackground(
         child: SafeArea(
           child: ListView(
             padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
             children: [
               Text(
-                'How are you feeling right now?',
+                context.tr('How are you feeling right now?'),
                 style: theme.textTheme.headlineSmall,
               ),
               const SizedBox(height: 4),
               Text(
-                'Pick one or more.',
+                context.tr('Pick one or more.'),
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
@@ -63,7 +64,7 @@ class _MoodScreenState extends ConsumerState<MoodScreen> {
                 children: [
                   for (final mood in Mood.values)
                     FilterChip(
-                      label: Text(mood.label),
+                      label: Text(context.tr(mood.label)),
                       selected: input.moods.contains(mood),
                       onSelected: (_) => controller.toggle(mood),
                     ),
@@ -83,10 +84,12 @@ class _MoodScreenState extends ConsumerState<MoodScreen> {
                 maxLines: 4,
                 textCapitalization: TextCapitalization.sentences,
                 decoration: InputDecoration(
-                  labelText: 'Describe your mood in your own words',
-                  helperText: input.moods.contains(Mood.other)
-                      ? 'Optional, but it helps us understand "Other".'
-                      : 'Optional. No need to share anything personal.',
+                  labelText: context.tr('Describe your mood in your own words'),
+                  helperText: context.tr(
+                    input.moods.contains(Mood.other)
+                        ? 'Optional, but it helps us understand "Other".'
+                        : 'Optional. No need to share anything personal.',
+                  ),
                   border: const OutlineInputBorder(),
                 ),
               ),
@@ -95,7 +98,7 @@ class _MoodScreenState extends ConsumerState<MoodScreen> {
                 onPressed: input.isComplete
                     ? () => context.push(AppRoutes.preferences)
                     : null,
-                child: const Text('Continue'),
+                child: Text(context.tr('Continue')),
               ),
             ],
           ),
@@ -122,14 +125,16 @@ class _IntensitySection extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                'Intensity (optional): ${isSet ? '$intensity / 5' : 'not set'}',
+                context.tr('Intensity (optional): {value}', {
+                  'value': isSet ? '$intensity / 5' : context.tr('not set'),
+                }),
                 style: theme.textTheme.titleSmall,
               ),
             ),
             if (isSet)
               TextButton(
                 onPressed: () => onChanged(null),
-                child: const Text('Clear'),
+                child: Text(context.tr('Clear')),
               ),
           ],
         ),
@@ -139,7 +144,8 @@ class _IntensitySection extends StatelessWidget {
           max: MoodInput.maxIntensity.toDouble(),
           divisions: MoodInput.maxIntensity - MoodInput.minIntensity,
           label: isSet ? '$intensity' : null,
-          semanticFormatterCallback: (v) => 'Intensity ${v.round()} of 5',
+          semanticFormatterCallback: (v) =>
+              context.tr('Intensity {value} of 5', {'value': v.round()}),
           onChanged: (v) => onChanged(v.round()),
         ),
       ],

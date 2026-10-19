@@ -1,8 +1,10 @@
 # MoodScape
 
-MoodScape suggests music that fits **how you feel** and **what's around you**.
-You can take a photo of your surroundings (optional), say how you feel, and
-set your listening preferences. MoodScape then ranks songs with a transparent
+MoodScape makes **playlists to read along to**: music that fits **what you
+are reading**, **how you feel** and **what's around you**. You choose what you
+are reading (a story, studying, comics, poetry, articles), can take a photo of
+your surroundings (optional), say how you feel, and set your listening
+preferences. MoodScape then ranks songs with a transparent
 match score and explains each match. Songs open in Spotify or Apple Music and
 can be saved to a playlist.
 
@@ -10,6 +12,10 @@ can be saved to a playlist.
 > MoodScape never tries to read emotions from images. Your feelings are
 > whatever you tell it. Match scores estimate how well a song fits; they are
 > not a scientific measure of emotion.
+
+The app is available in **English and Thai (ไทย)**: it follows the phone's
+language, and the ไทย/English button on the Welcome screen or **Settings ›
+Language** switches it.
 
 ## Use it now: one link for iPhone and Android
 
@@ -286,7 +292,7 @@ belong on a server. The server contracts are in [docs/backend.md](docs/backend.m
 ## 4. How it works
 
 ### Flow
-Welcome → Capture (optional) → Mood → Preferences (skippable) → Platform
+Welcome → Reading → Capture (optional) → Mood → Preferences (skippable) → Platform
 (skippable) → Atmosphere analysis → Results → Track details. Settings and
 Privacy are reachable from Welcome and Results.
 
@@ -313,10 +319,24 @@ matchScore = moodMatch·0.40 + atmosphereMatch·0.25 + preferenceMatch·0.20 + e
 - **Preferences:** genre, language, vocals, and familiar-or-new; only the
   checks the track's metadata supports are used.
 - **Energy:** distance from the requested relaxing (25), balanced (50) or
-  energetic (80) target.
+  energetic (80) target. With no requested energy, the energy that suits
+  the reading is used (poetry 15, studying 25, a story 30, something else 35,
+  articles 40, comics 55).
+- **Reading:** except for comics, songs without lyrics are favoured (lyrics
+  compete with the words on the page). This counts as a preference check
+  unless the user picked a vocals preference themselves.
 
 Each result shows a plain-language explanation. The track details screen
 shows each component's score and the weight it was given.
+
+### Languages
+UI text is written in English in the code and wrapped in `context.tr(...)`;
+Thai versions live in `lib/core/l10n/thai.dart`, keyed by the English text,
+with `{name}` placeholders. Match explanations are stored as data
+(`MatchReason`) and worded in the current language when shown.
+`test/unit/translations_test.dart` fails if any translated text lacks a Thai
+entry or a placeholder differs, and the accessibility tests run every screen
+in Thai too.
 
 ### "Not for me"
 Every song has a 👎 **Not for me** button, on its card and on the details

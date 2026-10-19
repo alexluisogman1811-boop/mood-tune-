@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../../../core/l10n/l10n.dart';
 import '../../../shared/widgets/gradient_background.dart';
 
 class PrivacyScreen extends StatelessWidget {
@@ -44,7 +45,7 @@ class PrivacyScreen extends StatelessWidget {
     final theme = Theme.of(context);
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: AppBar(title: const Text('Privacy')),
+      appBar: AppBar(title: Text(context.tr('Privacy'))),
       body: GradientBackground(
         child: SafeArea(
           child: ListView.separated(
@@ -59,9 +60,12 @@ class PrivacyScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(title, style: theme.textTheme.titleMedium),
+                      Text(
+                        context.tr(title),
+                        style: theme.textTheme.titleMedium,
+                      ),
                       const SizedBox(height: 6),
-                      Text(body, style: theme.textTheme.bodyMedium),
+                      Text(context.tr(body), style: theme.textTheme.bodyMedium),
                     ],
                   ),
                 ),

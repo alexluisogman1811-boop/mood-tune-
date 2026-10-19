@@ -1,8 +1,10 @@
 import 'dart:math' as math;
 
+import '../../../core/l10n/translate.dart';
 import '../../../services/image_analysis/scene_features.dart';
 import '../../mood/domain/mood.dart';
 import '../../preferences/domain/music_preferences.dart';
+import '../../reading/domain/reading.dart';
 import 'track.dart';
 
 /// The four parts of a match score.
@@ -44,11 +46,15 @@ class MatchContext {
     required this.mood,
     required this.preferences,
     this.scene,
+    this.reading,
   });
 
   final MoodInput mood;
   final MusicPreferences preferences;
   final SceneFeatures? scene;
+
+  /// What the user is reading; null when they did not say.
+  final ReadingKind? reading;
 }
 
 class TrackMatch {
@@ -57,7 +63,7 @@ class TrackMatch {
     required this.score,
     required this.components,
     required this.weights,
-    required this.explanation,
+    required this.reasons,
   });
 
   final Track track;
@@ -71,7 +77,33 @@ class TrackMatch {
   /// Weights actually applied after redistribution; they sum to 1 (or the
   /// map is empty when nothing could be computed).
   final Map<MatchComponent, double> weights;
-  final String explanation;
+
+  /// Why the song fits, kept as data so it can be worded in any language.
+  final List<MatchReason> reasons;
+
+  /// The explanation in English.
+  String get explanation => explanationIn('en');
+
+  /// The explanation in [languageCode], e.g. `th`.
+  String explanationIn(String languageCode) =>
+      MatchScorer.describe(reasons, languageCode);
+}
+
+enum ReasonKind {
+  mood,
+  sceneFeel,
+  sceneEnergy,
+  genre,
+  preferences,
+  reading,
+  energy,
+}
+
+/// One part of "why this song". [items] holds English labels or tag names.
+class MatchReason {
+  const MatchReason(this.kind, [this.items = const []]);
+  final ReasonKind kind;
+  final List<String> items;
 }
 
 /// Transparent, deterministic scoring:
@@ -93,8 +125,12 @@ class MatchScorer {
       MatchComponent.mood: ?moodMatch(track, ctx.mood),
       if (ctx.scene case final scene?)
         MatchComponent.atmosphere: ?atmosphereMatch(track, scene),
-      MatchComponent.preference: ?preferenceMatch(track, ctx.preferences),
-      MatchComponent.energy: ?energyMatch(track, ctx.preferences),
+      MatchComponent.preference: ?preferenceMatch(
+        track,
+        ctx.preferences,
+        ctx.reading,
+      ),
+      MatchComponent.energy: ?energyMatch(track, ctx.preferences, ctx.reading),
     };
     final applied = normalizedWeights(components.keys, weights);
     final total = applied.isEmpty
@@ -108,7 +144,7 @@ class MatchScorer {
       score: total.round().clamp(0, 100),
       components: components,
       weights: applied,
-      explanation: explain(track, ctx, components),
+      reasons: explain(track, ctx, components),
     );
   }
 
@@ -194,9 +230,22 @@ class MatchScorer {
 
   /// Average of the taste checks that apply. Null when the user set no
   /// taste preferences or the track lacks the metadata to check them.
-  static double? preferenceMatch(Track t, MusicPreferences p) {
-    if (!p.hasTastePreferences) return null;
+  /// Reading that prefers no lyrics counts as a taste check unless the user
+  /// chose a vocal preference themselves.
+  static double? preferenceMatch(
+    Track t,
+    MusicPreferences p, [
+    ReadingKind? reading,
+  ]) {
+    final readingCheck =
+        reading != null &&
+        reading.preferInstrumental &&
+        p.vocal == VocalPreference.any &&
+        t.isInstrumental != null;
+    if (!p.hasTastePreferences && !readingCheck) return null;
     final parts = <double>[
+      // Lyrics are not ruled out, just less suited to reading.
+      if (readingCheck) t.isInstrumental! ? 100 : 30,
       if (p.genres.isNotEmpty && t.genres.isNotEmpty)
         p.genres.intersection(t.genres).isNotEmpty ? 100 : 0,
       if (p.languages.isNotEmpty &&
@@ -214,25 +263,32 @@ class MatchScorer {
     return parts.reduce((a, b) => a + b) / parts.length;
   }
 
-  static double? energyMatch(Track t, MusicPreferences p) {
-    final requested = p.energy;
+  /// Closeness to the energy the user asked for or, failing that, the
+  /// energy that suits what they are reading.
+  static double? energyMatch(
+    Track t,
+    MusicPreferences p, [
+    ReadingKind? reading,
+  ]) {
+    final target = p.energy?.target ?? reading?.targetEnergy;
     final e = t.energy;
-    if (requested == null || e == null) return null;
-    return 100 - (requested.target - e).abs().toDouble();
+    if (target == null || e == null) return null;
+    return 100 - (target - e).abs().toDouble();
   }
 
   // ---- Explanation ------------------------------------------------------
 
   static const _strong = 60.0;
 
-  static String explain(
+  static List<MatchReason> explain(
     Track t,
     MatchContext ctx,
     Map<MatchComponent, double> c,
   ) {
-    final reasons = <String>[];
+    bool strong(MatchComponent m) => (c[m] ?? 0) >= _strong;
+    final reasons = <MatchReason>[];
 
-    if ((c[MatchComponent.mood] ?? 0) >= _strong) {
+    if (strong(MatchComponent.mood)) {
       // Name only the moods this track actually fits, best first.
       final fits = [
         for (final MapEntry(key: m, value: target) in moodTargets(
@@ -241,12 +297,14 @@ class MatchScorer {
           if (similarity(t, target) case final s? when s >= _strong) (m, s),
       ]..sort((a, b) => b.$2.compareTo(a.$2));
       reasons.add(
-        'fits your ${_joinFew([for (final (m, _) in fits) m.label.toLowerCase()])} mood',
+        MatchReason(ReasonKind.mood, [
+          for (final (m, _) in fits.take(2)) m.label,
+        ]),
       );
     }
 
     final scene = ctx.scene;
-    if (scene != null && (c[MatchComponent.atmosphere] ?? 0) >= _strong) {
+    if (scene != null && strong(MatchComponent.atmosphere)) {
       final shared = [
         for (final a in scene.atmosphere)
           if (t.atmosphere?.contains(a) ?? false) a.name,
@@ -255,44 +313,103 @@ class MatchScorer {
       ];
       reasons.add(
         shared.isNotEmpty
-            ? 'suits the ${_joinFew(shared)} feel of your scene'
-            : 'matches the energy of your surroundings',
+            ? MatchReason(ReasonKind.sceneFeel, shared.take(2).toList())
+            : const MatchReason(ReasonKind.sceneEnergy),
       );
     }
 
-    if ((c[MatchComponent.preference] ?? 0) >= _strong) {
+    final reading = ctx.reading;
+    final prefs = ctx.preferences;
+    var readingFits = false;
+    if (strong(MatchComponent.preference)) {
       final liked = [
         for (final g in Genre.values)
-          if (ctx.preferences.genres.contains(g) && t.genres.contains(g))
-            g.label,
+          if (prefs.genres.contains(g) && t.genres.contains(g)) g.label,
       ];
-      reasons.add(
-        liked.isNotEmpty
-            ? 'is ${liked.first} like you asked for'
-            : 'lines up with your listening preferences',
-      );
+      if (liked.isNotEmpty) {
+        reasons.add(MatchReason(ReasonKind.genre, [liked.first]));
+      } else if (prefs.hasTastePreferences) {
+        reasons.add(const MatchReason(ReasonKind.preferences));
+      } else {
+        readingFits = reading != null; // only the reading check applied
+      }
     }
 
-    final energyPref = ctx.preferences.energy;
-    if (energyPref != null && (c[MatchComponent.energy] ?? 0) >= _strong) {
-      reasons.add(
-        'has the ${energyPref.label.toLowerCase()} energy you wanted',
-      );
+    final energyPref = prefs.energy;
+    if (strong(MatchComponent.energy)) {
+      if (energyPref != null) {
+        reasons.add(MatchReason(ReasonKind.energy, [energyPref.label]));
+      } else {
+        readingFits = reading != null;
+      }
     }
-
-    if (reasons.isEmpty) {
-      return 'A looser match — it differs from some of what you told us.';
+    if (readingFits) {
+      reasons.add(MatchReason(ReasonKind.reading, [reading!.reason]));
     }
-    final sentence = _joinAll(reasons);
-    return '${sentence[0].toUpperCase()}${sentence.substring(1)}.';
+    return reasons;
   }
 
-  static String _joinFew(List<String> items) =>
-      _joinAll(items.take(2).toList());
+  /// Words [reasons] as one sentence in [languageCode].
+  static String describe(List<MatchReason> reasons, String languageCode) {
+    final thai = languageCode == 'th';
+    String tr(String english) => translate(english, languageCode);
+    String tag(String name) =>
+        tr(name.isEmpty ? name : name[0].toUpperCase() + name.substring(1));
+
+    if (reasons.isEmpty) {
+      return tr('A looser match — it differs from some of what you told us.');
+    }
+    if (thai) {
+      final parts = [
+        for (final r in reasons)
+          switch (r.kind) {
+            ReasonKind.mood =>
+              'เข้ากับอารมณ์${_joinThai(r.items.map(tr))}ของคุณ',
+            ReasonKind.sceneFeel =>
+              'เหมาะกับบรรยากาศ${_joinThai(r.items.map(tag))}ในฉากของคุณ',
+            ReasonKind.sceneEnergy => 'เข้ากับพลังของสิ่งรอบตัวคุณ',
+            ReasonKind.genre => 'เป็นแนว${tr(r.items.first)}ตามที่คุณต้องการ',
+            ReasonKind.preferences => 'ตรงกับความชอบในการฟังของคุณ',
+            ReasonKind.reading => tr(r.items.first),
+            ReasonKind.energy => 'มีพลังแบบ${tr(r.items.first)}ที่คุณต้องการ',
+          },
+      ];
+      return _joinThai(parts, separator: ' ', last: ' และ');
+    }
+    final parts = [
+      for (final r in reasons)
+        switch (r.kind) {
+          ReasonKind.mood =>
+            'fits your ${_joinAll([for (final m in r.items) m.toLowerCase()])} mood',
+          ReasonKind.sceneFeel =>
+            'suits the ${_joinAll(r.items)} feel of your scene',
+          ReasonKind.sceneEnergy => 'matches the energy of your surroundings',
+          ReasonKind.genre => 'is ${r.items.first} like you asked for',
+          ReasonKind.preferences => 'lines up with your listening preferences',
+          ReasonKind.reading => r.items.first,
+          ReasonKind.energy =>
+            'has the ${r.items.first.toLowerCase()} energy you wanted',
+        },
+    ];
+    final sentence = _joinAll(parts);
+    return '${sentence[0].toUpperCase()}${sentence.substring(1)}.';
+  }
 
   static String _joinAll(List<String> items) => switch (items.length) {
     0 => '',
     1 => items.first,
     _ => '${items.sublist(0, items.length - 1).join(', ')} and ${items.last}',
   };
+
+  /// Thai lists: "ก ข และค".
+  static String _joinThai(
+    Iterable<String> items, {
+    String separator = ' ',
+    String last = 'และ',
+  }) {
+    final list = items.toList();
+    if (list.length < 2) return list.join();
+    return '${list.sublist(0, list.length - 1).join(separator)}$last'
+        '${list.last}';
+  }
 }

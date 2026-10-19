@@ -1,5 +1,6 @@
 import 'package:material_ui/material_ui.dart';
 
+import '../../../core/l10n/l10n.dart';
 import '../../../shared/widgets/artwork.dart';
 import '../domain/match_scorer.dart';
 
@@ -53,7 +54,7 @@ class TrackCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      match.explanation,
+                      match.explanationIn(context.languageCode),
                       style: theme.textTheme.bodySmall,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -67,7 +68,7 @@ class TrackCard extends StatelessWidget {
                   ScoreBadge(score: match.score),
                   if (onDislike case final dislike?)
                     IconButton(
-                      tooltip: 'Not for me',
+                      tooltip: context.tr('Not for me'),
                       onPressed: dislike,
                       icon: const Icon(Icons.thumb_down_alt_outlined),
                     ),
@@ -91,7 +92,7 @@ class ScoreBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     return Semantics(
-      label: 'Match score $score out of 100',
+      label: context.tr('Match score {score} out of 100', {'score': score}),
       excludeSemantics: true,
       child: SizedBox.square(
         dimension: size,

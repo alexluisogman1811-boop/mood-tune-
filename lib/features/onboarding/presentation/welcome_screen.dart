@@ -1,17 +1,21 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../app/router.dart';
 import '../../../app/theme/app_theme.dart';
+import '../../../core/l10n/app_language.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../shared/widgets/gradient_background.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
   static const _steps = [
+    (Icons.menu_book_outlined, 'Tell us what you are reading'),
     (Icons.photo_camera_outlined, 'Snap your surroundings (optional)'),
     (Icons.favorite_outline, 'Tell us how you feel'),
-    (Icons.queue_music_outlined, 'Get a playlist that fits the moment'),
+    (Icons.queue_music_outlined, 'Get a playlist to read along to'),
   ];
 
   @override
@@ -34,8 +38,9 @@ class WelcomeScreen extends StatelessWidget {
                       children: [
                         const _Logo(),
                         const Spacer(),
+                        const _LanguageButton(),
                         IconButton(
-                          tooltip: 'Settings',
+                          tooltip: context.tr('Settings'),
                           onPressed: () => context.push(AppRoutes.settings),
                           icon: const Icon(Icons.settings_outlined),
                         ),
@@ -45,7 +50,10 @@ class WelcomeScreen extends StatelessWidget {
                     Text('MoodScape', style: theme.textTheme.displaySmall),
                     const SizedBox(height: 8),
                     Text(
-                      'Music that matches your surroundings and how you feel.',
+                      context.tr(
+                        'Music for reading that matches your mood and '
+                        'surroundings.',
+                      ),
                       style: theme.textTheme.titleMedium?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
@@ -60,7 +68,7 @@ class WelcomeScreen extends StatelessWidget {
                             const SizedBox(width: 16),
                             Expanded(
                               child: Text(
-                                label,
+                                context.tr(label),
                                 style: theme.textTheme.bodyLarge,
                               ),
                             ),
@@ -81,9 +89,11 @@ class WelcomeScreen extends StatelessWidget {
                             const SizedBox(width: 12),
                             Expanded(
                               child: Text(
-                                'Photos describe the scene, not you. Nothing '
-                                'is uploaded without your consent, and you '
-                                'can always continue without a photo.',
+                                context.tr(
+                                  'Photos describe the scene, not you. Nothing '
+                                  'is uploaded without your consent, and you '
+                                  'can always continue without a photo.',
+                                ),
                                 style: theme.textTheme.bodyMedium,
                               ),
                             ),
@@ -93,14 +103,14 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 32),
                     FilledButton(
-                      onPressed: () => context.push(AppRoutes.capture),
-                      child: const Text('Get Started'),
+                      onPressed: () => context.push(AppRoutes.reading),
+                      child: Text(context.tr('Get Started')),
                     ),
                     const SizedBox(height: 8),
                     Center(
                       child: TextButton(
                         onPressed: () => context.push(AppRoutes.privacy),
-                        child: const Text('How we handle your photos'),
+                        child: Text(context.tr('How we handle your photos')),
                       ),
                     ),
                   ],
@@ -114,13 +124,34 @@ class WelcomeScreen extends StatelessWidget {
   }
 }
 
+/// One tap between English and Thai; Settings also offers "System".
+class _LanguageButton extends ConsumerWidget {
+  const _LanguageButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final thai = context.languageCode == 'th';
+    return TextButton.icon(
+      onPressed: () => ref
+          .read(appLanguageProvider.notifier)
+          .set(thai ? AppLanguage.english : AppLanguage.thai),
+      icon: const Icon(Icons.translate, size: 18),
+      // Each language is named in its own words.
+      label: Text(
+        thai ? 'English' : 'ไทย',
+        semanticsLabel: thai ? 'Switch to English' : 'เปลี่ยนเป็นภาษาไทย',
+      ),
+    );
+  }
+}
+
 class _Logo extends StatelessWidget {
   const _Logo();
 
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      label: 'MoodScape logo',
+      label: context.tr('MoodScape logo'),
       child: Container(
         width: 72,
         height: 72,

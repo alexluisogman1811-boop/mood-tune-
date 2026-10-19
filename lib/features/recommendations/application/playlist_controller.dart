@@ -1,17 +1,30 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/errors/app_failure.dart';
+import '../../../core/l10n/translate.dart';
 import '../../mood/application/mood_controller.dart';
 import '../../mood/domain/mood.dart';
 import '../../music_platform/application/apple_music_providers.dart';
 import '../../music_platform/application/platform_providers.dart';
 import '../domain/track.dart';
 
-/// Outcome of a playlist action, for a snackbar.
+/// Outcome of a playlist action, for a snackbar. [template] is English with
+/// `{name}` placeholders filled from [args], so it can be shown in any
+/// language.
 class PlaylistResult {
-  const PlaylistResult(this.message, {this.url});
-  final String message;
+  const PlaylistResult(this.template, {this.args = const {}, this.url});
+  final String template;
+  final Map<String, Object?> args;
   final Uri? url;
+
+  /// The message in English.
+  String get message => wordedIn('en');
+
+  /// The message in [languageCode]; text arguments are translated too.
+  String wordedIn(String languageCode) => translate(template, languageCode, {
+    for (final MapEntry(:key, :value) in args.entries)
+      key: value is String ? translate(value, languageCode) : value,
+  });
 }
 
 /// Whether songs from [provider] can be saved to a playlist right now.
@@ -56,7 +69,8 @@ class PlaylistController extends Notifier<Map<MusicProvider, String>> {
       final created = await _create(provider, ids);
       state = {...state, provider: created.id};
       return PlaylistResult(
-        'Saved ${ids.length} songs to ${_serviceName(provider)}.',
+        'Saved {count} songs to {service}.',
+        args: {'count': ids.length, 'service': _serviceName(provider)},
         url: created.url,
       );
     } on AppFailure catch (e) {
@@ -80,7 +94,8 @@ class PlaylistController extends Notifier<Map<MusicProvider, String>> {
         await _append(provider, existing, ids);
       }
       return PlaylistResult(
-        'Added to your MoodScape playlist on ${_serviceName(provider)}.',
+        'Added to your MoodScape playlist on {service}.',
+        args: {'service': _serviceName(provider)},
       );
     } on AppFailure catch (e) {
       return PlaylistResult(e.message);
@@ -122,7 +137,10 @@ class PlaylistController extends Notifier<Map<MusicProvider, String>> {
           return null;
       }
     } on AppFailure catch (e) {
-      return PlaylistResult('Playlist not updated: ${e.message}');
+      return PlaylistResult(
+        'Playlist not updated: {error}',
+        args: {'error': e.message},
+      );
     }
   }
 

@@ -1,8 +1,9 @@
-﻿import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../app/router.dart';
+import '../../../core/l10n/l10n.dart';
 import '../../../shared/widgets/gradient_background.dart';
 import '../application/preferences_controller.dart';
 import '../domain/music_preferences.dart';
@@ -37,10 +38,10 @@ class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(text, style: theme.textTheme.titleMedium),
+          Text(context.tr(text), style: theme.textTheme.titleMedium),
           if (hint != null)
             Text(
-              hint,
+              context.tr(hint),
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
@@ -52,11 +53,11 @@ class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text('Music preferences'),
+        title: Text(context.tr('Music preferences')),
         actions: [
           TextButton(
             onPressed: () => context.push(AppRoutes.platform),
-            child: const Text('Skip'),
+            child: Text(context.tr('Skip')),
           ),
         ],
       ),
@@ -66,7 +67,7 @@ class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
             padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
             children: [
               Text(
-                'All optional. Skip to use balanced defaults.',
+                context.tr('All optional. Skip to use balanced defaults.'),
                 style: theme.textTheme.bodyMedium,
               ),
               heading('Favourite genres'),
@@ -76,7 +77,7 @@ class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
                 children: [
                   for (final g in Genre.values)
                     FilterChip(
-                      label: Text(g.label),
+                      label: Text(context.tr(g.label)),
                       selected: d.genres.contains(g),
                       onSelected: (_) =>
                           _update(d.copyWith(genres: _toggled(d.genres, g))),
@@ -90,7 +91,7 @@ class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
                 children: [
                   for (final l in MusicLanguage.values)
                     FilterChip(
-                      label: Text(l.label),
+                      label: Text(context.tr(l.label)),
                       selected: d.languages.contains(l),
                       onSelected: (_) => _update(
                         d.copyWith(languages: _toggled(d.languages, l)),
@@ -101,21 +102,21 @@ class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
               heading('Vocals'),
               _Segmented<VocalPreference>(
                 values: VocalPreference.values,
-                label: (v) => v.label,
+                label: (v) => context.tr(v.label),
                 selected: d.vocal,
                 onChanged: (v) => _update(d.copyWith(vocal: v)),
               ),
               heading('Familiar or new?'),
               _Segmented<DiscoveryPreference>(
                 values: DiscoveryPreference.values,
-                label: (v) => v.label,
+                label: (v) => context.tr(v.label),
                 selected: d.discovery,
                 onChanged: (v) => _update(d.copyWith(discovery: v)),
               ),
               heading('Energy', 'Tap again to clear.'),
               _Segmented<EnergyPreference>(
                 values: EnergyPreference.values,
-                label: (v) => v.label,
+                label: (v) => context.tr(v.label),
                 selected: d.energy,
                 allowEmpty: true,
                 onChanged: (v) => _update(d.copyWith(energy: () => v)),
@@ -123,25 +124,25 @@ class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
               heading('Playlist length'),
               _Segmented<int>(
                 values: MusicPreferences.playlistLengths,
-                label: (v) => '$v songs',
+                label: (v) => context.tr('{count} songs', {'count': v}),
                 selected: d.playlistLength,
                 onChanged: (v) => _update(d.copyWith(playlistLength: v)),
               ),
               const SizedBox(height: 12),
               SwitchListTile(
                 contentPadding: EdgeInsets.zero,
-                title: const Text('Allow explicit content'),
+                title: Text(context.tr('Allow explicit content')),
                 value: d.allowExplicit,
                 onChanged: (v) => _update(d.copyWith(allowExplicit: v)),
               ),
               const SizedBox(height: 16),
               FilledButton(
                 onPressed: _saveAndContinue,
-                child: const Text('Save and continue'),
+                child: Text(context.tr('Save and continue')),
               ),
               TextButton(
                 onPressed: () => _update(const MusicPreferences()),
-                child: const Text('Reset to defaults'),
+                child: Text(context.tr('Reset to defaults')),
               ),
             ],
           ),

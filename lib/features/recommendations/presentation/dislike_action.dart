@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../../core/l10n/l10n.dart';
 import '../application/playlist_controller.dart';
 import '../application/recommendations_controller.dart';
 
@@ -13,6 +14,7 @@ Future<void> dislikeTrack(
   String trackId,
 ) async {
   final messenger = ScaffoldMessenger.of(context);
+  final lang = context.languageCode;
   final recs = ref.read(recommendationsProvider.notifier);
   final playlists = ref.read(playlistControllerProvider.notifier);
 
@@ -27,9 +29,16 @@ Future<void> dislikeTrack(
   final replacement = outcome.replacement;
   final text = [
     replacement == null
-        ? 'Removed “$removedTitle”. No other songs left to suggest.'
-        : 'Removed “$removedTitle” — added “${replacement.track.title}”.',
-    ?sync?.message,
+        ? translate(
+            'Removed “{removed}”. No other songs left to suggest.',
+            lang,
+            {'removed': removedTitle},
+          )
+        : translate('Removed “{removed}” — added “{added}”.', lang, {
+            'removed': removedTitle,
+            'added': replacement.track.title,
+          }),
+    ?sync?.wordedIn(lang),
   ].join(' ');
 
   messenger
@@ -39,7 +48,7 @@ Future<void> dislikeTrack(
         content: Text(text),
         duration: const Duration(seconds: 6),
         action: SnackBarAction(
-          label: 'Undo',
+          label: translate('Undo', lang),
           onPressed: () async {
             await recs.undoDislike(outcome);
             await playlists.swap(

@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/l10n/app_language.dart';
 import '../../../core/privacy/photo_consent.dart';
 import '../../../core/storage/storage_providers.dart';
 import '../../atmosphere/application/analysis_controller.dart';
@@ -8,6 +9,7 @@ import '../../mood/application/mood_controller.dart';
 import '../../music_platform/application/apple_music_providers.dart';
 import '../../music_platform/application/platform_providers.dart';
 import '../../preferences/application/preferences_controller.dart';
+import '../../reading/application/reading_controller.dart';
 import '../../recommendations/application/disliked_tracks.dart';
 import '../../recommendations/application/playlist_controller.dart';
 import '../../recommendations/application/recommendations_controller.dart';
@@ -30,6 +32,7 @@ class DataControls {
     _ref.read(capturedPhotoProvider.notifier).clear();
     _ref.read(analysisControllerProvider.notifier).reset();
     _ref.read(moodControllerProvider.notifier).reset();
+    _ref.read(readingProvider.notifier).reset();
 
     // Re-read everything from the now-empty storage.
     _ref
@@ -37,6 +40,7 @@ class DataControls {
       ..invalidate(photoUploadConsentProvider)
       ..invalidate(selectedPlatformProvider)
       ..invalidate(themeModeProvider)
+      ..invalidate(appLanguageProvider)
       ..invalidate(spotifyConnectionProvider)
       ..invalidate(appleMusicConnectionProvider)
       ..invalidate(playlistControllerProvider)

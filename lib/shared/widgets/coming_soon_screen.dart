@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
+import '../../core/l10n/l10n.dart';
 import 'gradient_background.dart';
 
 /// Honest placeholder for flows that are not built yet. When [nextRoute] is
@@ -31,7 +32,7 @@ class ComingSoonScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'This step is not implemented yet.',
+                  context.tr('This step is not implemented yet.'),
                   style: Theme.of(context).textTheme.bodyLarge,
                   textAlign: TextAlign.center,
                 ),
