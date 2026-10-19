@@ -8,9 +8,10 @@ class RecommendationEngine {
 
   final MatchScorer scorer;
 
-  /// Drops explicit tracks if disallowed (unknown explicitness is kept),
-  /// removes duplicates and [exclude]d ids, scores, and returns the best
-  /// [limit] by score (ties broken by title for stable output).
+  /// Drops explicit tracks if disallowed (unknown explicitness is kept) and
+  /// tracks outside the chosen languages, removes duplicates and
+  /// [exclude]d ids, scores, and returns the best [limit] by score (ties
+  /// broken by title for stable output).
   List<TrackMatch> rank(
     Iterable<Track> candidates,
     MatchContext ctx, {
@@ -22,12 +23,22 @@ class RecommendationEngine {
       for (final t in candidates)
         if (!exclude.contains(t.id) &&
             seen.add(t.id) &&
-            (ctx.preferences.allowExplicit || t.isExplicit != true))
+            (ctx.preferences.allowExplicit || t.isExplicit != true) &&
+            inChosenLanguage(t, ctx.preferences.languages))
           t,
     ];
     final scored = [for (final t in eligible) scorer.score(t, ctx)]
       ..sort(compare);
     return scored.take(limit).toList(growable: false);
+  }
+
+  /// Choosing languages asks for songs sung in them, so instrumentals and
+  /// songs in other languages are left out. Songs whose language is unknown
+  /// (some services don't say) are kept rather than lost.
+  static bool inChosenLanguage(Track t, Set<MusicLanguage> languages) {
+    if (languages.isEmpty) return true;
+    if (t.isInstrumental ?? false) return false;
+    return t.language == null || languages.contains(t.language);
   }
 
   /// Playlist order: highest score first, ties broken by title so the

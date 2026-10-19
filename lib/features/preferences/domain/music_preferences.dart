@@ -26,7 +26,8 @@ enum MusicLanguage {
   korean('Korean'),
   japanese('Japanese'),
   french('French'),
-  portuguese('Portuguese');
+  portuguese('Portuguese'),
+  thai('Thai');
 
   const MusicLanguage(this.label);
   final String label;

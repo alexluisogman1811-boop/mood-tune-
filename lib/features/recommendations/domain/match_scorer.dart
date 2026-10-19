@@ -231,7 +231,7 @@ class MatchScorer {
   /// Average of the taste checks that apply. Null when the user set no
   /// taste preferences or the track lacks the metadata to check them.
   /// Reading that prefers no lyrics counts as a taste check unless the user
-  /// chose a vocal preference themselves.
+  /// chose a vocal preference or song languages themselves.
   static double? preferenceMatch(
     Track t,
     MusicPreferences p, [
@@ -241,6 +241,7 @@ class MatchScorer {
         reading != null &&
         reading.preferInstrumental &&
         p.vocal == VocalPreference.any &&
+        p.languages.isEmpty &&
         t.isInstrumental != null;
     if (!p.hasTastePreferences && !readingCheck) return null;
     final parts = <double>[

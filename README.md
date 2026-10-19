@@ -324,7 +324,12 @@ matchScore = moodMatch·0.40 + atmosphereMatch·0.25 + preferenceMatch·0.20 + e
   articles 40, comics 55).
 - **Reading:** except for comics, songs without lyrics are favoured (lyrics
   compete with the words on the page). This counts as a preference check
-  unless the user picked a vocals preference themselves.
+  unless the user picked a vocals preference or song languages themselves.
+- **Languages:** choosing song languages is a filter: only songs sung in
+  those languages are shown (songs whose language a service does not
+  report are kept). The demo catalogue has 188 real songs, at least 15 in
+  each language (English, Spanish, Korean, Japanese, French, Portuguese,
+  Thai).
 
 Each result shows a plain-language explanation. The track details screen
 shows each component's score and the weight it was given.

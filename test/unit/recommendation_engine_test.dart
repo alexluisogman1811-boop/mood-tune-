@@ -37,6 +37,42 @@ MatchContext _ctx({bool allowExplicit = true}) => MatchContext(
 );
 
 void main() {
+  group('chosen languages', () {
+    MatchContext withLanguages(Set<MusicLanguage> languages) => MatchContext(
+      mood: const MoodInput(moods: {Mood.calm}),
+      preferences: MusicPreferences(languages: languages),
+    );
+    final candidates = [
+      _t('ko', language: MusicLanguage.korean),
+      _t('en', language: MusicLanguage.english),
+      Track(
+        id: 'piano',
+        title: 'piano',
+        artist: 'a',
+        provider: MusicProvider.demo,
+        valence: 50,
+        isInstrumental: true,
+      ),
+      _t('unknown'), // e.g. a service that doesn't report language
+    ];
+    List<String> ids(Set<MusicLanguage> languages) => [
+      for (final m in _engine.rank(
+        candidates,
+        withLanguages(languages),
+        limit: 10,
+      ))
+        m.track.id,
+    ];
+
+    test('only songs in the chosen languages (or unknown) remain', () {
+      expect(ids({MusicLanguage.korean}), unorderedEquals(['ko', 'unknown']));
+    });
+
+    test('no choice keeps every song', () {
+      expect(ids({}), hasLength(4));
+    });
+  });
+
   group('rank', () {
     test('orders by score, then title; respects limit', () {
       final out = _engine.rank(
@@ -149,7 +185,18 @@ void main() {
       final tracks = DemoTrackSource.parse(raw);
       final entries = RegExp(r'"id":').allMatches(raw).length;
       expect(tracks, hasLength(entries));
-      expect(tracks.length, greaterThanOrEqualTo(30));
+      expect(tracks.length, greaterThanOrEqualTo(150));
+    });
+
+    test('every song language has plenty of songs', () {
+      final tracks = DemoTrackSource.parse(raw);
+      for (final l in MusicLanguage.values) {
+        expect(
+          tracks.where((t) => t.language == l).length,
+          greaterThanOrEqualTo(15),
+          reason: l.name,
+        );
+      }
     });
 
     test('ids are unique and features are complete', () {

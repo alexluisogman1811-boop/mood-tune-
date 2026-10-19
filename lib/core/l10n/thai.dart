@@ -183,6 +183,7 @@ const thaiStrings = <String, String>{
   'Japanese': 'ญี่ปุ่น',
   'French': 'ฝรั่งเศส',
   'Portuguese': 'โปรตุเกส',
+  'Thai': 'ไทย',
   'No preference': 'ไม่ระบุ',
   'Instrumental': 'บรรเลง',
   'With vocals': 'มีเสียงร้อง',
