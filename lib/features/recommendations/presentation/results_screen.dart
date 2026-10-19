@@ -13,6 +13,7 @@ import '../domain/match_scorer.dart';
 import '../domain/recommendation_engine.dart';
 import '../domain/track.dart';
 import 'dislike_action.dart';
+import 'export_sheet.dart';
 import 'track_card.dart';
 
 class ResultsScreen extends ConsumerWidget {
@@ -43,6 +44,13 @@ class ResultsScreen extends ConsumerWidget {
                     .saveAll([for (final m in recs.value!.matches) m.track]);
                 messenger.showSnackBar(SnackBar(content: Text(result.message)));
               },
+            ),
+          if (!canSave && matches.isNotEmpty)
+            IconButton(
+              tooltip: 'Export to Spotify',
+              icon: const Icon(Icons.queue_music),
+              onPressed: () =>
+                  showExportSheet(context, [for (final m in matches) m.track]),
             ),
           IconButton(
             tooltip: 'Settings',
@@ -128,6 +136,19 @@ class _ResultsBody extends ConsumerWidget {
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
+              if (recs.matches.isNotEmpty &&
+                  !ref.watch(
+                    canSavePlaylistProvider(recs.matches.first.track.provider),
+                  )) ...[
+                const SizedBox(height: 12),
+                FilledButton.tonalIcon(
+                  onPressed: () => showExportSheet(context, [
+                    for (final m in recs.matches) m.track,
+                  ]),
+                  icon: const Icon(Icons.queue_music),
+                  label: const Text('Make this a Spotify playlist'),
+                ),
+              ],
               const SizedBox(height: 12),
               _Filters(matches: recs.matches, filter: filter, year: year),
             ],
