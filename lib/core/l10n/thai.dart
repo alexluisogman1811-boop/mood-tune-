@@ -305,8 +305,8 @@ const thaiStrings = <String, String>{
   'Demo mode': 'โหมดตัวอย่าง',
   '{source}. Connect Spotify or Apple Music for real catalogue search.':
       '{source} เชื่อมต่อ Spotify หรือ Apple Music เพื่อค้นหาเพลงจริง',
-  'Demo catalogue (hand-estimated features)':
-      'คลังเพลงตัวอย่าง (ค่าคุณลักษณะประมาณด้วยมือ)',
+  'Built-in catalogue (features estimated from song previews)':
+      'คลังเพลงในแอป (ค่าต่าง ๆ ประมาณจากตัวอย่างเพลง)',
   'Spotify search': 'การค้นหาใน Spotify',
   'Apple Music catalogue': 'คลังเพลง Apple Music',
   'Match scores estimate how well a song fits what you told us. They are '

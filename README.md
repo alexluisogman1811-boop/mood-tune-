@@ -327,9 +327,13 @@ matchScore = moodMatch·0.40 + atmosphereMatch·0.25 + preferenceMatch·0.20 + e
   unless the user picked a vocals preference or song languages themselves.
 - **Languages:** choosing song languages is a filter: only songs sung in
   those languages are shown (songs whose language a service does not
-  report are kept). The demo catalogue has 188 real songs, at least 15 in
-  each language (English, Spanish, Korean, Japanese, French, Portuguese,
-  Thai).
+  report are kept). The built-in catalogue is built by `tool/build_catalog.py`:
+  it collects free Apple Music charts and Deezer playlists per language,
+  analyses each 30-second preview with librosa (loudness, brightness,
+  tempo, onsets, major/minor key) into energy and valence estimates, deletes
+  the audio, and stores only the numbers. Re-run it with
+  `py tool/build_catalog.py` after `py -m pip install --user librosa
+  soundfile requests`.
 
 Each result shows a plain-language explanation. The track details screen
 shows each component's score and the weight it was given.
@@ -361,7 +365,7 @@ Settings › *Forget disliked songs* clears the list.
 ### Where songs come from
 | Source | When | Feature quality |
 | --- | --- | --- |
-| Demo catalogue (`assets/demo/demo_catalog.json`) | No service connected, or a service failed | Real songs; features hand-estimated and labelled as such |
+| Built-in catalogue (`assets/demo/demo_catalog.json`) | No service connected, or a service failed | Real songs; features measured from 30-second previews by `tool/build_catalog.py` (or estimated by hand for the original 188), labelled as estimates |
 | Spotify search | Spotify chosen and connected | Real metadata; mood features estimated from search words |
 | Apple Music catalogue | Apple Music chosen and a developer token available | Real metadata incl. genres and previews; mood features estimated |
 

@@ -19,7 +19,7 @@ class DemoTrackSource implements TrackSource {
   List<Track>? _cache;
 
   @override
-  String get label => 'Demo catalogue (hand-estimated features)';
+  String get label => 'Built-in catalogue (features estimated from song previews)';
 
   @override
   bool get isDemo => true;
