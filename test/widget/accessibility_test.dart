@@ -17,7 +17,7 @@ import 'package:moodscape/features/music_platform/presentation/platform_screen.d
 import 'package:moodscape/features/onboarding/presentation/privacy_screen.dart';
 import 'package:moodscape/features/onboarding/presentation/welcome_screen.dart';
 import 'package:moodscape/features/preferences/presentation/preferences_screen.dart';
-import 'package:moodscape/features/reading/presentation/reading_screen.dart';
+import 'package:moodscape/features/activity/presentation/activity_screen.dart';
 import 'package:moodscape/features/recommendations/application/recommendations_controller.dart';
 import 'package:moodscape/features/recommendations/data/track_source.dart';
 import 'package:moodscape/features/recommendations/domain/match_scorer.dart';
@@ -57,7 +57,7 @@ class _Source implements TrackSource {
 final _screens = <String, (String, Widget)>{
   'welcome': (AppRoutes.welcome, const WelcomeScreen()),
   'privacy': (AppRoutes.privacy, const PrivacyScreen()),
-  'reading': (AppRoutes.reading, const ReadingScreen()),
+  'activity': (AppRoutes.activity, const ActivityScreen()),
   'capture': (AppRoutes.capture, const CaptureScreen()),
   'mood': (AppRoutes.mood, const MoodScreen()),
   'preferences': (AppRoutes.preferences, const PreferencesScreen()),

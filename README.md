@@ -1,8 +1,9 @@
 # MoodScape
 
-MoodScape makes **playlists to read along to**: music that fits **what you
-are reading**, **how you feel** and **what's around you**. You choose what you
-are reading (a story, studying, comics, poetry, articles), can take a photo of
+MoodScape makes **playlists for every moment**: music that fits **what you
+are doing**, **how you feel** and **what's around you**. You choose an activity
+(gym, running, party, tidying up, driving, commuting, cooking, chilling,
+working, studying, reading, falling asleep), can take a photo of
 your surroundings (optional), say how you feel, and set your listening
 preferences. MoodScape then ranks songs with a transparent
 match score and explains each match. Songs open in Spotify or Apple Music and
@@ -292,7 +293,7 @@ belong on a server. The server contracts are in [docs/backend.md](docs/backend.m
 ## 4. How it works
 
 ### Flow
-Welcome → Reading → Capture (optional) → Mood → Preferences (skippable) → Platform
+Welcome → Activity → Capture (optional) → Mood → Preferences (skippable) → Platform
 (skippable) → Atmosphere analysis → Results → Track details. Settings and
 Privacy are reachable from Welcome and Results.
 
@@ -320,10 +321,11 @@ matchScore = moodMatch·0.40 + atmosphereMatch·0.25 + preferenceMatch·0.20 + e
   checks the track's metadata supports are used.
 - **Energy:** distance from the requested relaxing (25), balanced (50) or
   energetic (80) target. With no requested energy, the energy that suits
-  the reading is used (poetry 15, studying 25, a story 30, something else 35,
-  articles 40, comics 55).
-- **Reading:** except for comics, songs without lyrics are favoured (lyrics
-  compete with the words on the page). This counts as a preference check
+  the activity is used (falling asleep 10, studying and reading 25, chilling
+  30, working 40, something else 45, commuting and cooking 55, driving 65,
+  tidying up 75, running 85, gym and party 90).
+- **Activity:** for working, studying, reading and falling asleep, songs
+  without lyrics are favoured (words in the music compete for attention). This counts as a preference check
   unless the user picked a vocals preference or song languages themselves.
 - **Languages:** choosing song languages is a filter: only songs sung in
   those languages are shown (songs whose language a service does not

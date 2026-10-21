@@ -8,7 +8,7 @@ import '../../mood/application/mood_controller.dart';
 import '../../music_platform/application/apple_music_providers.dart';
 import '../../music_platform/application/platform_providers.dart';
 import '../../preferences/application/preferences_controller.dart';
-import '../../reading/application/reading_controller.dart';
+import '../../activity/application/activity_controller.dart';
 import '../data/demo_track_source.dart';
 import '../data/track_source.dart';
 import '../domain/match_scorer.dart';
@@ -59,7 +59,7 @@ final matchContextProvider = Provider<MatchContext>((ref) {
     mood: ref.watch(moodControllerProvider),
     preferences: ref.watch(musicPreferencesProvider),
     scene: analysis is AnalysisDone ? analysis.outcome.features : null,
-    reading: ref.watch(readingProvider),
+    activity: ref.watch(activityProvider),
   );
 });
 

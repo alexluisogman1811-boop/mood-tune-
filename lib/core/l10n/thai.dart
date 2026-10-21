@@ -4,13 +4,13 @@
 /// test/unit/translations_test.dart checks that every text the UI passes
 /// for translation has an entry here.
 const thaiStrings = <String, String>{
-  // ---- Welcome and reading ----------------------------------------------
-  'Music for reading that matches your mood and surroundings.':
-      'เพลงสำหรับอ่านหนังสือ ที่เข้ากับอารมณ์และสิ่งรอบตัวของคุณ',
-  'Tell us what you are reading': 'บอกเราว่าคุณกำลังอ่านอะไร',
+  // ---- Welcome and activity ---------------------------------------------
+  'Music for every moment: what you do, how you feel and where you are.':
+      'เพลงสำหรับทุกช่วงเวลา ตามสิ่งที่คุณทำ ความรู้สึก และสถานที่ที่คุณอยู่',
+  'Tell us what you are doing': 'บอกเราว่าคุณกำลังทำอะไร',
   'Snap your surroundings (optional)': 'ถ่ายรูปสิ่งรอบตัว (ไม่บังคับ)',
   'Tell us how you feel': 'บอกเราว่าคุณรู้สึกอย่างไร',
-  'Get a playlist to read along to': 'รับเพลย์ลิสต์ไว้ฟังระหว่างอ่าน',
+  'Get a playlist for the moment': 'รับเพลย์ลิสต์ที่เหมาะกับตอนนี้',
   'Photos describe the scene, not you. Nothing is uploaded without your '
           'consent, and you can always continue without a photo.':
       'รูปภาพใช้บอกเล่าฉาก ไม่ใช่ตัวคุณ ไม่มีการอัปโหลดใด ๆ โดยไม่ได้รับ'
@@ -19,35 +19,56 @@ const thaiStrings = <String, String>{
   'How we handle your photos': 'เราจัดการรูปภาพของคุณอย่างไร',
   'MoodScape logo': 'โลโก้ MoodScape',
   'Settings': 'การตั้งค่า',
-  'Your reading': 'การอ่านของคุณ',
-  'What are you reading?': 'คุณกำลังอ่านอะไรอยู่?',
-  'MoodScape picks music to read along to, so it helps instead of '
-          'distracting you.':
-      'MoodScape เลือกเพลงไว้ฟังระหว่างอ่าน ให้ช่วยให้อ่านได้ดีขึ้น '
-      'ไม่ใช่ทำให้เสียสมาธิ',
-  'A story or novel': 'เรื่องสั้นหรือนิยาย',
-  'Gentle background music that lets the story lead.':
-      'เพลงเบา ๆ คลอเป็นพื้นหลัง ให้เรื่องราวเป็นตัวนำ',
-  'good for reading a story': 'เหมาะกับการอ่านนิยาย',
+  'Your activity': 'กิจกรรมของคุณ',
+  'What are you doing?': 'ตอนนี้คุณกำลังทำอะไร?',
+  'MoodScape picks music that fits the moment, together with your photo and '
+          'how you feel.':
+      'MoodScape เลือกเพลงให้เข้ากับช่วงเวลานี้ ร่วมกับรูปถ่ายและความรู้สึก'
+      'ของคุณ',
+  'Exercise or gym': 'ออกกำลังกาย / ยิม',
+  'Strong, fast music to keep you moving.':
+      'เพลงหนักแน่นและเร็ว ให้คุณขยับต่อไป',
+  'pumps you up for a workout': 'ปลุกพลังให้ออกกำลังกาย',
+  'Running': 'วิ่ง',
+  'A steady, quick beat to run to.': 'จังหวะเร็วและสม่ำเสมอสำหรับวิ่ง',
+  'keeps your running pace': 'ช่วยรักษาจังหวะการวิ่ง',
+  'Party': 'ปาร์ตี้',
+  'Big, danceable songs.': 'เพลงสนุก ๆ ที่ชวนเต้น',
+  'gets the party going': 'ทำให้ปาร์ตี้สนุกขึ้น',
+  'Tidying up': 'ทำความสะอาด / จัดห้อง',
+  'Upbeat songs that make chores go faster.':
+      'เพลงสดใส ทำให้งานบ้านเสร็จไวขึ้น',
+  'makes tidying up more fun': 'ทำให้การจัดห้องสนุกขึ้น',
+  'Driving': 'ขับรถ',
+  'Songs to sing along to on the road.': 'เพลงไว้ร้องตามระหว่างขับรถ',
+  'is great for the road': 'เหมาะกับการเดินทางบนถนน',
+  'Commuting': 'เดินทาง',
+  'Easy songs for the bus or train.': 'เพลงฟังสบายบนรถเมล์หรือรถไฟฟ้า',
+  'makes the trip go by': 'ทำให้การเดินทางผ่านไปไว',
+  'Cooking': 'ทำอาหาร',
+  'Warm, happy music for the kitchen.': 'เพลงอบอุ่นสดใสสำหรับในครัว',
+  'is nice to cook to': 'ฟังเพลินระหว่างทำอาหาร',
+  'Chilling': 'ชิล ๆ พักผ่อน',
+  'Relaxed songs to unwind.': 'เพลงสบาย ๆ ไว้ผ่อนคลาย',
+  'helps you unwind': 'ช่วยให้ผ่อนคลาย',
+  'Working': 'ทำงาน',
+  'Steady music without lyrics to stay focused.':
+      'เพลงบรรเลงจังหวะสม่ำเสมอ ช่วยให้มีสมาธิ',
+  'helps you focus on work': 'ช่วยให้มีสมาธิกับงาน',
   'Studying': 'อ่านหนังสือเรียน',
-  'Calm, steady music without lyrics to help you focus.':
-      'เพลงบรรเลงที่สงบและสม่ำเสมอ ช่วยให้มีสมาธิ',
+  'Calm music without lyrics to help you focus.':
+      'เพลงบรรเลงที่สงบ ช่วยให้มีสมาธิ',
   'helps you focus while studying': 'ช่วยให้มีสมาธิขณะอ่านหนังสือเรียน',
-  'Comics or manga': 'การ์ตูนหรือมังงะ',
-  'Livelier music; lyrics are fine with pictures.':
-      'เพลงที่มีชีวิตชีวาขึ้น มีเนื้อร้องได้เพราะอ่านจากภาพ',
-  'has the pace for comics': 'มีจังหวะเหมาะกับการอ่านการ์ตูน',
-  'Poetry': 'บทกวี',
-  'Quiet, slow music that leaves room for every line.':
-      'เพลงช้าและเงียบ ให้ทุกบรรทัดได้มีที่ว่าง',
-  'is quiet enough for poetry': 'เงียบพอสำหรับการอ่านบทกวี',
-  'News or articles': 'ข่าวหรือบทความ',
-  'Light, even music for quick reading.':
-      'เพลงเบา ๆ จังหวะสม่ำเสมอ สำหรับการอ่านเร็ว',
-  'keeps an even pace for articles': 'มีจังหวะสม่ำเสมอเหมาะกับการอ่านบทความ',
+  'Reading': 'อ่านหนังสือ',
+  'Gentle background music that lets the words lead.':
+      'เพลงเบา ๆ คลอเป็นพื้นหลัง ให้ตัวหนังสือเป็นตัวนำ',
+  'is good for reading': 'เหมาะกับการอ่านหนังสือ',
+  'Falling asleep': 'ก่อนนอน',
+  'Very quiet, slow music to drift off.': 'เพลงเงียบและช้ามาก ช่วยให้หลับง่าย',
+  'is quiet enough to fall asleep to': 'เงียบพอที่จะฟังก่อนนอน',
   'Something else': 'อย่างอื่น',
-  'Easy music to read along to.': 'เพลงฟังสบาย ไว้ฟังระหว่างอ่าน',
-  'is easy to read along to': 'ฟังสบายระหว่างอ่าน',
+  'Easy music for any moment.': 'เพลงฟังสบายสำหรับทุกช่วงเวลา',
+  'fits the moment': 'เข้ากับช่วงเวลานี้',
   'Continue': 'ต่อไป',
 
   // ---- Privacy ----------------------------------------------------------

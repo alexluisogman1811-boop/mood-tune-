@@ -4,7 +4,7 @@ import '../../../core/l10n/translate.dart';
 import '../../../services/image_analysis/scene_features.dart';
 import '../../mood/domain/mood.dart';
 import '../../preferences/domain/music_preferences.dart';
-import '../../reading/domain/reading.dart';
+import '../../activity/domain/activity.dart';
 import 'track.dart';
 
 /// The four parts of a match score.
@@ -46,15 +46,15 @@ class MatchContext {
     required this.mood,
     required this.preferences,
     this.scene,
-    this.reading,
+    this.activity,
   });
 
   final MoodInput mood;
   final MusicPreferences preferences;
   final SceneFeatures? scene;
 
-  /// What the user is reading; null when they did not say.
-  final ReadingKind? reading;
+  /// What the user is doing; null when they did not say.
+  final Activity? activity;
 }
 
 class TrackMatch {
@@ -95,7 +95,7 @@ enum ReasonKind {
   sceneEnergy,
   genre,
   preferences,
-  reading,
+  activity,
   energy,
 }
 
@@ -128,9 +128,9 @@ class MatchScorer {
       MatchComponent.preference: ?preferenceMatch(
         track,
         ctx.preferences,
-        ctx.reading,
+        ctx.activity,
       ),
-      MatchComponent.energy: ?energyMatch(track, ctx.preferences, ctx.reading),
+      MatchComponent.energy: ?energyMatch(track, ctx.preferences, ctx.activity),
     };
     final applied = normalizedWeights(components.keys, weights);
     final total = applied.isEmpty
@@ -230,23 +230,23 @@ class MatchScorer {
 
   /// Average of the taste checks that apply. Null when the user set no
   /// taste preferences or the track lacks the metadata to check them.
-  /// Reading that prefers no lyrics counts as a taste check unless the user
+  /// An activity that prefers no lyrics counts as a taste check unless the user
   /// chose a vocal preference or song languages themselves.
   static double? preferenceMatch(
     Track t,
     MusicPreferences p, [
-    ReadingKind? reading,
+    Activity? activity,
   ]) {
-    final readingCheck =
-        reading != null &&
-        reading.preferInstrumental &&
+    final activityCheck =
+        activity != null &&
+        activity.preferInstrumental &&
         p.vocal == VocalPreference.any &&
         p.languages.isEmpty &&
         t.isInstrumental != null;
-    if (!p.hasTastePreferences && !readingCheck) return null;
+    if (!p.hasTastePreferences && !activityCheck) return null;
     final parts = <double>[
-      // Lyrics are not ruled out, just less suited to reading.
-      if (readingCheck) t.isInstrumental! ? 100 : 30,
+      // Lyrics are not ruled out, just less suited to focused tasks.
+      if (activityCheck) t.isInstrumental! ? 100 : 30,
       if (p.genres.isNotEmpty && t.genres.isNotEmpty)
         p.genres.intersection(t.genres).isNotEmpty ? 100 : 0,
       if (p.languages.isNotEmpty &&
@@ -265,13 +265,13 @@ class MatchScorer {
   }
 
   /// Closeness to the energy the user asked for or, failing that, the
-  /// energy that suits what they are reading.
+  /// energy that suits what they are doing.
   static double? energyMatch(
     Track t,
     MusicPreferences p, [
-    ReadingKind? reading,
+    Activity? activity,
   ]) {
-    final target = p.energy?.target ?? reading?.targetEnergy;
+    final target = p.energy?.target ?? activity?.targetEnergy;
     final e = t.energy;
     if (target == null || e == null) return null;
     return 100 - (target - e).abs().toDouble();
@@ -319,9 +319,9 @@ class MatchScorer {
       );
     }
 
-    final reading = ctx.reading;
+    final activity = ctx.activity;
     final prefs = ctx.preferences;
-    var readingFits = false;
+    var activityFits = false;
     if (strong(MatchComponent.preference)) {
       final liked = [
         for (final g in Genre.values)
@@ -332,7 +332,7 @@ class MatchScorer {
       } else if (prefs.hasTastePreferences) {
         reasons.add(const MatchReason(ReasonKind.preferences));
       } else {
-        readingFits = reading != null; // only the reading check applied
+        activityFits = activity != null; // only the activity check applied
       }
     }
 
@@ -341,11 +341,11 @@ class MatchScorer {
       if (energyPref != null) {
         reasons.add(MatchReason(ReasonKind.energy, [energyPref.label]));
       } else {
-        readingFits = reading != null;
+        activityFits = activity != null;
       }
     }
-    if (readingFits) {
-      reasons.add(MatchReason(ReasonKind.reading, [reading!.reason]));
+    if (activityFits) {
+      reasons.add(MatchReason(ReasonKind.activity, [activity!.reason]));
     }
     return reasons;
   }
@@ -371,7 +371,7 @@ class MatchScorer {
             ReasonKind.sceneEnergy => 'เข้ากับพลังของสิ่งรอบตัวคุณ',
             ReasonKind.genre => 'เป็นแนว${tr(r.items.first)}ตามที่คุณต้องการ',
             ReasonKind.preferences => 'ตรงกับความชอบในการฟังของคุณ',
-            ReasonKind.reading => tr(r.items.first),
+            ReasonKind.activity => tr(r.items.first),
             ReasonKind.energy => 'มีพลังแบบ${tr(r.items.first)}ที่คุณต้องการ',
           },
       ];
@@ -387,7 +387,7 @@ class MatchScorer {
           ReasonKind.sceneEnergy => 'matches the energy of your surroundings',
           ReasonKind.genre => 'is ${r.items.first} like you asked for',
           ReasonKind.preferences => 'lines up with your listening preferences',
-          ReasonKind.reading => r.items.first,
+          ReasonKind.activity => r.items.first,
           ReasonKind.energy =>
             'has the ${r.items.first.toLowerCase()} energy you wanted',
         },

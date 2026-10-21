@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:moodscape/features/activity/domain/activity.dart';
 import 'package:moodscape/features/mood/domain/mood.dart';
 import 'package:moodscape/features/preferences/domain/music_preferences.dart';
-import 'package:moodscape/features/reading/domain/reading.dart';
 import 'package:moodscape/features/recommendations/domain/match_scorer.dart';
 import 'package:moodscape/features/recommendations/domain/track.dart';
 
@@ -16,49 +16,72 @@ Track _track(String id, {required int energy, bool? instrumental}) => Track(
 );
 
 MatchContext _ctx({
-  ReadingKind? reading,
+  Activity? activity,
   MusicPreferences preferences = const MusicPreferences(),
 }) => MatchContext(
   mood: const MoodInput(moods: {Mood.calm}),
   preferences: preferences,
-  reading: reading,
+  activity: activity,
 );
 
 const _scorer = MatchScorer();
 
 void main() {
-  group('reading', () {
-    test('every kind has a sensible energy target', () {
-      for (final k in ReadingKind.values) {
-        expect(k.targetEnergy, inInclusiveRange(0, 100), reason: k.name);
+  group('activity', () {
+    test('every activity has a sensible energy target', () {
+      for (final a in Activity.values) {
+        expect(a.targetEnergy, inInclusiveRange(0, 100), reason: a.name);
       }
     });
 
-    test('without reading, scores are unchanged', () {
+    test('lively activities aim higher than quiet ones', () {
+      expect(
+        Activity.exercise.targetEnergy,
+        greaterThan(Activity.chilling.targetEnergy),
+      );
+      expect(
+        Activity.party.targetEnergy,
+        greaterThan(Activity.sleeping.targetEnergy),
+      );
+    });
+
+    test('without an activity, scores are unchanged', () {
       final t = _track('t', energy: 20, instrumental: true);
       expect(MatchScorer.energyMatch(t, const MusicPreferences()), isNull);
       expect(MatchScorer.preferenceMatch(t, const MusicPreferences()), isNull);
     });
 
-    test('reading sets the energy target when the user set none', () {
-      final t = _track('t', energy: 15);
+    test('the activity sets the energy target when the user set none', () {
       expect(
         MatchScorer.energyMatch(
-          t,
+          _track('t', energy: 90),
           const MusicPreferences(),
-          ReadingKind.poetry,
+          Activity.exercise,
         ),
         100,
       );
     });
 
-    test("the user's own energy choice wins over reading", () {
-      final t = _track('t', energy: 80);
+    test('the gym ranks a high-energy song above a quiet one', () {
+      final ctx = _ctx(activity: Activity.exercise);
+      expect(
+        _scorer
+            .score(_track('loud', energy: 90), ctx)
+            .components[MatchComponent.energy],
+        greaterThan(
+          _scorer
+              .score(_track('quiet', energy: 15), ctx)
+              .components[MatchComponent.energy]!,
+        ),
+      );
+    });
+
+    test("the user's own energy choice wins over the activity", () {
       expect(
         MatchScorer.energyMatch(
-          t,
-          const MusicPreferences(energy: EnergyPreference.energetic),
-          ReadingKind.poetry,
+          _track('t', energy: 25),
+          const MusicPreferences(energy: EnergyPreference.relaxing),
+          Activity.exercise,
         ),
         100,
       );
@@ -67,44 +90,42 @@ void main() {
     test('studying favours songs without lyrics', () {
       final instrumental = _track('i', energy: 25, instrumental: true);
       final vocal = _track('v', energy: 25, instrumental: false);
-      final ctx = _ctx(reading: ReadingKind.study);
+      final ctx = _ctx(activity: Activity.studying);
       expect(
         _scorer.score(instrumental, ctx).score,
         greaterThan(_scorer.score(vocal, ctx).score),
       );
     });
 
-    test('comics do not penalise lyrics', () {
-      final vocal = _track('v', energy: 55, instrumental: false);
+    test('driving does not penalise lyrics', () {
       expect(
         MatchScorer.preferenceMatch(
-          vocal,
+          _track('v', energy: 65, instrumental: false),
           const MusicPreferences(),
-          ReadingKind.comics,
+          Activity.driving,
         ),
         isNull,
       );
     });
 
-    test('a chosen vocal preference is not overridden by reading', () {
-      final vocal = _track('v', energy: 30, instrumental: false);
+    test('chosen song languages switch off the no-lyrics preference', () {
       expect(
         MatchScorer.preferenceMatch(
-          vocal,
-          const MusicPreferences(vocal: VocalPreference.vocal),
-          ReadingKind.study,
+          _track('v', energy: 25, instrumental: false),
+          const MusicPreferences(languages: {MusicLanguage.thai}),
+          Activity.studying,
         ),
-        100,
+        isNot(30),
       );
     });
 
-    test('the explanation mentions the reading', () {
+    test('the explanation mentions the activity', () {
       final m = _scorer.score(
-        _track('t', energy: 30, instrumental: true),
-        _ctx(reading: ReadingKind.story),
+        _track('t', energy: 85),
+        _ctx(activity: Activity.running),
       );
-      expect(m.explanation, contains('good for reading a story'));
-      expect(m.explanationIn('th'), contains('เหมาะกับการอ่านนิยาย'));
+      expect(m.explanation.toLowerCase(), contains('keeps your running pace'));
+      expect(m.explanationIn('th'), contains('ช่วยรักษาจังหวะการวิ่ง'));
     });
   });
 

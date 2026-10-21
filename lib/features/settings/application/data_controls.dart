@@ -9,7 +9,7 @@ import '../../mood/application/mood_controller.dart';
 import '../../music_platform/application/apple_music_providers.dart';
 import '../../music_platform/application/platform_providers.dart';
 import '../../preferences/application/preferences_controller.dart';
-import '../../reading/application/reading_controller.dart';
+import '../../activity/application/activity_controller.dart';
 import '../../recommendations/application/disliked_tracks.dart';
 import '../../recommendations/application/playlist_controller.dart';
 import '../../recommendations/application/recommendations_controller.dart';
@@ -32,7 +32,7 @@ class DataControls {
     _ref.read(capturedPhotoProvider.notifier).clear();
     _ref.read(analysisControllerProvider.notifier).reset();
     _ref.read(moodControllerProvider.notifier).reset();
-    _ref.read(readingProvider.notifier).reset();
+    _ref.read(activityProvider.notifier).reset();
 
     // Re-read everything from the now-empty storage.
     _ref

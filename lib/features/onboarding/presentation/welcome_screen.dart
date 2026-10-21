@@ -12,10 +12,10 @@ class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
   static const _steps = [
-    (Icons.menu_book_outlined, 'Tell us what you are reading'),
+    (Icons.directions_run, 'Tell us what you are doing'),
     (Icons.photo_camera_outlined, 'Snap your surroundings (optional)'),
     (Icons.favorite_outline, 'Tell us how you feel'),
-    (Icons.queue_music_outlined, 'Get a playlist to read along to'),
+    (Icons.queue_music_outlined, 'Get a playlist for the moment'),
   ];
 
   @override
@@ -51,8 +51,8 @@ class WelcomeScreen extends StatelessWidget {
                     const SizedBox(height: 8),
                     Text(
                       context.tr(
-                        'Music for reading that matches your mood and '
-                        'surroundings.',
+                        'Music for every moment: what you do, how you '
+                        'feel and where you are.',
                       ),
                       style: theme.textTheme.titleMedium?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
@@ -103,7 +103,7 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 32),
                     FilledButton(
-                      onPressed: () => context.push(AppRoutes.reading),
+                      onPressed: () => context.push(AppRoutes.activity),
                       child: Text(context.tr('Get Started')),
                     ),
                     const SizedBox(height: 8),

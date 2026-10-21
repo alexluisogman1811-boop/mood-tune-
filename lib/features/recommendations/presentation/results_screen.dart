@@ -227,7 +227,7 @@ class _ContextSummary extends StatelessWidget {
           ].take(3).join(', ');
     final parts = [
       moods.isEmpty ? context.tr('no mood set') : moods.join(', '),
-      if (ctx.reading case final reading?) context.tr(reading.label),
+      if (ctx.activity case final activity?) context.tr(activity.label),
       if (sceneText.isNotEmpty) sceneText,
     ];
     return Row(

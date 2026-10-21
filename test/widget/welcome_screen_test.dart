@@ -53,23 +53,21 @@ void main() {
     expect(find.text('Uploads need consent'), findsOneWidget);
   });
 
-  testWidgets('Get Started asks what the user is reading first', (
-    tester,
-  ) async {
+  testWidgets('Get Started asks what the user is doing first', (tester) async {
     await pumpApp(tester);
 
     await tester.ensureVisible(find.text('Get Started'));
     await tester.tap(find.text('Get Started'));
     await tester.pumpAndSettle();
 
-    expect(find.text('What are you reading?'), findsOneWidget);
-    // Continue stays off until a kind of reading is chosen.
+    expect(find.text('What are you doing?'), findsOneWidget);
+    // Continue stays off until an activity is chosen.
     final continueButton = find.widgetWithText(FilledButton, 'Continue');
     await _scrollTo(tester, continueButton);
     expect(tester.widget<FilledButton>(continueButton).onPressed, isNull);
 
-    await _scrollTo(tester, find.text('Poetry'));
-    await tester.tap(find.text('Poetry'));
+    await _scrollTo(tester, find.text('Exercise or gym'));
+    await tester.tap(find.text('Exercise or gym'));
     await tester.pumpAndSettle();
     await _scrollTo(tester, continueButton);
     await tester.tap(continueButton);
@@ -86,7 +84,7 @@ void main() {
     await tester.ensureVisible(find.text('Get Started'));
     await tester.tap(find.text('Get Started'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('A story or novel'));
+    await tester.tap(find.text('Driving'));
     await tester.pumpAndSettle();
     await _scrollTo(tester, find.text('Continue'));
     await tester.tap(find.text('Continue'));
