@@ -36,13 +36,18 @@ class _CaptureScreenState extends ConsumerState<CaptureScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    // Free plan: photo analysis is Premium, so don't even start the camera.
-    if (ref.read(entitlementsProvider).canUsePhoto) {
-      _initCamera();
-    } else {
-      _initializing = false;
-    }
+    _initializing = false;
+    // Free plan: photo analysis is Premium, so the camera only starts once
+    // the plan is known to allow it (the account may still be loading).
+    ref.listenManual(entitlementsProvider, (_, next) {
+      if (next.canUsePhoto && !_cameraStarted) {
+        _cameraStarted = true;
+        _initCamera();
+      }
+    }, fireImmediately: true);
   }
+
+  bool _cameraStarted = false;
 
   @override
   void dispose() {

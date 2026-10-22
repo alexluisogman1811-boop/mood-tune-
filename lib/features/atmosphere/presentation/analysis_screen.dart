@@ -87,6 +87,9 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(analysisControllerProvider);
+    // Keep the account loaded while this screen is open: unwatched data is
+    // paused, and "See my music" needs it to count today's playlists.
+    ref.watch(accountProvider);
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(title: Text(context.tr('Your atmosphere'))),

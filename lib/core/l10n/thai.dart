@@ -674,4 +674,8 @@ const thaiStrings = <String, String>{
       'พรีเมียมจะอ่านแสง สี และสภาพอากาศรอบตัว เพื่อเลือกเพลงให้ตรงขึ้น '
       'คุณยังทำต่อได้ด้วยกิจกรรมและความรู้สึก',
   '20 and 30 songs are Premium.': 'เพลย์ลิสต์ 20 และ 30 เพลงเป็นของพรีเมียม',
+  'Message us on LINE for payment details: PromptPay, bank transfer or '
+          'PayPal.':
+      'ทักไลน์มาเพื่อรับข้อมูลการชำระเงิน: พร้อมเพย์ โอนผ่านธนาคาร หรือ PayPal',
+  'LINE ID: {id}': 'LINE ID: {id}',
 };

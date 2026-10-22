@@ -64,17 +64,21 @@ final entitlementsProvider = Provider<Entitlements>((ref) {
 
 /// Uses one of today's playlists. Returns false when a Free user has none
 /// left, so the caller can show the upgrade screen instead.
+///
+/// Waits for the sign-in and the account record to load first: reading
+/// them before they arrive would look like "no playlists left".
 final playlistUsageProvider = Provider<Future<bool> Function()>((ref) {
   return () async {
-    final entitlements = ref.read(entitlementsProvider);
-    if (!entitlements.accountsEnabled) return true;
-    if (!entitlements.canMakePlaylist) return false;
-    final account = ref.read(accountProvider).value;
+    if (!ref.read(accountsEnabledProvider)) return true;
     final repo = ref.read(accountRepositoryProvider);
-    if (account == null || repo == null) return false;
-    if (!entitlements.premium) {
-      await repo.recordPlaylist(account, ref.read(clockProvider)());
-    }
+    final user = await ref.read(authUserProvider.future);
+    if (repo == null || user == null) return false;
+    final account = await ref.read(accountProvider.future);
+    if (account == null) return false;
+    final now = ref.read(clockProvider)();
+    if (account.isPremium(now)) return true;
+    if ((account.playlistsLeft(now) ?? 0) <= 0) return false;
+    await repo.recordPlaylist(account, now);
     return true;
   };
 });

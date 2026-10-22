@@ -130,9 +130,12 @@ class RecommendationsController extends AsyncNotifier<Recommendations> {
           .rank(
             _candidates,
             ctx,
-            limit: ref
-                .read(entitlementsProvider)
-                .maxPlaylistLength(ctx.preferences.playlistLength),
+            // Only Premium changes the length; usage counts must not reload.
+            limit: ref.watch(entitlementsProvider.select((e) => e.premium))
+                ? ctx.preferences.playlistLength
+                : ref
+                      .read(entitlementsProvider)
+                      .maxPlaylistLength(ctx.preferences.playlistLength),
             // Read, not watch: dislikes update the list in place below.
             exclude: ref.read(dislikedTracksProvider),
           ),

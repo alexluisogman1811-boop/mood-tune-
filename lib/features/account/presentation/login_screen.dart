@@ -157,6 +157,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       TextFormField(
                         controller: _email,
                         keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
                         autofillHints: const [AutofillHints.email],
                         decoration: InputDecoration(
                           labelText: context.tr('Email'),
@@ -175,6 +176,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               ? AutofillHints.newPassword
                               : AutofillHints.password,
                         ],
+                        textInputAction: TextInputAction.done,
                         onFieldSubmitted: (_) => _submit(),
                         decoration: InputDecoration(
                           labelText: context.tr('Password'),

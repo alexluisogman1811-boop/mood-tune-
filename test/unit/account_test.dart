@@ -135,6 +135,25 @@ void main() {
       expect(repo.accountFor('user@example.com')!.usageCount, 3);
     });
 
+    test('works even before anything has loaded the account', () async {
+      // Regression: reading the plan before the account record arrived
+      // looked like "no playlists left" and sent new users to Upgrade.
+      final repo = FakeAccountRepository()..addUser('fresh@example.com');
+      await repo.signIn('fresh@example.com', 'secret1');
+      final c = ProviderContainer(
+        overrides: [
+          accountsEnabledProvider.overrideWithValue(true),
+          accountRepositoryProvider.overrideWithValue(repo),
+          clockProvider.overrideWithValue(() => _now),
+        ],
+      );
+      addTearDown(c.dispose);
+      // As on the analysis screen, which watches the account.
+      c.listen(accountProvider, (_, _) {});
+      expect(await c.read(playlistUsageProvider)(), isTrue);
+      expect(repo.accountFor('fresh@example.com')!.usageCount, 1);
+    });
+
     test('Premium users are never limited', () async {
       final (c, _) = await signedIn(Plan.monthly);
       final use = c.read(playlistUsageProvider);

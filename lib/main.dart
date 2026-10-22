@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,6 +33,12 @@ Future<void> main() async {
             : config.firebaseAuthDomain,
       ),
     );
+    // Test builds only: talk to the local Firebase emulators, not the real
+    // project (see tool/firestore_rules_test).
+    if (const bool.fromEnvironment('USE_FIREBASE_EMULATORS')) {
+      await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+      FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+    }
   }
 
   runApp(

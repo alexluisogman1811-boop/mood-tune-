@@ -19,6 +19,7 @@ class AppConfig {
     this.firebaseAuthDomain = '',
     this.adminEmails = '',
     this.paymentInfo = '',
+    this.lineId = '',
   });
 
   factory AppConfig.fromEnvironment() => const AppConfig(
@@ -39,6 +40,7 @@ class AppConfig {
     firebaseAuthDomain: String.fromEnvironment('FIREBASE_AUTH_DOMAIN'),
     adminEmails: String.fromEnvironment('ADMIN_EMAILS'),
     paymentInfo: String.fromEnvironment('PAYMENT_INFO'),
+    lineId: String.fromEnvironment('LINE_ID'),
   );
 
   final String spotifyClientId;
@@ -66,6 +68,9 @@ class AppConfig {
 
   /// How to pay, shown on the upgrade screen (e.g. PromptPay number).
   final String paymentInfo;
+
+  /// LINE ID where buyers send payment slips and ask for payment details.
+  final String lineId;
 
   bool get hasSpotify =>
       spotifyClientId.isNotEmpty && spotifyRedirectUri.isNotEmpty;

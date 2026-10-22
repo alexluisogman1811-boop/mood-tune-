@@ -23,7 +23,9 @@ class UpgradeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final email = ref.watch(authUserProvider).value?.email ?? '';
-    final paymentInfo = ref.watch(appConfigProvider).paymentInfo;
+    final config = ref.watch(appConfigProvider);
+    final paymentInfo = config.paymentInfo;
+    final lineId = config.lineId;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -76,11 +78,31 @@ class UpgradeScreen extends ConsumerWidget {
                       Text(
                         paymentInfo.isNotEmpty
                             ? paymentInfo
+                            : lineId.isNotEmpty
+                            ? context.tr(
+                                'Message us on LINE for payment details: '
+                                'PromptPay, bank transfer or PayPal.',
+                              )
                             : context.tr(
                                 'Payment details are not set up in this '
                                 'build yet.',
                               ),
                       ),
+                      if (lineId.isNotEmpty) ...[
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            const Icon(Icons.chat_outlined),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: SelectableText(
+                                context.tr('LINE ID: {id}', {'id': lineId}),
+                                style: theme.textTheme.titleMedium,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                       const SizedBox(height: 12),
                       Text(
                         context.tr(

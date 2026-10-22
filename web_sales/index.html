@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MoodScape Premium</title>
+<meta name="description" content="MoodScape builds a playlist for your mood, your activity and the place you are in. ฟังเพลงที่เข้ากับอารมณ์และบรรยากาศของคุณ">
+<meta property="og:title" content="MoodScape — music that fits your moment">
+<meta property="og:description" content="Free: 3 playlists a day. Premium from $4.99 (≈179 ฿).">
+<meta property="og:image" content="../icons/Icon-512.png">
+<link rel="icon" href="../favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --night: #0e0c1a; --dusk: #1b1730; --plum: #2a1f3d;
+    --seed: #7c6cf2; --glow: #b6a8ff; --text: #f2efff; --muted: #b9b3d6;
+    --card: rgba(255,255,255,.05); --line: rgba(182,168,255,.18);
+    --line-green: #06c755;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; color: var(--text); background: var(--night);
+    font-family: "Plus Jakarta Sans", "Noto Sans Thai", system-ui, sans-serif;
+    line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  html[lang="th"] body { font-family: "Noto Sans Thai", "Plus Jakarta Sans", system-ui, sans-serif; }
+  a { color: var(--glow); }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+
+  /* Header */
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(14,12,26,.8); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .bar { display: flex; align-items: center; gap: 16px; height: 64px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.15rem; color: var(--text); text-decoration: none; }
+  .brand img { width: 32px; height: 32px; border-radius: 8px; }
+  nav { margin-left: auto; display: flex; gap: 20px; align-items: center; }
+  nav a.link { color: var(--muted); text-decoration: none; font-size: .95rem; }
+  nav a.link:hover { color: var(--text); }
+  .lang {
+    background: var(--card); color: var(--text); border: 1px solid var(--line);
+    border-radius: 999px; padding: 6px 14px; font: inherit; font-size: .9rem; cursor: pointer;
+  }
+  @media (max-width: 720px) { nav a.link { display: none; } }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 14px 24px; border-radius: 999px; font-weight: 700; text-decoration: none;
+    border: 1px solid transparent; transition: transform .15s, box-shadow .15s; font-size: 1rem;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-primary { background: var(--glow); color: #1a1433; box-shadow: 0 8px 30px rgba(182,168,255,.35); }
+  .btn-ghost { border-color: var(--line); color: var(--text); background: var(--card); }
+  .btn-line { background: var(--line-green); color: #fff; }
+
+  /* Hero */
+  .hero {
+    background:
+      radial-gradient(60% 60% at 80% 20%, rgba(124,108,242,.35), transparent 70%),
+      radial-gradient(50% 50% at 10% 80%, rgba(182,168,255,.15), transparent 70%),
+      linear-gradient(180deg, var(--night), var(--dusk) 60%, var(--plum));
+    padding: 72px 0 88px; overflow: hidden;
+  }
+  .hero .wrap { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; }
+  @media (max-width: 860px) { .hero .wrap { grid-template-columns: 1fr; } }
+  .pill {
+    display: inline-block; padding: 6px 14px; border-radius: 999px; font-size: .85rem;
+    background: rgba(182,168,255,.12); color: var(--glow); border: 1px solid var(--line); margin-bottom: 18px;
+  }
+  h1 { font-size: clamp(2.2rem, 5.5vw, 3.6rem); line-height: 1.12; margin: 0 0 18px; letter-spacing: -.02em; }
+  h1 em { font-style: normal; background: linear-gradient(90deg, var(--glow), #ffb3e6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lead { color: var(--muted); font-size: 1.15rem; max-width: 34em; margin: 0 0 28px; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+  .trust { margin-top: 22px; color: var(--muted); font-size: .9rem; display: flex; flex-wrap: wrap; gap: 18px; }
+  .trust span::before { content: "✓ "; color: var(--glow); }
+
+  /* Phone mock */
+  .phone {
+    width: min(300px, 80vw); margin: 0 auto; aspect-ratio: 9/18.5; border-radius: 40px;
+    background: linear-gradient(180deg, #17132a, #241b38); border: 8px solid #2c2547;
+    box-shadow: 0 30px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.06), 0 0 120px rgba(124,108,242,.3);
+    padding: 26px 16px; display: flex; flex-direction: column; gap: 10px; position: relative;
+    animation: float 6s ease-in-out infinite;
+  }
+  @keyframes float { 50% { transform: translateY(-10px); } }
+  @media (prefers-reduced-motion: reduce) { .phone { animation: none; } .btn:hover { transform: none; } }
+  .phone .mood { font-size: .75rem; color: var(--muted); }
+  .phone .title { font-weight: 800; font-size: 1.1rem; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip { font-size: .68rem; padding: 3px 9px; border-radius: 999px; background: rgba(182,168,255,.14); color: var(--glow); }
+  .song { display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 12px; background: rgba(255,255,255,.04); }
+  .art { width: 36px; height: 36px; border-radius: 8px; flex: none; }
+  .song b { display: block; font-size: .8rem; }
+  .song small { color: var(--muted); font-size: .7rem; }
+  .match { margin-left: auto; font-size: .7rem; color: var(--glow); font-weight: 700; }
+  .eq { display: flex; gap: 3px; align-items: end; height: 22px; margin-top: auto; justify-content: center; }
+  .eq i { width: 4px; background: var(--glow); border-radius: 2px; animation: eq 1s ease-in-out infinite; }
+  .eq i:nth-child(2) { animation-delay: .2s } .eq i:nth-child(3) { animation-delay: .4s } .eq i:nth-child(4) { animation-delay: .1s } .eq i:nth-child(5) { animation-delay: .3s }
+  @keyframes eq { 0%,100% { height: 6px } 50% { height: 22px } }
+
+  /* Sections */
+  section { padding: 80px 0; }
+  .alt { background: var(--dusk); }
+  h2 { font-size: clamp(1.7rem, 3.5vw, 2.4rem); margin: 0 0 12px; letter-spacing: -.01em; }
+  .sub { color: var(--muted); margin: 0 0 40px; max-width: 40em; }
+  .center { text-align: center; } .center .sub { margin-left: auto; margin-right: auto; }
+
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 860px) { .steps, .features { grid-template-columns: 1fr; } }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 24px; }
+  .num {
+    width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center;
+    background: rgba(182,168,255,.15); color: var(--glow); font-weight: 800; margin-bottom: 14px; font-size: 1.2rem;
+  }
+  .card h3 { margin: 0 0 6px; font-size: 1.1rem; }
+  .card p { margin: 0; color: var(--muted); font-size: .95rem; }
+
+  /* Pricing */
+  .plans { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; align-items: stretch; }
+  @media (max-width: 960px) { .plans { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .plans { grid-template-columns: 1fr; } }
+  .plan { display: flex; flex-direction: column; position: relative; }
+  .plan.best { border: 2px solid var(--glow); background: rgba(182,168,255,.08); box-shadow: 0 10px 40px rgba(124,108,242,.25); }
+  .badge {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%); white-space: nowrap;
+    background: var(--glow); color: #1a1433; font-size: .75rem; font-weight: 800; padding: 4px 12px; border-radius: 999px;
+  }
+  .plan h3 { font-size: 1rem; color: var(--muted); font-weight: 600; margin-bottom: 10px; }
+  .price { font-size: 2.2rem; font-weight: 800; line-height: 1; }
+  .thb { color: var(--glow); font-weight: 700; margin: 6px 0 2px; }
+  .per { color: var(--muted); font-size: .85rem; min-height: 1.4em; }
+  .plan ul { list-style: none; padding: 0; margin: 18px 0 22px; font-size: .92rem; flex: 1; }
+  .plan li { padding: 5px 0 5px 24px; position: relative; }
+  .plan li::before { content: "✓"; position: absolute; left: 0; color: var(--glow); font-weight: 800; }
+  .plan li.no { color: var(--muted); }
+  .plan li.no::before { content: "–"; color: var(--muted); }
+  .plan .btn { width: 100%; padding: 12px; }
+  .note { color: var(--muted); font-size: .85rem; text-align: center; margin-top: 18px; }
+
+  /* Compare table */
+  .tablewrap { overflow-x: auto; margin-top: 40px; }
+  table { width: 100%; border-collapse: collapse; min-width: 480px; }
+  th, td { padding: 12px 14px; text-align: center; border-bottom: 1px solid var(--line); font-size: .95rem; }
+  th:first-child, td:first-child { text-align: left; }
+  thead th { color: var(--glow); }
+
+  /* Buy */
+  .buy { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 860px) { .buy { grid-template-columns: 1fr; } }
+  ol.howto { margin: 0; padding: 0; list-style: none; counter-reset: s; }
+  ol.howto li { counter-increment: s; padding: 0 0 18px 48px; position: relative; }
+  ol.howto li::before {
+    content: counter(s); position: absolute; left: 0; top: 0; width: 32px; height: 32px; border-radius: 10px;
+    background: rgba(182,168,255,.15); color: var(--glow); font-weight: 800; display: grid; place-items: center;
+  }
+  ol.howto b { display: block; }
+  ol.howto span { color: var(--muted); font-size: .95rem; }
+  .lineid { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 16px 0; }
+  .lineid code { font-size: 1.4rem; font-weight: 800; color: var(--text); background: rgba(6,199,85,.12); border: 1px solid rgba(6,199,85,.4); padding: 6px 14px; border-radius: 12px; font-family: inherit; }
+  .copy { background: none; border: 1px solid var(--line); color: var(--text); border-radius: 999px; padding: 6px 14px; cursor: pointer; font: inherit; font-size: .85rem; }
+  .pay { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .pay span { font-size: .85rem; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+
+  /* FAQ */
+  details { border-bottom: 1px solid var(--line); padding: 16px 0; }
+  summary { cursor: pointer; font-weight: 700; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+  summary::after { content: "+"; color: var(--glow); font-size: 1.3rem; line-height: 1; }
+  details[open] summary::after { content: "–"; }
+  details p { color: var(--muted); margin: 10px 0 0; }
+
+  .final {
+    text-align: center; padding: 80px 0;
+    background: radial-gradient(60% 80% at 50% 0%, rgba(124,108,242,.35), transparent 70%), var(--night);
+  }
+  footer { border-top: 1px solid var(--line); padding: 28px 0; color: var(--muted); font-size: .85rem; }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; }
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px);
+    background: var(--glow); color: #1a1433; padding: 10px 18px; border-radius: 999px; font-weight: 700;
+    transition: transform .25s; z-index: 20;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <a class="brand" href="#top"><img src="../icons/Icon-192.png" alt="">MoodScape</a>
+    <nav>
+      <a class="link" href="#how" data-t="nav_how"></a>
+      <a class="link" href="#pricing" data-t="nav_pricing"></a>
+      <a class="link" href="#buy" data-t="nav_buy"></a>
+      <button class="lang" id="lang" type="button" aria-label="Switch language">English</button>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="wrap">
+      <div>
+        <span class="pill" data-t="pill"></span>
+        <h1 data-t="h1" data-html></h1>
+        <p class="lead" data-t="lead"></p>
+        <div class="cta">
+          <a class="btn btn-primary" href="../" data-t="try"></a>
+          <a class="btn btn-ghost" href="#pricing" data-t="see_plans"></a>
+        </div>
+        <div class="trust">
+          <span data-t="t1"></span><span data-t="t2"></span><span data-t="t3"></span>
+        </div>
+      </div>
+      <div class="phone" aria-hidden="true">
+        <div class="mood" data-t="mock_for"></div>
+        <div class="title" data-t="mock_title"></div>
+        <div class="chips"><span class="chip" data-t="mock_c1"></span><span class="chip" data-t="mock_c2"></span><span class="chip" data-t="mock_c3"></span></div>
+        <div class="song"><div class="art" style="background:linear-gradient(135deg,#7c6cf2,#ffb3e6)"></div><div><b>Golden Hour</b><small>JVKE</small></div><span class="match">96%</span></div>
+        <div class="song"><div class="art" style="background:linear-gradient(135deg,#ffb36b,#ff6b9a)"></div><div><b>Sunset Lover</b><small>Petit Biscuit</small></div><span class="match">93%</span></div>
+        <div class="song"><div class="art" style="background:linear-gradient(135deg,#4fd1c5,#7c6cf2)"></div><div><b>ทางของฝุ่น</b><small>Atom ชนกันต์</small></div><span class="match">90%</span></div>
+        <div class="song"><div class="art" style="background:linear-gradient(135deg,#b6a8ff,#2a1f3d)"></div><div><b>Sweater Weather</b><small>The Neighbourhood</small></div><span class="match">88%</span></div>
+        <div class="eq"><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+    </div>
+  </div>
+
+  <section id="how">
+    <div class="wrap">
+      <h2 data-t="how_h"></h2>
+      <p class="sub" data-t="how_sub"></p>
+      <div class="steps">
+        <div class="card"><div class="num">1</div><h3 data-t="s1h"></h3><p data-t="s1p"></p></div>
+        <div class="card"><div class="num">2</div><h3 data-t="s2h"></h3><p data-t="s2p"></p></div>
+        <div class="card"><div class="num">3</div><h3 data-t="s3h"></h3><p data-t="s3p"></p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt">
+    <div class="wrap">
+      <h2 data-t="feat_h"></h2>
+      <p class="sub" data-t="feat_sub"></p>
+      <div class="features">
+        <div class="card"><div class="num">🎧</div><h3 data-t="f1h"></h3><p data-t="f1p"></p></div>
+        <div class="card"><div class="num">📷</div><h3 data-t="f2h"></h3><p data-t="f2p"></p></div>
+        <div class="card"><div class="num">🇹🇭</div><h3 data-t="f3h"></h3><p data-t="f3p"></p></div>
+        <div class="card"><div class="num">📚</div><h3 data-t="f4h"></h3><p data-t="f4p"></p></div>
+        <div class="card"><div class="num">🔒</div><h3 data-t="f5h"></h3><p data-t="f5p"></p></div>
+        <div class="card"><div class="num">📱</div><h3 data-t="f6h"></h3><p data-t="f6p"></p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <div class="wrap">
+      <div class="center">
+        <h2 data-t="price_h"></h2>
+        <p class="sub" data-t="price_sub"></p>
+      </div>
+      <div class="plans">
+        <div class="card plan">
+          <h3 data-t="free"></h3>
+          <div class="price">$0</div>
+          <div class="thb">0 ฿</div>
+          <div class="per" data-t="forever"></div>
+          <ul>
+            <li data-t="pf1"></li><li data-t="pf2"></li>
+            <li class="no" data-t="pf3"></li><li class="no" data-t="pf4"></li>
+          </ul>
+          <a class="btn btn-ghost" href="../" data-t="start_free"></a>
+        </div>
+        <div class="card plan">
+          <h3 data-t="monthly"></h3>
+          <div class="price">$4.99</div>
+          <div class="thb">≈ 179 ฿</div>
+          <div class="per" data-t="per_month"></div>
+          <ul><li data-t="pp1"></li><li data-t="pp2"></li><li data-t="pp3"></li><li data-t="pm4"></li></ul>
+          <a class="btn btn-ghost" href="#buy" data-plan="monthly" data-t="choose"></a>
+        </div>
+        <div class="card plan best">
+          <span class="badge" data-t="best"></span>
+          <h3 data-t="yearly"></h3>
+          <div class="price">$39.99</div>
+          <div class="thb">≈ 1,390 ฿</div>
+          <div class="per" data-t="per_year"></div>
+          <ul><li data-t="pp1"></li><li data-t="pp2"></li><li data-t="pp3"></li><li data-t="py4"></li></ul>
+          <a class="btn btn-primary" href="#buy" data-plan="yearly" data-t="choose"></a>
+        </div>
+        <div class="card plan">
+          <h3 data-t="lifetime"></h3>
+          <div class="price">$49.99</div>
+          <div class="thb">≈ 1,790 ฿</div>
+          <div class="per" data-t="once"></div>
+          <ul><li data-t="pp1"></li><li data-t="pp2"></li><li data-t="pp3"></li><li data-t="pl4"></li></ul>
+          <a class="btn btn-ghost" href="#buy" data-plan="lifetime" data-t="choose"></a>
+        </div>
+      </div>
+      <p class="note" data-t="thb_note"></p>
+
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th></th><th data-t="free"></th><th>Premium</th></tr></thead>
+          <tbody>
+            <tr><td data-t="r1"></td><td>3</td><td data-t="unlimited"></td></tr>
+            <tr><td data-t="r2"></td><td>10</td><td>10 / 20 / 30</td></tr>
+            <tr><td data-t="r3"></td><td>–</td><td>✓</td></tr>
+            <tr><td data-t="r4"></td><td>✓</td><td>✓</td></tr>
+            <tr><td data-t="r5"></td><td>✓</td><td>✓</td></tr>
+            <tr><td data-t="r6"></td><td>✓</td><td>✓</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="buy" class="alt">
+    <div class="wrap">
+      <h2 data-t="buy_h"></h2>
+      <p class="sub" data-t="buy_sub"></p>
+      <div class="buy">
+        <div class="card">
+          <ol class="howto">
+            <li><b data-t="b1h"></b><span data-t="b1p"></span></li>
+            <li><b data-t="b2h"></b><span data-t="b2p"></span></li>
+            <li><b data-t="b3h"></b><span data-t="b3p"></span></li>
+            <li><b data-t="b4h"></b><span data-t="b4p"></span></li>
+          </ol>
+        </div>
+        <div class="card">
+          <h3 data-t="line_h"></h3>
+          <p class="sub" style="margin:0" data-t="line_p"></p>
+          <div class="lineid">
+            <code id="lineid">company181113</code>
+            <button class="copy" type="button" id="copyline" data-t="copy"></button>
+          </div>
+          <a class="btn btn-line" id="linebtn" href="https://line.me/R/ti/p/~company181113" target="_blank" rel="noopener" data-t="open_line"></a>
+          <p style="margin:20px 0 4px;font-weight:700" data-t="we_accept"></p>
+          <div class="pay"><span>PromptPay</span><span data-t="bank"></span><span>TrueMoney</span><span>PayPal</span></div>
+          <p class="note" style="text-align:left" id="chosen"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap" style="max-width:780px">
+      <h2 data-t="faq_h"></h2>
+      <details><summary data-t="q1"></summary><p data-t="a1"></p></details>
+      <details><summary data-t="q2"></summary><p data-t="a2"></p></details>
+      <details><summary data-t="q3"></summary><p data-t="a3"></p></details>
+      <details><summary data-t="q4"></summary><p data-t="a4"></p></details>
+      <details><summary data-t="q5"></summary><p data-t="a5"></p></details>
+      <details><summary data-t="q6"></summary><p data-t="a6"></p></details>
+    </div>
+  </section>
+
+  <div class="final">
+    <div class="wrap">
+      <h2 data-t="final_h"></h2>
+      <p class="sub" style="margin:0 auto 28px" data-t="final_p"></p>
+      <div class="cta" style="justify-content:center">
+        <a class="btn btn-primary" href="../" data-t="open_web"></a>
+        <a class="btn btn-ghost" href="../MoodScape.apk" data-t="get_apk"></a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 MoodScape</span>
+    <span><a href="../#/privacy" data-t="privacy"></a> · LINE: company181113</span>
+  </div>
+</footer>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const T = {
+  en: {
+    nav_how: "How it works", nav_pricing: "Pricing", nav_buy: "How to buy",
+    pill: "🎵 Free to start · no card needed",
+    h1: "Music that fits <em>your moment</em>",
+    lead: "Tell MoodScape how you feel and what you're doing — or snap the sky, the room, the street — and get a playlist that matches in seconds.",
+    try: "Try it free", see_plans: "See plans",
+    t1: "3 free playlists every day", t2: "Thai + English songs", t3: "Photos never leave your phone",
+    mock_for: "For: reading · calm · rainy evening", mock_title: "Soft Rain Focus",
+    mock_c1: "Calm", mock_c2: "Warm light", mock_c3: "Thai + English",
+    how_h: "How it works", how_sub: "Three taps from \"I don't know what to listen to\" to the right playlist.",
+    s1h: "Pick your mood and activity", s1p: "Reading, working out, studying, relaxing… plus how you feel right now.",
+    s2h: "Snap your surroundings (Premium)", s2p: "MoodScape reads the light, colour and weather of the scene — never faces.",
+    s3h: "Get your playlist", s3p: "Each song shows a match score and why it fits. Open it in Spotify or YouTube.",
+    feat_h: "Made for how you really listen", feat_sub: "Built from 1,700+ analysed songs, matched by energy, tempo, mood and language.",
+    f1h: "Smart matching", f1p: "Energy, tempo and mood are scored against your moment, not just a genre.",
+    f2h: "Photo atmosphere", f2p: "Sunny, dark, rainy, neon — the scene around you shapes the music.",
+    f3h: "Thai & English", f3p: "Thai-only, English-only or mixed. The whole app speaks Thai too.",
+    f4h: "Activity modes", f4p: "Reading, exercise, study, sleep, party — each with its own sound.",
+    f5h: "Private by design", f5p: "Photos are analysed on your phone. We store only your email and plan.",
+    f6h: "Phone or web", f6p: "Android app or straight in the browser on any phone or computer.",
+    price_h: "Simple pricing", price_sub: "Start free. Upgrade when you want more.",
+    free: "Free", monthly: "Monthly", yearly: "Yearly", lifetime: "Lifetime",
+    forever: "forever", per_month: "per month", per_year: "per year · ≈ $3.33 / month", once: "pay once, keep forever",
+    pf1: "3 playlists a day", pf2: "10 songs per playlist", pf3: "Photo analysis", pf4: "20 / 30-song playlists",
+    pp1: "Unlimited playlists", pp2: "Photo analysis", pp3: "Playlists of 20 or 30 songs",
+    pm4: "30 days of Premium", py4: "Save 33% vs monthly", pl4: "All future updates",
+    best: "Best value", choose: "Choose", start_free: "Start free",
+    thb_note: "Baht prices are approximate (≈ 36 ฿ per $). Pay in baht or dollars — whichever is easier.",
+    r1: "Playlists per day", r2: "Songs per playlist", r3: "Photo analysis", r4: "Mood + activity matching", r5: "Thai / English songs", r6: "Feedback & support",
+    unlimited: "Unlimited",
+    buy_h: "How to buy Premium", buy_sub: "Payment is handled personally over LINE, so you can pay in the way that suits you.",
+    b1h: "Create a free account", b1p: "Open the app and sign up with your email. Confirm the email we send you.",
+    b2h: "Message us on LINE", b2p: "Tell us the plan you want. We'll reply with PromptPay / bank / PayPal details.",
+    b3h: "Pay and send the slip", b3p: "Send the payment slip together with your account email.",
+    b4h: "Premium switches on", b4p: "Usually within a day. Reopen the app to see your new plan.",
+    line_h: "Our LINE", line_p: "Add us as a friend and send a message:",
+    copy: "Copy", open_line: "Open LINE", we_accept: "We accept", bank: "Bank transfer",
+    copied: "Copied!", chosen: "You chose: {p}. Mention it in your LINE message.",
+    faq_h: "Questions",
+    q1: "Do I need to pay to try it?", a1: "No. Every account gets 3 playlists a day for free, forever. No card needed.",
+    q2: "How long does activation take?", a2: "Usually within a day after we receive your slip. Monthly and Yearly start from the day they are activated.",
+    q3: "What happens when Monthly or Yearly ends?", a3: "Your account goes back to Free. Nothing is deleted. Renew any time and the new period is added on top of any time you still have.",
+    q4: "Does it play the music itself?", a4: "MoodScape picks the songs and explains why. You listen in Spotify, YouTube or your favourite player.",
+    q5: "What about my photos?", a5: "Photos are analysed for light, colour and weather and are not uploaded or stored. You can delete your account any time from the Account page.",
+    q6: "Can I get a refund?", a6: "If Premium doesn't work for you, message us on LINE within 7 days of paying and we'll sort it out.",
+    final_h: "Ready to hear your moment?", final_p: "Start free in your browser or install the Android app.",
+    open_web: "Open MoodScape", get_apk: "Download Android app", privacy: "Privacy"
+  },
+  th: {
+    nav_how: "ใช้งานยังไง", nav_pricing: "ราคา", nav_buy: "วิธีซื้อ",
+    pill: "🎵 เริ่มใช้ฟรี · ไม่ต้องใช้บัตร",
+    h1: "เพลงที่ใช่ <em>ในทุกช่วงเวลา</em>",
+    lead: "บอก MoodScape ว่าคุณรู้สึกยังไงและกำลังทำอะไร หรือถ่ายรูปท้องฟ้า ห้อง ถนนรอบตัว แล้วรับเพลย์ลิสต์ที่เข้ากับคุณในไม่กี่วินาที",
+    try: "ลองใช้ฟรี", see_plans: "ดูแพ็กเกจ",
+    t1: "ฟรีวันละ 3 เพลย์ลิสต์", t2: "เพลงไทย + สากล", t3: "รูปไม่ออกจากมือถือคุณ",
+    mock_for: "สำหรับ: อ่านหนังสือ · สงบ · ค่ำวันฝนตก", mock_title: "Soft Rain Focus",
+    mock_c1: "สงบ", mock_c2: "แสงอุ่น", mock_c3: "ไทย + สากล",
+    how_h: "ใช้งานยังไง", how_sub: "แตะแค่ 3 ครั้ง จาก \"ไม่รู้จะฟังอะไร\" สู่เพลย์ลิสต์ที่ใช่",
+    s1h: "เลือกอารมณ์และกิจกรรม", s1p: "อ่านหนังสือ ออกกำลังกาย ติวหนังสือ พักผ่อน… และความรู้สึกตอนนี้",
+    s2h: "ถ่ายรูปบรรยากาศ (Premium)", s2p: "MoodScape อ่านแสง สี และสภาพอากาศของภาพ ไม่ดูใบหน้าคน",
+    s3h: "รับเพลย์ลิสต์", s3p: "ทุกเพลงมีคะแนนความเข้ากันและเหตุผล เปิดฟังใน Spotify หรือ YouTube ได้เลย",
+    feat_h: "ออกแบบมาให้เข้ากับการฟังจริงของคุณ", feat_sub: "วิเคราะห์จากเพลงกว่า 1,700 เพลง จับคู่ด้วยพลังงาน จังหวะ อารมณ์ และภาษา",
+    f1h: "จับคู่อัจฉริยะ", f1p: "ให้คะแนนพลังงาน จังหวะ และอารมณ์ของเพลงเทียบกับช่วงเวลาของคุณ ไม่ใช่แค่แนวเพลง",
+    f2h: "อ่านบรรยากาศจากรูป", f2p: "แดดจ้า มืด ฝนตก แสงนีออน บรรยากาศรอบตัวกำหนดเพลงให้คุณ",
+    f3h: "ไทยและสากล", f3p: "เลือกเพลงไทยล้วน สากลล้วน หรือผสม และแอปใช้ภาษาไทยได้ทั้งหมด",
+    f4h: "โหมดกิจกรรม", f4p: "อ่านหนังสือ ออกกำลังกาย ติว นอนหลับ ปาร์ตี้ แต่ละโหมดมีเสียงของตัวเอง",
+    f5h: "ปลอดภัยเป็นส่วนตัว", f5p: "รูปถูกวิเคราะห์ในมือถือคุณ เราเก็บแค่อีเมลและแพ็กเกจ",
+    f6h: "มือถือหรือเว็บ", f6p: "แอป Android หรือเปิดในเบราว์เซอร์ได้ทุกเครื่อง",
+    price_h: "ราคาเรียบง่าย", price_sub: "เริ่มฟรี อัปเกรดเมื่อต้องการมากขึ้น",
+    free: "ฟรี", monthly: "รายเดือน", yearly: "รายปี", lifetime: "ตลอดชีพ",
+    forever: "ตลอดไป", per_month: "ต่อเดือน", per_year: "ต่อปี · ตกเดือนละ ≈ 116 ฿", once: "จ่ายครั้งเดียว ใช้ได้ตลอด",
+    pf1: "วันละ 3 เพลย์ลิสต์", pf2: "เพลย์ลิสต์ละ 10 เพลง", pf3: "วิเคราะห์จากรูป", pf4: "เพลย์ลิสต์ 20 / 30 เพลง",
+    pp1: "เพลย์ลิสต์ไม่จำกัด", pp2: "วิเคราะห์จากรูป", pp3: "เพลย์ลิสต์ 20 หรือ 30 เพลง",
+    pm4: "Premium 30 วัน", py4: "ประหยัด 33% เทียบรายเดือน", pl4: "ได้อัปเดตในอนาคตทั้งหมด",
+    best: "คุ้มที่สุด", choose: "เลือกแพ็กเกจนี้", start_free: "เริ่มฟรี",
+    thb_note: "ราคาเงินบาทเป็นราคาโดยประมาณ (≈ 36 ฿ ต่อ $) จ่ายเป็นบาทหรือดอลลาร์ก็ได้",
+    r1: "เพลย์ลิสต์ต่อวัน", r2: "จำนวนเพลงต่อเพลย์ลิสต์", r3: "วิเคราะห์จากรูป", r4: "จับคู่ตามอารมณ์ + กิจกรรม", r5: "เพลงไทย / สากล", r6: "ส่งความคิดเห็นและการช่วยเหลือ",
+    unlimited: "ไม่จำกัด",
+    buy_h: "วิธีซื้อ Premium", buy_sub: "ชำระเงินผ่าน LINE กับเราโดยตรง เลือกช่องทางที่สะดวกได้เลย",
+    b1h: "สมัครบัญชีฟรี", b1p: "เปิดแอปแล้วสมัครด้วยอีเมล จากนั้นกดยืนยันในอีเมลที่เราส่งไป",
+    b2h: "ทักเราทาง LINE", b2p: "บอกแพ็กเกจที่ต้องการ เราจะส่งเลขพร้อมเพย์ / บัญชีธนาคาร / PayPal ให้",
+    b3h: "โอนเงินและส่งสลิป", b3p: "ส่งสลิปพร้อมอีเมลที่ใช้สมัครบัญชี",
+    b4h: "เปิดใช้ Premium", b4p: "ปกติภายใน 1 วัน เปิดแอปใหม่เพื่อดูแพ็กเกจของคุณ",
+    line_h: "LINE ของเรา", line_p: "เพิ่มเพื่อนแล้วทักมาได้เลย:",
+    copy: "คัดลอก", open_line: "เปิด LINE", we_accept: "ช่องทางชำระเงิน", bank: "โอนผ่านธนาคาร",
+    copied: "คัดลอกแล้ว!", chosen: "คุณเลือก: {p} บอกชื่อแพ็กเกจนี้ในข้อความ LINE ได้เลย",
+    faq_h: "คำถามที่พบบ่อย",
+    q1: "ต้องจ่ายเงินก่อนลองไหม?", a1: "ไม่ต้อง ทุกบัญชีใช้ฟรีได้วันละ 3 เพลย์ลิสต์ตลอดไป ไม่ต้องใช้บัตร",
+    q2: "เปิดใช้งานนานแค่ไหน?", a2: "ปกติภายใน 1 วันหลังได้รับสลิป แพ็กเกจรายเดือนและรายปีเริ่มนับจากวันที่เปิดใช้",
+    q3: "หมดอายุรายเดือน/รายปีแล้วเป็นยังไง?", a3: "บัญชีกลับเป็นแบบฟรี ไม่มีอะไรถูกลบ ต่ออายุได้ทุกเมื่อ และเวลาที่เหลืออยู่จะถูกบวกเพิ่มให้",
+    q4: "แอปเล่นเพลงเองไหม?", a4: "MoodScape เลือกเพลงและอธิบายว่าทำไมถึงเข้ากัน คุณฟังผ่าน Spotify, YouTube หรือแอปที่ชอบ",
+    q5: "รูปของฉันปลอดภัยไหม?", a5: "รูปถูกวิเคราะห์แค่แสง สี และสภาพอากาศ ไม่ถูกอัปโหลดหรือเก็บไว้ และลบบัญชีได้ทุกเมื่อในหน้าบัญชี",
+    q6: "ขอคืนเงินได้ไหม?", a6: "ถ้า Premium ไม่ตอบโจทย์ ทักเราทาง LINE ภายใน 7 วันหลังชำระเงิน แล้วเราจะช่วยดูให้",
+    final_h: "พร้อมฟังเพลงของช่วงเวลานี้หรือยัง?", final_p: "เริ่มฟรีในเบราว์เซอร์ หรือติดตั้งแอป Android",
+    open_web: "เปิด MoodScape", get_apk: "ดาวน์โหลดแอป Android", privacy: "ความเป็นส่วนตัว"
+  }
+};
+
+let lang = (navigator.language || "").startsWith("th") ? "th" : "en";
+try { lang = localStorage.getItem("ms-lang") || lang; } catch (e) {}
+let chosenPlan = null;
+
+function apply() {
+  const d = T[lang];
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-t]").forEach(el => {
+    const v = d[el.dataset.t];
+    if (v == null) return;
+    if (el.hasAttribute("data-html")) el.innerHTML = v; else el.textContent = v;
+  });
+  document.getElementById("lang").textContent = lang === "th" ? "English" : "ไทย";
+  const c = document.getElementById("chosen");
+  c.textContent = chosenPlan ? d.chosen.replace("{p}", d[chosenPlan]) : "";
+}
+
+document.getElementById("lang").addEventListener("click", () => {
+  lang = lang === "th" ? "en" : "th";
+  try { localStorage.setItem("ms-lang", lang); } catch (e) {}
+  apply();
+});
+
+document.querySelectorAll("[data-plan]").forEach(a => a.addEventListener("click", () => {
+  chosenPlan = a.dataset.plan; apply();
+}));
+
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 1600);
+}
+document.getElementById("copyline").addEventListener("click", async () => {
+  try { await navigator.clipboard.writeText("company181113"); toast(T[lang].copied); }
+  catch (e) {
+    const r = document.createRange(); r.selectNodeContents(document.getElementById("lineid"));
+    const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+  }
+});
+
+apply();
+</script>
+</body>
+</html>

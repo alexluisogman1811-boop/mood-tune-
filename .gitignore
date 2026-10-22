@@ -50,3 +50,6 @@ app.*.map.json
 # Local build-time configuration (may contain client IDs)
 config/*.json
 !config/*.example.json
+
+# Node tooling
+node_modules/
