@@ -349,6 +349,14 @@ with `{name}` placeholders. Match explanations are stored as data
 entry or a placeholder differs, and the accessibility tests run every screen
 in Thai too.
 
+### Feedback
+After a day of use the results screen invites people to rate the app
+(Settings › Feedback always works). Answers are anonymous and go to a Google
+Sheet through a free Apps Script web app that also serves a password-protected
+admin dashboard; see `tool/feedback_backend/README.md`. Release builds pass
+the web app URL with `--dart-define-from-file=config/prod.json`
+(`{"FEEDBACK_URL": "https://script.google.com/macros/s/…/exec"}`, not committed).
+
 ### "Not for me"
 Every song has a 👎 **Not for me** button, on its card and on the details
 screen. Tapping it:

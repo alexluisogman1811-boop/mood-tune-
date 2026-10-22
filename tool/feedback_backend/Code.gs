@@ -10,6 +10,11 @@
 // CHANGE THIS before deploying. Anyone with the password can see feedback.
 const ADMIN_PASSWORD = 'change-me';
 
+// Leave empty when the script was created from the sheet (Extensions › Apps
+// Script). For a separate script, paste the sheet's id from its URL:
+// docs.google.com/spreadsheets/d/<THIS PART>/edit
+const SHEET_ID = '';
+
 const SHEET_NAME = 'Feedback';
 const HEADERS = [
   'Time', 'Overall', 'Songs fit', 'Easy to use', 'Recommend',
@@ -27,8 +32,14 @@ const IMPROVE_LABELS = {
 };
 const RECOMMEND_LABELS = { yes: 'แนะนำ', maybe: 'อาจจะ', no: 'ไม่แนะนำ' };
 
+function spreadsheet_() {
+  return SHEET_ID
+    ? SpreadsheetApp.openById(SHEET_ID)
+    : SpreadsheetApp.getActiveSpreadsheet();
+}
+
 function sheet_() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss = spreadsheet_();
   let sh = ss.getSheetByName(SHEET_NAME);
   if (!sh) {
     sh = ss.insertSheet(SHEET_NAME);
@@ -175,7 +186,7 @@ function dashboard_() {
   return `${STYLE}<main>
   <h1>MoodScape · แดชบอร์ดความคิดเห็น</h1>
   <p class="muted">อัปเดตเมื่อเปิดหน้านี้ · ข้อมูลไม่ระบุตัวตน ·
-    <a style="color:#B6A8FF" href="${SpreadsheetApp.getActiveSpreadsheet().getUrl()}"
+    <a style="color:#B6A8FF" href="${spreadsheet_().getUrl()}"
     target="_blank">เปิด Google Sheet</a></p>
   <div class="grid">
     <div class="card"><h2>คำตอบทั้งหมด</h2><div class="big">${total}</div>
