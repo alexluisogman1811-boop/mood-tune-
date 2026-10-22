@@ -571,4 +571,107 @@ const thaiStrings = <String, String>{
   'New analysis': 'วิเคราะห์ใหม่',
   'Start again with a new activity, photo and mood':
       'เริ่มใหม่ด้วยกิจกรรม รูปถ่าย และความรู้สึกใหม่',
+
+  // ---- Accounts and plans -----------------------------------------------
+  'Sign in to continue': 'ลงชื่อเข้าใช้เพื่อดำเนินการต่อ',
+  'Create your free account': 'สร้างบัญชีฟรีของคุณ',
+  'Email': 'อีเมล',
+  'Password': 'รหัสผ่าน',
+  'Show password': 'แสดงรหัสผ่าน',
+  'Hide password': 'ซ่อนรหัสผ่าน',
+  'Sign in': 'ลงชื่อเข้าใช้',
+  'Create account': 'สร้างบัญชี',
+  'Forgot password?': 'ลืมรหัสผ่าน?',
+  'I already have an account': 'ฉันมีบัญชีอยู่แล้ว',
+  'Create a new account': 'สร้างบัญชีใหม่',
+  'We store only your email, your plan and how many playlists you made '
+          'today. Photos never leave your phone. You can delete your account '
+          'at any time.':
+      'เราเก็บเฉพาะอีเมล แพ็กเกจ และจำนวนเพลย์ลิสต์ที่คุณสร้างวันนี้ '
+      'รูปภาพไม่ออกจากโทรศัพท์ของคุณ และคุณลบบัญชีได้ทุกเมื่อ',
+  'Account created. We sent you an email to confirm your address.':
+      'สร้างบัญชีแล้ว เราส่งอีเมลให้คุณยืนยันที่อยู่อีเมลแล้ว',
+  'Type your email first, then tap again.': 'พิมพ์อีเมลก่อน แล้วแตะอีกครั้ง',
+  'If that email has an account, a reset link is on its way.':
+      'ถ้าอีเมลนี้มีบัญชีอยู่ ลิงก์ตั้งรหัสผ่านใหม่กำลังส่งไป',
+  'That email address is not valid.': 'อีเมลนี้ไม่ถูกต้อง',
+  'Wrong email or password.': 'อีเมลหรือรหัสผ่านไม่ถูกต้อง',
+  'An account with this email already exists.': 'มีบัญชีที่ใช้อีเมลนี้อยู่แล้ว',
+  'Use a password of at least 6 characters.': 'ใช้รหัสผ่านอย่างน้อย 6 ตัวอักษร',
+  'Too many tries. Wait a moment and try again.':
+      'ลองหลายครั้งเกินไป รอสักครู่แล้วลองใหม่',
+  'For your safety, sign in again before deleting your account.':
+      'เพื่อความปลอดภัย กรุณาลงชื่อเข้าใช้อีกครั้งก่อนลบบัญชี',
+  'Could not reach the server. Try again.':
+      'ติดต่อเซิร์ฟเวอร์ไม่ได้ ลองอีกครั้ง',
+  'Something went wrong. Try again.': 'เกิดข้อผิดพลาด ลองอีกครั้ง',
+  'You are not allowed to do that.': 'คุณไม่มีสิทธิ์ทำสิ่งนี้',
+  'Your account': 'บัญชีของคุณ',
+  'Account': 'บัญชี',
+  'Plan, Premium, sign out': 'แพ็กเกจ พรีเมียม ออกจากระบบ',
+  'Email confirmed': 'ยืนยันอีเมลแล้ว',
+  'Email not confirmed yet': 'ยังไม่ได้ยืนยันอีเมล',
+  'Resend': 'ส่งอีกครั้ง',
+  'Renew or change plan': 'ต่ออายุหรือเปลี่ยนแพ็กเกจ',
+  'Upgrade to Premium': 'อัปเกรดเป็นพรีเมียม',
+  'Admin dashboard': 'แดชบอร์ดผู้ดูแล',
+  'Sign out': 'ออกจากระบบ',
+  'Delete account': 'ลบบัญชี',
+  'Delete your account?': 'ลบบัญชีของคุณไหม?',
+  'This permanently deletes your login and your plan. Paid time left is '
+          'lost. It cannot be undone.':
+      'การดำเนินการนี้จะลบบัญชีและแพ็กเกจของคุณถาวร เวลาพรีเมียมที่เหลือจะหายไป '
+      'และย้อนกลับไม่ได้',
+  'Plan: {plan}': 'แพ็กเกจ: {plan}',
+  'Your {plan} plan ended on {date}.': 'แพ็กเกจ{plan}ของคุณหมดอายุเมื่อ {date}',
+  'Premium forever.': 'พรีเมียมตลอดชีพ',
+  'Premium until {date}.': 'พรีเมียมถึงวันที่ {date}',
+  '{left} of {total} free playlists left today.':
+      'วันนี้เหลือเพลย์ลิสต์ฟรี {left} จาก {total}',
+  'Free': 'ฟรี',
+  'Monthly': 'รายเดือน',
+  'Yearly': 'รายปี',
+  'Lifetime': 'ตลอดชีพ',
+  'MoodScape Premium': 'MoodScape พรีเมียม',
+  'Unlock everything': 'ปลดล็อกทุกอย่าง',
+  'Unlimited playlists every day': 'สร้างเพลย์ลิสต์ได้ไม่จำกัดทุกวัน',
+  'Photo analysis of your surroundings': 'วิเคราะห์รูปถ่ายสิ่งรอบตัว',
+  'Playlists of 20 or 30 songs': 'เพลย์ลิสต์ 20 หรือ 30 เพลง',
+  'Free: {count} playlists a day, 10 songs, no photo.':
+      'ฟรี: {count} เพลย์ลิสต์ต่อวัน 10 เพลง ไม่มีการวิเคราะห์รูป',
+  'Premium for 30 days': 'พรีเมียม 30 วัน',
+  'Premium for 365 days · best value': 'พรีเมียม 365 วัน · คุ้มที่สุด',
+  'Pay once, Premium forever': 'จ่ายครั้งเดียว พรีเมียมตลอดชีพ',
+  'How to pay': 'วิธีชำระเงิน',
+  'Payment details are not set up in this build yet.':
+      'แอปรุ่นนี้ยังไม่ได้ตั้งค่าข้อมูลการชำระเงิน',
+  '1. Pay for the plan you want.\n2. Send the payment slip together with '
+          'your account email.\n3. Your plan is switched on, usually within a '
+          'day.':
+      '1. ชำระเงินตามแพ็กเกจที่ต้องการ\n2. ส่งสลิปพร้อมอีเมลบัญชีของคุณ\n'
+      '3. แพ็กเกจจะเปิดใช้งาน โดยปกติภายในหนึ่งวัน',
+  'Your account email': 'อีเมลบัญชีของคุณ',
+  'Copy email': 'คัดลอกอีเมล',
+  'Copied.': 'คัดลอกแล้ว',
+  'Give {plan} ({price})': 'ให้แพ็กเกจ{plan} ({price})',
+  'Set back to Free': 'เปลี่ยนกลับเป็นฟรี',
+  '{email} is now on {plan}.': '{email} ใช้แพ็กเกจ{plan}แล้ว',
+  'Could not load users. Only the admin account can see this page.':
+      'โหลดรายชื่อผู้ใช้ไม่ได้ หน้านี้ดูได้เฉพาะบัญชีผู้ดูแล',
+  'Users': 'ผู้ใช้',
+  'Premium now': 'พรีเมียมตอนนี้',
+  'Active today': 'ใช้งานวันนี้',
+  'Search by email': 'ค้นหาด้วยอีเมล',
+  'No users yet.': 'ยังไม่มีผู้ใช้',
+  'Expired': 'หมดอายุ',
+  'until {date}': 'ถึง {date}',
+  '{count} today': 'วันนี้ {count}',
+  'You have used your {count} free playlists today.':
+      'วันนี้คุณใช้เพลย์ลิสต์ฟรีครบ {count} รายการแล้ว',
+  'Photo analysis is a Premium feature': 'การวิเคราะห์รูปเป็นฟีเจอร์พรีเมียม',
+  'Premium reads the light, colour and weather around you to pick better '
+          'songs. You can still continue with your activity and mood.':
+      'พรีเมียมจะอ่านแสง สี และสภาพอากาศรอบตัว เพื่อเลือกเพลงให้ตรงขึ้น '
+      'คุณยังทำต่อได้ด้วยกิจกรรมและความรู้สึก',
+  '20 and 30 songs are Premium.': 'เพลย์ลิสต์ 20 และ 30 เพลงเป็นของพรีเมียม',
 };

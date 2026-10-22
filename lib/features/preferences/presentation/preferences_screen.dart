@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../app/router.dart';
+import '../../account/application/account_providers.dart';
+import '../../account/domain/account.dart';
 import '../../../core/l10n/l10n.dart';
 import '../../../shared/widgets/gradient_background.dart';
 import '../application/preferences_controller.dart';
@@ -32,6 +34,8 @@ class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final d = _draft;
+    final entitlements = ref.watch(entitlementsProvider);
+    final premium = entitlements.premium;
 
     Widget heading(String text, [String? hint]) => Padding(
       padding: const EdgeInsets.only(top: 24, bottom: 10),
@@ -121,11 +125,18 @@ class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
                 allowEmpty: true,
                 onChanged: (v) => _update(d.copyWith(energy: () => v)),
               ),
-              heading('Playlist length'),
+              heading(
+                'Playlist length',
+                premium ? null : '20 and 30 songs are Premium.',
+              ),
               _Segmented<int>(
                 values: MusicPreferences.playlistLengths,
                 label: (v) => context.tr('{count} songs', {'count': v}),
-                selected: d.playlistLength,
+                // Free playlists are capped, so show the length they get.
+                selected: premium
+                    ? d.playlistLength
+                    : entitlements.maxPlaylistLength(d.playlistLength),
+                enabled: (v) => premium || v <= FreeLimits.playlistLength,
                 onChanged: (v) => _update(d.copyWith(playlistLength: v)),
               ),
               const SizedBox(height: 12),
@@ -159,6 +170,7 @@ class _Segmented<T> extends StatelessWidget {
     required this.selected,
     required this.onChanged,
     this.allowEmpty = false,
+    this.enabled,
   });
 
   final List<T> values;
@@ -166,6 +178,9 @@ class _Segmented<T> extends StatelessWidget {
   final T? selected;
   final ValueChanged<T?> onChanged;
   final bool allowEmpty;
+
+  /// Null means every choice is available.
+  final bool Function(T)? enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -177,7 +192,11 @@ class _Segmented<T> extends StatelessWidget {
         emptySelectionAllowed: allowEmpty,
         segments: [
           for (final v in values)
-            ButtonSegment<T>(value: v, label: Text(label(v))),
+            ButtonSegment<T>(
+              value: v,
+              label: Text(label(v)),
+              enabled: enabled?.call(v) ?? true,
+            ),
         ],
         selected: {?current},
         onSelectionChanged: (s) => onChanged(s.isEmpty ? null : s.first),

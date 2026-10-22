@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../app/theme/app_theme.dart';
 import '../../../core/l10n/app_language.dart';
+import '../../account/application/account_providers.dart';
 import '../../../core/l10n/l10n.dart';
 import '../../../shared/widgets/gradient_background.dart';
 
@@ -39,6 +40,7 @@ class WelcomeScreen extends StatelessWidget {
                         const _Logo(),
                         const Spacer(),
                         const _LanguageButton(),
+                        const _AccountButton(),
                         IconButton(
                           tooltip: context.tr('Settings'),
                           onPressed: () => context.push(AppRoutes.settings),
@@ -120,6 +122,21 @@ class WelcomeScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Opens the account page; hidden when accounts are switched off.
+class _AccountButton extends ConsumerWidget {
+  const _AccountButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (!ref.watch(accountsEnabledProvider)) return const SizedBox.shrink();
+    return IconButton(
+      tooltip: context.tr('Your account'),
+      onPressed: () => context.push(AppRoutes.account),
+      icon: const Icon(Icons.account_circle_outlined),
     );
   }
 }
