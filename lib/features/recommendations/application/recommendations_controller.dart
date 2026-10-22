@@ -9,6 +9,7 @@ import '../../music_platform/application/apple_music_providers.dart';
 import '../../music_platform/application/platform_providers.dart';
 import '../../preferences/application/preferences_controller.dart';
 import '../../activity/application/activity_controller.dart';
+import '../../feedback/application/feedback_controller.dart';
 import '../data/demo_track_source.dart';
 import '../data/track_source.dart';
 import '../domain/match_scorer.dart';
@@ -120,6 +121,8 @@ class RecommendationsController extends AsyncNotifier<Recommendations> {
       source = ref.read(demoTrackSourceProvider);
       _candidates = await source.candidates(ctx);
     }
+    // Start the one-day clock for the feedback invitation.
+    await ref.read(feedbackPromptProvider.notifier).recordUse();
     return Recommendations(
       matches: ref
           .read(recommendationEngineProvider)

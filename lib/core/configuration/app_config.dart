@@ -8,6 +8,7 @@ class AppConfig {
     required this.spotifyRedirectUri,
     required this.analysisBackendUrl,
     required this.appleMusicDeveloperTokenUrl,
+    this.feedbackUrl = '',
   });
 
   factory AppConfig.fromEnvironment() => const AppConfig(
@@ -17,12 +18,16 @@ class AppConfig {
     appleMusicDeveloperTokenUrl: String.fromEnvironment(
       'APPLE_MUSIC_DEVELOPER_TOKEN_URL',
     ),
+    feedbackUrl: String.fromEnvironment('FEEDBACK_URL'),
   );
 
   final String spotifyClientId;
   final String spotifyRedirectUri;
   final String analysisBackendUrl;
   final String appleMusicDeveloperTokenUrl;
+
+  /// Google Apps Script web app that collects feedback (tool/feedback_backend).
+  final String feedbackUrl;
 
   bool get hasSpotify =>
       spotifyClientId.isNotEmpty && spotifyRedirectUri.isNotEmpty;
@@ -31,6 +36,8 @@ class AppConfig {
   bool get hasAnalysisBackend => _isHttps(analysisBackendUrl);
 
   bool get hasAppleMusicTokenService => _isHttps(appleMusicDeveloperTokenUrl);
+
+  bool get hasFeedbackBackend => _isHttps(feedbackUrl);
 
   static bool _isHttps(String url) {
     final uri = Uri.tryParse(url);

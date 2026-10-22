@@ -10,6 +10,7 @@ import 'package:moodscape/core/storage/storage_providers.dart';
 import 'package:moodscape/features/atmosphere/presentation/analysis_screen.dart';
 import 'package:moodscape/features/camera/application/camera_providers.dart';
 import 'package:moodscape/features/camera/presentation/capture_screen.dart';
+import 'package:moodscape/features/feedback/presentation/feedback_screen.dart';
 import 'package:moodscape/features/mood/application/mood_controller.dart';
 import 'package:moodscape/features/mood/domain/mood.dart';
 import 'package:moodscape/features/mood/presentation/mood_screen.dart';
@@ -58,6 +59,7 @@ final _screens = <String, (String, Widget)>{
   'welcome': (AppRoutes.welcome, const WelcomeScreen()),
   'privacy': (AppRoutes.privacy, const PrivacyScreen()),
   'activity': (AppRoutes.activity, const ActivityScreen()),
+  'feedback': (AppRoutes.feedback, const FeedbackScreen()),
   'capture': (AppRoutes.capture, const CaptureScreen()),
   'mood': (AppRoutes.mood, const MoodScreen()),
   'preferences': (AppRoutes.preferences, const PreferencesScreen()),

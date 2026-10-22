@@ -527,4 +527,43 @@ const thaiStrings = <String, String>{
       'Apple Music มีปัญหา ลองใหม่ภายหลัง',
   'Apple Music rejected the request.': 'Apple Music ปฏิเสธคำขอ',
   'Not available in your region.': 'ไม่มีให้บริการในภูมิภาคของคุณ',
+
+  // ---- Feedback ---------------------------------------------------------
+  'Feedback': 'ความคิดเห็น',
+  'How is MoodScape so far?': 'MoodScape เป็นอย่างไรบ้าง?',
+  'Your answers are anonymous: no name, photo or song list is sent.':
+      'คำตอบไม่ระบุตัวตน ไม่มีการส่งชื่อ รูปภาพ หรือรายการเพลง',
+  'Overall rating': 'คะแนนโดยรวม',
+  'Do the songs fit you?': 'เพลงตรงใจคุณไหม?',
+  'Is the app easy to use?': 'แอปใช้งานง่ายไหม?',
+  'Optional': 'ไม่บังคับ',
+  'What should we improve?': 'เราควรปรับปรุงอะไร?',
+  'Pick any.': 'เลือกได้หลายข้อ',
+  'More songs': 'เพลงเพิ่มขึ้น',
+  'Better song choices': 'เลือกเพลงให้ตรงใจขึ้น',
+  'More languages': 'ภาษาเพิ่มขึ้น',
+  'More activities': 'กิจกรรมเพิ่มขึ้น',
+  'Photo analysis': 'การวิเคราะห์รูป',
+  'Saving to Spotify': 'การบันทึกลง Spotify',
+  'Look and design': 'หน้าตาและดีไซน์',
+  'Speed': 'ความเร็ว',
+  'Would you recommend MoodScape to a friend?':
+      'คุณจะแนะนำ MoodScape ให้เพื่อนไหม?',
+  'Yes': 'แนะนำ',
+  'Maybe': 'อาจจะ',
+  'No': 'ไม่แนะนำ',
+  'Anything else you want to tell us?': 'มีอะไรอยากบอกเราอีกไหม?',
+  'Send feedback': 'ส่งความคิดเห็น',
+  'Thank you! Your feedback was sent.': 'ขอบคุณ! ส่งความคิดเห็นแล้ว',
+  'Thank you! Your feedback is saved and will be sent later.':
+      'ขอบคุณ! บันทึกความคิดเห็นไว้แล้ว และจะส่งให้ภายหลัง',
+  '{count} of 5 stars': '{count} จาก 5 ดาว',
+  'Give feedback': 'ให้ความคิดเห็น',
+  'Rate MoodScape and tell us what to improve':
+      'ให้คะแนน MoodScape และบอกสิ่งที่ควรปรับปรุง',
+  'You have used MoodScape for a day. How is it going?':
+      'คุณใช้ MoodScape มาหนึ่งวันแล้ว เป็นอย่างไรบ้าง?',
+  'Later': 'ไว้ทีหลัง',
+  'Rate MoodScape': 'ให้คะแนน MoodScape',
+  'Feedback was not accepted.': 'ส่งความคิดเห็นไม่สำเร็จ',
 };

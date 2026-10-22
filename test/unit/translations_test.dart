@@ -7,6 +7,7 @@ import 'package:moodscape/features/mood/domain/mood.dart';
 import 'package:moodscape/features/music_platform/application/platform_providers.dart';
 import 'package:moodscape/features/preferences/domain/music_preferences.dart';
 import 'package:moodscape/features/activity/domain/activity.dart';
+import 'package:moodscape/features/feedback/domain/feedback.dart';
 import 'package:moodscape/features/recommendations/domain/match_scorer.dart';
 import 'package:moodscape/features/recommendations/domain/recommendation_engine.dart';
 import 'package:moodscape/services/image_analysis/scene_features.dart';
@@ -73,6 +74,8 @@ void main() {
       for (final c in MatchComponent.values) c.label,
       for (final s in AnalysisSource.values) s.label,
       for (final p in MusicPlatform.values) p.label,
+      for (final i in Improvement.values) i.label,
+      for (final r in Recommend.values) r.label,
       for (final r in Activity.values) ...[r.label, r.description, r.reason],
       for (final s in SceneSetting.values)
         if (s != SceneSetting.unknown) _capitalized(s),

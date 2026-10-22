@@ -10,6 +10,7 @@ import '../../music_platform/application/apple_music_providers.dart';
 import '../../music_platform/application/platform_providers.dart';
 import '../../preferences/application/preferences_controller.dart';
 import '../../activity/application/activity_controller.dart';
+import '../../feedback/application/feedback_controller.dart';
 import '../../recommendations/application/disliked_tracks.dart';
 import '../../recommendations/application/playlist_controller.dart';
 import '../../recommendations/application/recommendations_controller.dart';
@@ -41,6 +42,7 @@ class DataControls {
       ..invalidate(selectedPlatformProvider)
       ..invalidate(themeModeProvider)
       ..invalidate(appLanguageProvider)
+      ..invalidate(feedbackPromptProvider)
       ..invalidate(spotifyConnectionProvider)
       ..invalidate(appleMusicConnectionProvider)
       ..invalidate(playlistControllerProvider)

@@ -49,6 +49,18 @@ class SettingsScreen extends ConsumerWidget {
               const _PrivacyCard(),
               section('Your data'),
               const _DataCard(),
+              section('Feedback'),
+              Card(
+                child: ListTile(
+                  leading: const Icon(Icons.rate_review_outlined),
+                  title: Text(context.tr('Give feedback')),
+                  subtitle: Text(
+                    context.tr('Rate MoodScape and tell us what to improve'),
+                  ),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => context.push(AppRoutes.feedback),
+                ),
+              ),
               section('About'),
               Card(
                 child: Padding(
