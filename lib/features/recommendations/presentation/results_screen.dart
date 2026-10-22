@@ -16,6 +16,7 @@ import '../domain/recommendation_engine.dart';
 import '../domain/track.dart';
 import 'dislike_action.dart';
 import 'export_sheet.dart';
+import 'new_analysis.dart';
 import 'track_card.dart';
 
 class ResultsScreen extends ConsumerWidget {
@@ -30,6 +31,7 @@ class ResultsScreen extends ConsumerWidget {
         provider != null && ref.watch(canSavePlaylistProvider(provider));
     return Scaffold(
       extendBodyBehindAppBar: true,
+      floatingActionButton: recs.hasValue ? const NewAnalysisButton() : null,
       appBar: AppBar(
         title: Text(context.tr('Your music')),
         actions: [
@@ -188,7 +190,8 @@ class _ResultsBody extends ConsumerWidget {
           )
         else
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+            // Room at the bottom so the last song clears the button.
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 96),
             sliver: SliverList.separated(
               itemCount: visible.length,
               separatorBuilder: (_, _) => const SizedBox(height: 8),

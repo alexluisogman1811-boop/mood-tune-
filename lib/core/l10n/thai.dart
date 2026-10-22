@@ -566,4 +566,9 @@ const thaiStrings = <String, String>{
   'Later': 'ไว้ทีหลัง',
   'Rate MoodScape': 'ให้คะแนน MoodScape',
   'Feedback was not accepted.': 'ส่งความคิดเห็นไม่สำเร็จ',
+
+  // ---- New analysis -----------------------------------------------------
+  'New analysis': 'วิเคราะห์ใหม่',
+  'Start again with a new activity, photo and mood':
+      'เริ่มใหม่ด้วยกิจกรรม รูปถ่าย และความรู้สึกใหม่',
 };
