@@ -5,7 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../core/l10n/l10n.dart';
 import '../../../shared/widgets/gradient_background.dart';
-import '../../feedback/application/feedback_controller.dart';
+import '../../feedback/presentation/feedback_invite.dart';
 import '../../mood/application/mood_controller.dart';
 import '../../mood/domain/mood.dart';
 import '../../preferences/domain/music_preferences.dart';
@@ -112,7 +112,7 @@ class _ResultsBody extends ConsumerWidget {
           sliver: SliverList.list(
             children: [
               _ContextSummary(ctx: ctx),
-              const _FeedbackInvite(),
+              const FeedbackInvite(),
               if (recs.isDemo) ...[
                 const SizedBox(height: 8),
                 Card(
@@ -407,55 +407,4 @@ class _Message extends StatelessWidget {
       ),
     ),
   );
-}
-
-/// After a day of use, invites the user to rate the app. Easy to dismiss.
-class _FeedbackInvite extends ConsumerWidget {
-  const _FeedbackInvite();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    if (!ref.watch(feedbackPromptProvider)) return const SizedBox.shrink();
-    return Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 8, 4),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  const Icon(Icons.rate_review_outlined),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      context.tr(
-                        'You have used MoodScape for a day. How is it going?',
-                      ),
-                      style: Theme.of(context).textTheme.titleSmall,
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () =>
-                        ref.read(feedbackPromptProvider.notifier).snooze(),
-                    child: Text(context.tr('Later')),
-                  ),
-                  FilledButton.tonal(
-                    onPressed: () => context.push(AppRoutes.feedback),
-                    child: Text(context.tr('Rate MoodScape')),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }
