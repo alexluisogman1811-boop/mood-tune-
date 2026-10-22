@@ -146,7 +146,8 @@
 
   /* Compare table */
   .tablewrap { overflow-x: auto; margin-top: 40px; }
-  table { width: 100%; border-collapse: collapse; min-width: 480px; }
+  table { width: 100%; border-collapse: collapse; }
+  @media (max-width: 560px) { th, td { padding: 10px 8px; font-size: .88rem; } .plan.best { order: -1; margin-top: 8px; } }
   th, td { padding: 12px 14px; text-align: center; border-bottom: 1px solid var(--line); font-size: .95rem; }
   th:first-child, td:first-child { text-align: left; }
   thead th { color: var(--glow); }
