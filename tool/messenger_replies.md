@@ -30,9 +30,13 @@ Free: 3 playlists/day. Monthly $4.99 · Yearly $39.99 · Lifetime $49.99. Premiu
 📱 Android: https://alexluisogman1811-boop.github.io/moodscape/MoodScape.apk
 ข้อมูลเพิ่มเติม / More: https://alexluisogman1811-boop.github.io/moodscape/buy/
 
-**ใช้ฟรีได้ไหม / Is it free?**
-ใช้ฟรีได้ตลอดไปครับ วันละ 3 เพลย์ลิสต์ ไม่ต้องใช้บัตร
-Yes, free forever: 3 playlists a day, no card needed.
+**โอนแล้ว ส่งสลิป / I've paid**
+ขอบคุณครับ 🙏 ส่งรูปสลิปในแชทนี้ พร้อมพิมพ์อีเมลที่ใช้สมัครบัญชี MoodScape แอดมินจะตรวจและเปิด Premium ให้ภายใน 1 วันครับ / Thank you 🙏 Please send the slip photo here with the email of your MoodScape account. We'll switch Premium on within a day.
+
+(Messenger allows 4 FAQ questions; "Is it free?" was dropped because the price answer covers it.)
+
+Note: keyword replies only fire when the chat has been quiet for 15 minutes, and Thai
+keywords inside longer Thai text (no spaces) may not match, so the slip answer is also an FAQ.
 
 ## Keyword replies
 
