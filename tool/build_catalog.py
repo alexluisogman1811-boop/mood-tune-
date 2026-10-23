@@ -55,28 +55,61 @@ DEEZER_QUERIES = {
              "thai love songs", "เพลงชิล", "เพลงฮิต", "เพลงรัก", "เพลงเศร้า",
              "เพลงอกหัก", "ลูกทุ่ง", "luk thung", "thai hip hop", "t-pop",
              "thai r&b", "เพลงเพื่อชีวิต", "thai 90s", "thai cafe",
-             "เพลงวัยรุ่น", "thai ost", "thai band"],
+             "เพลงวัยรุ่น", "thai ost", "thai band", "เพลงไทยใหม่",
+             "เพลงไทยยุค 90", "เพลงไทยยุค 2000", "เพลงฮิต tiktok", "หมอลำ",
+             "เพลงลูกทุ่งฮิต", "เพลงสตริง", "thai rap", "thai pop hits 2024",
+             "thai pop hits 2025", "เพลงประกอบละคร", "เพลงซึ้ง", "เพลงสากลไทย",
+             "gmm grammy", "rsiam", "what the duck", "boxx music",
+             "smallroom", "bakery music", "thai chill acoustic", "เพลงฟังสบาย",
+             "เพลงเปิดในร้านกาแฟ", "เพลงออกกำลังกาย", "เพลงปาร์ตี้"],
     "korean": ["top k-pop", "k-pop hits", "k-drama ost", "korean ballad",
                "korean indie", "k-pop workout", "k-pop chill", "k-pop party",
-               "korean r&b", "k-pop dance"],
+               "korean r&b", "k-pop dance", "k-pop girl groups",
+               "k-pop boy groups", "korean hip hop", "k-pop 2010s",
+               "k-pop 2020s", "korean acoustic", "korean rock", "k-ost ballad",
+               "k-indie chill", "korean trot", "k-pop summer", "k-pop love"],
     "japanese": ["j-pop hits", "anime hits", "city pop", "japanese acoustic",
                  "j-rock", "anime workout", "j-pop chill", "vocaloid",
                  "japanese drive", "j-pop ballad", "anime opening",
-                 "japanese indie", "j-pop study"],
+                 "japanese indie", "j-pop study", "anime ending",
+                 "anime ballads", "j-pop 2020s", "j-pop 90s", "japanese rap",
+                 "visual kei", "japanese idol", "showa pop", "japanese jazz",
+                 "anime songs", "j-rock anime", "japanese summer"],
     "spanish": ["éxitos latinos", "baladas en español", "rock en español",
                 "pop en español", "música para entrenar", "reggaeton fiesta",
                 "música para manejar", "chill en español",
-                "música para limpiar"],
+                "música para limpiar", "bachata", "salsa", "cumbia",
+                "regional mexicano", "corridos", "pop latino 2000",
+                "rock latino", "canciones de amor", "flamenco pop",
+                "indie español", "trap latino", "boleros", "éxitos de los 80 en español",
+                "música de despecho"],
     "french": ["hits français", "chanson française", "variété française",
                "pop française", "rap français", "sport motivation français",
-               "chill français", "soirée française", "route française"],
+               "chill français", "soirée française", "route française",
+               "années 80 français", "années 90 français", "rap fr",
+               "chansons d'amour", "pop urbaine", "rock français",
+               "nouvelle scène française", "chanson à texte", "zouk",
+               "chansons tristes", "musique de film française"],
     "portuguese": ["sertanejo", "mpb", "bossa nova", "hits brasil",
                    "fado", "treino brasil", "funk brasileiro",
-                   "pagode", "música para dirigir", "chill brasil"],
+                   "pagode", "música para dirigir", "chill brasil",
+                   "forró", "axé", "samba", "rock nacional", "pop brasil",
+                   "rap nacional", "sertanejo universitário", "românticas",
+                   "anos 80 brasil", "música portuguesa", "kizomba"],
     "english": ["acoustic chill", "indie folk", "pop hits", "soft rock",
                 "workout hits", "gym motivation", "running", "road trip",
                 "driving songs", "cleaning music", "party hits",
-                "cooking music", "feel good", "chill vibes", "commute"],
+                "cooking music", "feel good", "chill vibes", "commute",
+                "top 50 global", "today's top hits", "80s hits", "90s hits",
+                "2000s hits", "2010s hits", "throwback", "classic rock",
+                "indie pop", "alternative rock", "hip hop hits", "rap caviar",
+                "r&b hits", "country hits", "edm hits", "dance pop",
+                "love songs", "sad songs", "breakup songs", "happy songs",
+                "summer hits", "rainy day", "study with lyrics", "sleep songs",
+                "coffee shop", "singer songwriter", "pop punk", "motown",
+                "soul classics", "funk", "reggae", "tiktok hits",
+                "movie soundtracks", "musical theatre", "christmas songs",
+                "acoustic covers", "piano pop", "beach vibes"],
     "instrumental": ["piano study", "lofi study beats", "classical focus",
                      "ambient study", "solo piano", "instrumental focus",
                      "deep focus", "sleep piano", "peaceful piano",
@@ -244,7 +277,8 @@ def verified(track: dict, language: str | None, instrumental: bool) -> bool:
     return True
 
 
-def collect(per_language: int, playlists_per_query: int = 2) -> list[dict]:
+def collect(per_language: int, playlists_per_query: int = 2,
+            caps: dict[str, int] | None = None) -> list[dict]:
     found: dict[int, dict] = {}
 
     def add(track: dict, language: str | None, instrumental: bool,
@@ -298,8 +332,9 @@ def collect(per_language: int, playlists_per_query: int = 2) -> list[dict]:
     chosen = []
     for lang, entries in by_lang.items():
         entries.sort(key=lambda e: -e["deezer"].get("rank", 0))
-        chosen += entries[:per_language]
-        print(f"{lang}: {len(entries)} found, {min(len(entries), per_language)}"
+        cap = (caps or {}).get(lang, per_language)
+        chosen += entries[:cap]
+        print(f"{lang}: {len(entries)} found, {min(len(entries), cap)}"
               " kept", flush=True)
     return chosen
 
@@ -327,6 +362,13 @@ def analyse(track_id: int, url: str) -> dict | None:
     mp3.parent.mkdir(parents=True, exist_ok=True)
     try:
         r = requests.get(url, timeout=30)
+        if r.status_code != 200:
+            # Preview links expire; cached playlist data can hold old ones.
+            fresh = requests.get(f"https://api.deezer.com/track/{track_id}",
+                                 timeout=20).json().get("preview")
+            if not fresh:
+                return None
+            r = requests.get(fresh, timeout=30)
         if r.status_code != 200 or len(r.content) < 50_000:
             return None
         mp3.write_bytes(r.content)
@@ -433,9 +475,12 @@ def main() -> None:
     ap.add_argument("--per-language", type=int, default=150)
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--playlists-per-query", type=int, default=2)
+    ap.add_argument("--english", type=int, default=None,
+                    help="how many English songs to keep (default: per-language)")
     args = ap.parse_args()
 
-    chosen = collect(args.per_language, args.playlists_per_query)
+    caps = {"english": args.english} if args.english else None
+    chosen = collect(args.per_language, args.playlists_per_query, caps)
     print(f"analysing {len(chosen)} previews…", flush=True)
     feats: dict[int, dict] = {}
     with cf.ProcessPoolExecutor(args.workers) as pool:
