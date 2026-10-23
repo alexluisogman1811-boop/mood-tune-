@@ -120,6 +120,7 @@ class FirebaseAccountRepository implements AccountRepository {
       usageDate: d['usageDate'] as String?,
       usageCount: (d['usageCount'] as num?)?.toInt() ?? 0,
       createdAt: time(d['createdAt']),
+      lastOpened: d['lastOpened'] as String?,
     );
   }
 
@@ -145,9 +146,29 @@ class FirebaseAccountRepository implements AccountRepository {
   @override
   Future<void> setPlan(Account account, Plan plan, DateTime now) => _guard(() {
     final until = account.untilAfterBuying(plan, now);
-    return _users.doc(account.uid).update({
-      'plan': plan.name,
-      'premiumUntil': until == null ? null : Timestamp.fromDate(until),
-    });
+    final batch = _db.batch()
+      ..update(_users.doc(account.uid), {
+        'plan': plan.name,
+        'premiumUntil': until == null ? null : Timestamp.fromDate(until),
+      });
+    // A record of each sale, for the admin website's income reports.
+    if (plan.isPaid) {
+      batch.set(_db.collection('payments').doc(), {
+        'uid': account.uid,
+        'email': account.email,
+        'plan': plan.name,
+        'usd': plan.usd,
+        'thb': plan.thb,
+        'at': FieldValue.serverTimestamp(),
+      });
+    }
+    return batch.commit();
+  });
+
+  @override
+  Future<void> markOpened(Account account, DateTime now) => _guard(() {
+    final today = Account.dayKey(now);
+    if (account.lastOpened == today) return Future.value();
+    return _users.doc(account.uid).update({'lastOpened': today});
   });
 }

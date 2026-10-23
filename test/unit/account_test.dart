@@ -154,6 +154,36 @@ void main() {
       expect(repo.accountFor('fresh@example.com')!.usageCount, 1);
     });
 
+    test('opening the app saves today as the last-open day, once', () async {
+      final (c, repo) = await signedIn(Plan.free);
+      c.listen(openTrackerProvider, (_, _) {});
+      await pumpEventQueue();
+      expect(
+        repo.accountFor('user@example.com')!.lastOpened,
+        Account.dayKey(_now),
+      );
+    });
+
+    test('giving a paid plan records a payment; Free does not', () async {
+      final repo = FakeAccountRepository()
+        ..addUser('buyer@example.com')
+        ..addUser('admin@example.com');
+      await repo.signIn('admin@example.com', 'secret1');
+      await repo.setPlan(
+        repo.accountFor('buyer@example.com')!,
+        Plan.yearly,
+        _now,
+      );
+      await repo.setPlan(
+        repo.accountFor('buyer@example.com')!,
+        Plan.free,
+        _now,
+      );
+      expect(repo.payments, [('buyer@example.com', Plan.yearly)]);
+      expect(Plan.yearly.thb, 1390);
+      expect(Plan.lifetime.usd, 49.99);
+    });
+
     test('Premium users are never limited', () async {
       final (c, _) = await signedIn(Plan.monthly);
       final use = c.read(playlistUsageProvider);

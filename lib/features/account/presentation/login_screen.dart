@@ -241,9 +241,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       const SizedBox(height: 20),
                       Text(
                         context.tr(
-                          'We store only your email, your plan and how many '
-                          'playlists you made today. Photos never leave your '
-                          'phone. You can delete your account at any time.',
+                          'We store only your email, your plan, how many '
+                          'playlists you made today and the last day you '
+                          'opened the app. Photos never leave your phone. You '
+                          'can delete your account at any time.',
                         ),
                         textAlign: TextAlign.center,
                         style: theme.textTheme.bodySmall?.copyWith(

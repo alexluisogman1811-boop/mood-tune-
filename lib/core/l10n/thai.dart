@@ -584,10 +584,11 @@ const thaiStrings = <String, String>{
   'Forgot password?': 'ลืมรหัสผ่าน?',
   'I already have an account': 'ฉันมีบัญชีอยู่แล้ว',
   'Create a new account': 'สร้างบัญชีใหม่',
-  'We store only your email, your plan and how many playlists you made '
-          'today. Photos never leave your phone. You can delete your account '
-          'at any time.':
-      'เราเก็บเฉพาะอีเมล แพ็กเกจ และจำนวนเพลย์ลิสต์ที่คุณสร้างวันนี้ '
+  'We store only your email, your plan, how many playlists you made today '
+          'and the last day you opened the app. Photos never leave your phone. '
+          'You can delete your account at any time.':
+      'เราเก็บเฉพาะอีเมล แพ็กเกจ จำนวนเพลย์ลิสต์ที่คุณสร้างวันนี้ '
+      'และวันล่าสุดที่คุณเปิดแอป '
       'รูปภาพไม่ออกจากโทรศัพท์ของคุณ และคุณลบบัญชีได้ทุกเมื่อ',
   'Account created. We sent you an email to confirm your address.':
       'สร้างบัญชีแล้ว เราส่งอีเมลให้คุณยืนยันที่อยู่อีเมลแล้ว',

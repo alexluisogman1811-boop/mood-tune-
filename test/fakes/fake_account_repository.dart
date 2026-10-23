@@ -111,9 +111,31 @@ class FakeAccountRepository implements AccountRepository {
         premiumUntil: current.premiumUntil,
         usageDate: today,
         usageCount: current.usageDate == today ? current.usageCount + 1 : 1,
+        lastOpened: current.lastOpened,
       ),
     );
   }
+
+  @override
+  Future<void> markOpened(Account account, DateTime now) async {
+    final current = _accounts[account.uid]!;
+    final today = Account.dayKey(now);
+    if (current.lastOpened == today) return;
+    _set(
+      Account(
+        uid: current.uid,
+        email: current.email,
+        plan: current.plan,
+        premiumUntil: current.premiumUntil,
+        usageDate: current.usageDate,
+        usageCount: current.usageCount,
+        lastOpened: today,
+      ),
+    );
+  }
+
+  /// Sales recorded by [setPlan], like the payments collection.
+  final payments = <(String email, Plan plan)>[];
 
   bool get _isAdmin =>
       _current != null &&
@@ -143,7 +165,9 @@ class FakeAccountRepository implements AccountRepository {
         premiumUntil: current.untilAfterBuying(plan, now),
         usageDate: current.usageDate,
         usageCount: current.usageCount,
+        lastOpened: current.lastOpened,
       ),
     );
+    if (plan.isPaid) payments.add((current.email, plan));
   }
 }

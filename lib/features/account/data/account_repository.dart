@@ -43,6 +43,9 @@ abstract interface class AccountRepository {
   /// Counts one playlist for [account] today.
   Future<void> recordPlaylist(Account account, DateTime now);
 
+  /// Saves today as the last day the app was opened (date only).
+  Future<void> markOpened(Account account, DateTime now);
+
   // ---- Admin only (the database rules enforce this) -----------------------
 
   Stream<List<Account>> watchAllAccounts();

@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>MoodScape Admin</title>
+<link rel="icon" href="../favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0c1a; --panel: #17132a; --panel2: #1f1a36; --line: #2c2547;
+    --text: #f2efff; --muted: #b9b3d6; --glow: #b6a8ff; --seed: #7c6cf2;
+    --good: #7ee0c3; --warn: #ffd27a; --bad: #ff9aa8;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+    font-family: "Plus Jakarta Sans", "Noto Sans Thai", system-ui, sans-serif; line-height: 1.5; }
+  a { color: var(--glow); }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+  header { position: sticky; top: 0; z-index: 5; background: rgba(14,12,26,.92);
+    backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .bar { display: flex; align-items: center; gap: 12px; min-height: 60px; flex-wrap: wrap; }
+  .brand { font-weight: 800; font-size: 1.1rem; display: flex; gap: 10px; align-items: center; }
+  .brand img { width: 28px; height: 28px; border-radius: 8px; }
+  .tag { font-size: .75rem; color: #1a1433; background: var(--glow); border-radius: 999px; padding: 2px 10px; font-weight: 700; }
+  nav { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
+  nav button { background: none; border: 1px solid transparent; color: var(--muted); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+  nav button[aria-current="page"] { color: var(--text); border-color: var(--line); background: var(--panel); }
+  .ghost { background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+  .primary { background: var(--glow); color: #1a1433; border: 0; border-radius: 999px; padding: 10px 18px; font-weight: 700; cursor: pointer; }
+  .primary:disabled { opacity: .5; cursor: default; }
+  main { padding: 24px 0 64px; }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; }
+  h2 { font-size: 1.1rem; margin: 0 0 12px; }
+  .sub { color: var(--muted); margin: 0 0 20px; font-size: .92rem; }
+  .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  @media (max-width: 400px) { .grid { gap: 10px; } .kpi .value { font-size: 1.5rem; } }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 16px 18px; }
+  .kpi .label { color: var(--muted); font-size: .85rem; }
+  .kpi .value { font-size: 1.9rem; font-weight: 800; line-height: 1.15; margin-top: 4px; }
+  .kpi .note { color: var(--muted); font-size: .8rem; }
+  .kpi.hl { background: var(--panel2); border-color: var(--seed); }
+  section { margin-top: 28px; }
+  .two { display: grid; gap: 14px; grid-template-columns: 1.4fr 1fr; }
+  @media (max-width: 860px) { .two { grid-template-columns: 1fr; } }
+  .tablewrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  th { color: var(--muted); font-weight: 600; font-size: .8rem; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .pill { display: inline-block; font-size: .75rem; padding: 2px 9px; border-radius: 999px; border: 1px solid var(--line); }
+  .pill.premium { background: rgba(182,168,255,.15); border-color: var(--seed); color: var(--glow); }
+  .pill.ended { color: var(--muted); }
+  .empty { color: var(--muted); padding: 14px 4px; }
+  input, select, textarea { background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px; width: 100%; }
+  label { display: block; font-size: .85rem; color: var(--muted); margin-bottom: 4px; }
+  .form { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); align-items: end; }
+  .form .wide { grid-column: 1 / -1; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .msg { margin-top: 10px; font-size: .9rem; }
+  .msg.err { color: var(--bad); } .msg.ok { color: var(--good); }
+  .chart svg { width: 100%; height: auto; display: block; }
+  .legend { display: flex; gap: 14px; color: var(--muted); font-size: .8rem; margin-top: 8px; flex-wrap: wrap; }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+  .split { display: flex; height: 14px; border-radius: 999px; overflow: hidden; background: var(--line); margin: 10px 0 6px; }
+  .login { max-width: 380px; margin: 10vh auto 0; }
+  .login .card { padding: 26px; display: grid; gap: 12px; }
+  .hidden { display: none !important; }
+  .actions button { margin: 2px; font-size: .8rem; padding: 4px 10px; }
+  .banner { background: var(--warn); color: #1a1433; text-align: center; font-size: .85rem; padding: 4px; font-weight: 700; }
+</style>
+</head>
+<body>
+<div id="emuBanner" class="banner hidden">Local test mode (emulator) — not real data</div>
+
+<div id="loginView" class="wrap login hidden">
+  <div class="card">
+    <div class="brand"><img src="../icons/Icon-192.png" alt="">MoodScape Admin</div>
+    <p class="sub" style="margin:0">Sign in with the admin email.</p>
+    <form id="loginForm" style="display:grid;gap:12px">
+      <div><label for="email">Email</label><input id="email" type="email" autocomplete="username" required></div>
+      <div><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required></div>
+      <button class="primary" type="submit">Sign in</button>
+      <button class="ghost" type="button" id="forgot">Forgot password?</button>
+    </form>
+    <div id="loginMsg" class="msg"></div>
+  </div>
+</div>
+
+<div id="appView" class="hidden">
+  <header>
+    <div class="wrap bar">
+      <div class="brand"><img src="../icons/Icon-192.png" alt="">MoodScape <span class="tag">Admin</span></div>
+      <nav aria-label="Sections">
+        <button data-tab="overview" aria-current="page">Overview</button>
+        <button data-tab="money">Money</button>
+        <button data-tab="users">Users</button>
+        <button data-tab="marketing">Marketing</button>
+      </nav>
+      <button class="ghost" id="signOut">Sign out</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div id="loadMsg" class="msg"></div>
+
+    <!-- OVERVIEW -->
+    <div data-view="overview">
+      <h1>Overview</h1>
+      <p class="sub" id="updated">Loading…</p>
+      <div class="grid" id="kpis"></div>
+
+      <section class="two">
+        <div class="card chart">
+          <h2>New sign-ups, last 30 days</h2>
+          <div id="signupChart"></div>
+          <div class="legend"><span><span class="dot" style="background:var(--glow)"></span>New users per day</span></div>
+        </div>
+        <div class="card">
+          <h2>Free vs Premium</h2>
+          <div id="split"></div>
+          <h2 style="margin-top:20px">Premium by plan</h2>
+          <div id="byPlan"></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Premium ending in the next 7 days</h2>
+        <p class="sub" style="margin-bottom:8px">Remind them on Messenger to renew.</p>
+        <div class="tablewrap"><table id="expiring"></table></div>
+      </section>
+    </div>
+
+    <!-- MONEY -->
+    <div data-view="money" class="hidden">
+      <h1>Money</h1>
+      <p class="sub">Income from plans you switched on. Baht uses the sales-page prices (179 / 1,390 / 1,790 ฿).</p>
+      <div class="grid" id="moneyKpis"></div>
+
+      <section class="card chart">
+        <h2>Income per month (฿)</h2>
+        <div id="incomeChart"></div>
+      </section>
+
+      <section class="card">
+        <h2>Add a past sale</h2>
+        <p class="sub" style="margin-bottom:10px">For plans given before payments were recorded, or paid outside the app. This only adds to the income report; it does not change anyone's plan.</p>
+        <form id="saleForm" class="form">
+          <div><label for="saleEmail">Customer email</label><input id="saleEmail" type="email" required></div>
+          <div><label for="salePlan">Plan</label><select id="salePlan"><option value="monthly">Monthly</option><option value="yearly">Yearly</option><option value="lifetime">Lifetime</option></select></div>
+          <div><label for="saleDate">Date</label><input id="saleDate" type="date" required></div>
+          <div><button class="primary" type="submit">Add sale</button></div>
+        </form>
+        <div id="saleMsg" class="msg"></div>
+      </section>
+
+      <section class="card">
+        <h2>All sales</h2>
+        <div class="tablewrap"><table id="payments"></table></div>
+      </section>
+    </div>
+
+    <!-- USERS -->
+    <div data-view="users" class="hidden">
+      <h1>Users</h1>
+      <p class="sub">Give a plan after checking the payment slip. Giving a paid plan also records the sale.</p>
+      <div class="row" style="margin-bottom:12px">
+        <input id="search" type="search" placeholder="Search email…" style="max-width:320px" aria-label="Search users by email">
+        <select id="filter" style="max-width:200px" aria-label="Filter users">
+          <option value="all">Everyone</option><option value="premium">Premium now</option>
+          <option value="free">Free</option><option value="ended">Premium ended</option>
+        </select>
+        <span id="userCount" class="sub" style="margin:0"></span>
+      </div>
+      <div class="card tablewrap"><table id="users"></table></div>
+      <div id="userMsg" class="msg"></div>
+    </div>
+
+    <!-- MARKETING -->
+    <div data-view="marketing" class="hidden">
+      <h1>Marketing</h1>
+      <p class="sub">Enter one row per week (weeks start on Monday). Saving the same week again replaces it.</p>
+      <div class="grid" id="mktKpis"></div>
+
+      <section class="card">
+        <h2>Enter this week's numbers</h2>
+        <form id="mktForm" class="form">
+          <div><label for="mWeek">Any day in the week</label><input id="mWeek" type="date" required></div>
+          <div><label for="mMonthly">Monthly sold</label><input id="mMonthly" type="number" min="0" step="1" value="0"></div>
+          <div><label for="mYearly">Yearly sold</label><input id="mYearly" type="number" min="0" step="1" value="0"></div>
+          <div><label for="mLifetime">Lifetime sold</label><input id="mLifetime" type="number" min="0" step="1" value="0"></div>
+          <div><label for="mAds">Ad spend (฿)</label><input id="mAds" type="number" min="0" step="1" value="0"></div>
+          <div><label for="mLeads">Leads / chats</label><input id="mLeads" type="number" min="0" step="1" value="0"></div>
+          <div class="wide"><label for="mNote">Note (which ads, what worked)</label><input id="mNote" type="text" maxlength="300"></div>
+          <div><button class="primary" type="submit">Save week</button></div>
+        </form>
+        <div id="mktMsg" class="msg"></div>
+      </section>
+
+      <section class="card">
+        <h2>Weeks</h2>
+        <div class="tablewrap"><table id="weeks"></table></div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<script>window.MS_CONFIG = /*CONFIG*/null;</script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut,
+  sendPasswordResetEmail, connectAuthEmulator } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+import { getFirestore, collection, onSnapshot, doc, setDoc, addDoc, writeBatch,
+  Timestamp, serverTimestamp, connectFirestoreEmulator } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+
+const cfg = window.MS_CONFIG;
+const PLANS = {
+  free: { label: "Free", usd: 0, thb: 0, days: null },
+  monthly: { label: "Monthly", usd: 4.99, thb: 179, days: 30 },
+  yearly: { label: "Yearly", usd: 39.99, thb: 1390, days: 365 },
+  lifetime: { label: "Lifetime", usd: 49.99, thb: 1790, days: null },
+};
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const thb = (n) => Math.round(n).toLocaleString("en-US") + " ฿";
+const usd = (n) => "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const pad = (n) => String(n).padStart(2, "0");
+const dayKey = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const monthKey = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
+const fmtDate = (d) => d ? d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "–";
+const toDate = (v) => v instanceof Timestamp ? v.toDate() : (v ? new Date(v) : null);
+const daysAgo = (n) => { const d = new Date(); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - n); return d; };
+const monday = (d) => { const x = new Date(d); x.setHours(0, 0, 0, 0); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return x; };
+
+if (!cfg) { document.body.innerHTML = "<p style='padding:24px'>This page was not built with a Firebase config (run tool/build_admin.py).</p>"; throw new Error("no config"); }
+const app = initializeApp({ apiKey: cfg.apiKey, appId: cfg.appId, projectId: cfg.projectId,
+  messagingSenderId: cfg.messagingSenderId, authDomain: cfg.authDomain || undefined });
+const auth = getAuth(app);
+const db = getFirestore(app);
+if (cfg.emulators) {
+  connectAuthEmulator(auth, "http://localhost:9099", { disableWarnings: true });
+  connectFirestoreEmulator(db, "localhost", 8080);
+  $("emuBanner").classList.remove("hidden");
+}
+const admins = (cfg.adminEmails || "").toLowerCase().split(",").map((s) => s.trim()).filter(Boolean);
+
+let users = [], payments = [], weeks = [], unsub = [];
+
+// ---- Sign-in ---------------------------------------------------------------
+$("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const m = $("loginMsg"); m.className = "msg"; m.textContent = "Signing in…";
+  try { await signInWithEmailAndPassword(auth, $("email").value.trim(), $("password").value); m.textContent = ""; }
+  catch (err) { m.className = "msg err"; m.textContent = /invalid|wrong|user-not-found/i.test(err.code || "") ? "Wrong email or password." : "Could not sign in: " + (err.code || err.message); }
+});
+$("forgot").addEventListener("click", async () => {
+  const m = $("loginMsg"); const email = $("email").value.trim();
+  if (!email) { m.className = "msg err"; m.textContent = "Type your email first."; return; }
+  try { await sendPasswordResetEmail(auth, email); m.className = "msg ok"; m.textContent = "Password reset email sent."; }
+  catch (err) { m.className = "msg err"; m.textContent = "Could not send: " + (err.code || err.message); }
+});
+$("signOut").addEventListener("click", () => signOut(auth));
+
+onAuthStateChanged(auth, (user) => {
+  unsub.forEach((u) => u()); unsub = [];
+  if (!user) { $("appView").classList.add("hidden"); $("loginView").classList.remove("hidden"); return; }
+  const ok = user.emailVerified && admins.includes((user.email || "").toLowerCase());
+  if (!ok) {
+    $("loginMsg").className = "msg err";
+    $("loginMsg").textContent = user.emailVerified ? "This email is not an admin." : "Confirm your email first (check your inbox), then sign in again.";
+    signOut(auth); return;
+  }
+  $("loginView").classList.add("hidden"); $("appView").classList.remove("hidden");
+  const fail = (what) => (err) => { $("loadMsg").className = "msg err"; $("loadMsg").textContent = `Could not load ${what}: ${err.code || err.message}`; };
+  unsub.push(onSnapshot(collection(db, "users"), (s) => { users = s.docs.map((d) => ({ id: d.id, ...d.data() })); render(); }, fail("users")));
+  unsub.push(onSnapshot(collection(db, "payments"), (s) => { payments = s.docs.map((d) => ({ id: d.id, ...d.data() })); render(); }, fail("payments")));
+  unsub.push(onSnapshot(collection(db, "marketing"), (s) => { weeks = s.docs.map((d) => ({ id: d.id, ...d.data() })); render(); }, fail("marketing")));
+});
+
+// ---- Tabs ------------------------------------------------------------------
+document.querySelectorAll("nav button").forEach((b) => b.addEventListener("click", () => {
+  document.querySelectorAll("nav button").forEach((x) => x.removeAttribute("aria-current"));
+  b.setAttribute("aria-current", "page");
+  document.querySelectorAll("[data-view]").forEach((v) => v.classList.toggle("hidden", v.dataset.view !== b.dataset.tab));
+}));
+
+// ---- Helpers ---------------------------------------------------------------
+const isPremium = (u, now = new Date()) => u.plan === "lifetime" || (["monthly", "yearly"].includes(u.plan) && toDate(u.premiumUntil) > now);
+const kpi = (label, value, note = "", hl = false) =>
+  `<div class="card kpi${hl ? " hl" : ""}"><div class="label">${esc(label)}</div><div class="value">${value}</div>${note ? `<div class="note">${note}</div>` : ""}</div>`;
+
+function bars(values, labels, color, fmt = (v) => v) {
+  const w = 600, h = 180, pb = 22, max = Math.max(1, ...values), n = values.length, bw = w / n;
+  let s = `<svg viewBox="0 0 ${w} ${h}" role="img" aria-label="Bar chart"><line x1="0" y1="${h - pb}" x2="${w}" y2="${h - pb}" stroke="#2c2547"/>`;
+  values.forEach((v, i) => {
+    const bh = (h - pb - 14) * v / max, x = i * bw + bw * 0.15, y = h - pb - bh;
+    s += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(bw * 0.7).toFixed(1)}" height="${bh.toFixed(1)}" rx="3" fill="${color}"><title>${esc(labels[i])}: ${esc(fmt(v))}</title></rect>`;
+    if (v > 0 && n <= 12) s += `<text x="${(x + bw * 0.35).toFixed(1)}" y="${(y - 4).toFixed(1)}" fill="#b9b3d6" font-size="11" text-anchor="middle">${esc(fmt(v))}</text>`;
+    const every = n > 12 ? 5 : 1;
+    if (i % every === 0 || i === n - 1) s += `<text x="${(x + bw * 0.35).toFixed(1)}" y="${h - 6}" fill="#b9b3d6" font-size="10" text-anchor="middle">${esc(labels[i])}</text>`;
+  });
+  return s + "</svg>";
+}
+
+// ---- Render ----------------------------------------------------------------
+function render() {
+  const now = new Date(), today = dayKey(now);
+  $("updated").textContent = `Live data · updated ${now.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}`;
+
+  // Overview
+  const prem = users.filter((u) => isPremium(u, now));
+  const weekAgo = daysAgo(6), monthAgo = daysAgo(29);
+  const newWeek = users.filter((u) => toDate(u.createdAt) >= weekAgo).length;
+  const opened = (from) => users.filter((u) => u.lastOpened && u.lastOpened >= dayKey(from)).length;
+  const playlistsToday = users.reduce((n, u) => n + (u.usageDate === today ? (u.usageCount || 0) : 0), 0);
+  $("kpis").innerHTML = [
+    kpi("Total users", users.length, `${newWeek} new in the last 7 days`, true),
+    kpi("Premium now", prem.length, users.length ? `${Math.round(100 * prem.length / users.length)}% of users` : ""),
+    kpi("Free", users.length - prem.length),
+    kpi("Active today", opened(daysAgo(0)), "opened the app today"),
+    kpi("Active, 7 days", opened(weekAgo)),
+    kpi("Active, 30 days", opened(monthAgo)),
+    kpi("Playlists today", playlistsToday, "counted for Free users only"),
+  ].join("");
+
+  const days = [...Array(30)].map((_, i) => daysAgo(29 - i));
+  const counts = days.map((d) => users.filter((u) => { const c = toDate(u.createdAt); return c && dayKey(c) === dayKey(d); }).length);
+  $("signupChart").innerHTML = bars(counts, days.map((d) => `${d.getDate()}/${d.getMonth() + 1}`), "#b6a8ff");
+
+  const pct = users.length ? 100 * prem.length / users.length : 0;
+  $("split").innerHTML = `<div class="split"><div style="width:${pct}%;background:var(--glow)"></div></div>
+    <div class="legend"><span><span class="dot" style="background:var(--glow)"></span>Premium ${prem.length}</span><span><span class="dot" style="background:var(--line)"></span>Free ${users.length - prem.length}</span></div>`;
+  $("byPlan").innerHTML = `<table>${["monthly", "yearly", "lifetime"].map((p) => `<tr><td>${PLANS[p].label}</td><td class="num">${prem.filter((u) => u.plan === p).length}</td></tr>`).join("")}</table>`;
+
+  const soon = new Date(now.getTime() + 7 * 864e5);
+  const exp = users.filter((u) => ["monthly", "yearly"].includes(u.plan) && toDate(u.premiumUntil) > now && toDate(u.premiumUntil) <= soon)
+    .sort((a, b) => toDate(a.premiumUntil) - toDate(b.premiumUntil));
+  $("expiring").innerHTML = exp.length
+    ? `<tr><th>Email</th><th>Plan</th><th>Ends</th><th class="num">Days left</th></tr>` + exp.map((u) => `<tr><td>${esc(u.email)}</td><td>${PLANS[u.plan].label}</td><td>${fmtDate(toDate(u.premiumUntil))}</td><td class="num">${Math.ceil((toDate(u.premiumUntil) - now) / 864e5)}</td></tr>`).join("")
+    : `<tr><td class="empty">Nobody's plan ends in the next 7 days.</td></tr>`;
+
+  // Money
+  const sales = payments.map((p) => ({ ...p, date: toDate(p.at) || new Date() })).sort((a, b) => b.date - a.date);
+  const sum = (list, k) => list.reduce((n, p) => n + (Number(p[k]) || 0), 0);
+  const thisMonth = sales.filter((p) => monthKey(p.date) === monthKey(now));
+  const last30 = sales.filter((p) => p.date >= monthAgo);
+  const mkt = weeks.map((w) => ({ ...w, revenue: (w.monthly || 0) * 179 + (w.yearly || 0) * 1390 + (w.lifetime || 0) * 1790 }));
+  const adTotal = mkt.reduce((n, w) => n + (Number(w.adSpend) || 0), 0);
+  $("moneyKpis").innerHTML = [
+    kpi("Total income", thb(sum(sales, "thb")), usd(sum(sales, "usd")), true),
+    kpi("This month", thb(sum(thisMonth, "thb")), `${usd(sum(thisMonth, "usd"))} · ${thisMonth.length} sales`),
+    kpi("Last 30 days", thb(sum(last30, "thb")), usd(sum(last30, "usd"))),
+    kpi("Sales", sales.length, ["monthly", "yearly", "lifetime"].map((p) => `${PLANS[p].label} ${sales.filter((s) => s.plan === p).length}`).join(" · ")),
+    kpi("Ad spend (all time)", thb(adTotal), "from Marketing"),
+    kpi("Income − ads", thb(sum(sales, "thb") - adTotal), "rough profit"),
+  ].join("");
+  const months = [...Array(6)].map((_, i) => { const d = new Date(now.getFullYear(), now.getMonth() - 5 + i, 1); return d; });
+  $("incomeChart").innerHTML = bars(months.map((m) => sum(sales.filter((p) => monthKey(p.date) === monthKey(m)), "thb")),
+    months.map((m) => m.toLocaleDateString("en-GB", { month: "short" })), "#7ee0c3", (v) => Math.round(v).toLocaleString("en-US"));
+  $("payments").innerHTML = sales.length
+    ? `<tr><th>Date</th><th>Email</th><th>Plan</th><th class="num">Baht</th><th class="num">Dollars</th><th></th></tr>` + sales.map((p) => `<tr><td>${fmtDate(p.date)}</td><td>${esc(p.email)}</td><td>${esc(PLANS[p.plan]?.label || p.plan)}</td><td class="num">${thb(p.thb || 0)}</td><td class="num">${usd(p.usd || 0)}</td><td>${p.manual ? '<span class="pill ended">added by hand</span>' : ""}</td></tr>`).join("")
+    : `<tr><td class="empty">No sales yet. Sales appear here when you give someone a paid plan.</td></tr>`;
+
+  renderUsers();
+
+  // Marketing
+  const wk = mkt.sort((a, b) => b.id.localeCompare(a.id));
+  const thisMonthW = wk.filter((w) => w.id.slice(0, 7) === monthKey(now));
+  const sold = (w) => (w.monthly || 0) + (w.yearly || 0) + (w.lifetime || 0);
+  const tot = (list, f) => list.reduce((n, w) => n + f(w), 0);
+  const mRev = tot(thisMonthW, (w) => w.revenue), mAds = tot(thisMonthW, (w) => Number(w.adSpend) || 0), mLeads = tot(thisMonthW, (w) => Number(w.leads) || 0), mSold = tot(thisMonthW, sold);
+  $("mktKpis").innerHTML = [
+    kpi("Sales this month", mSold, thb(mRev), true),
+    kpi("Ad spend this month", thb(mAds)),
+    kpi("Profit this month", thb(mRev - mAds), "sales − ad spend"),
+    kpi("Leads this month", mLeads, mLeads ? `${Math.round(100 * mSold / mLeads)}% became sales` : ""),
+    kpi("Cost per sale", mSold ? thb(mAds / mSold) : "–", "this month"),
+    kpi("All-time sales", tot(wk, sold), thb(tot(wk, (w) => w.revenue))),
+  ].join("");
+  $("weeks").innerHTML = wk.length
+    ? `<tr><th>Week of</th><th class="num">Monthly</th><th class="num">Yearly</th><th class="num">Lifetime</th><th class="num">Sales ฿</th><th class="num">Ads ฿</th><th class="num">Profit ฿</th><th class="num">Leads</th><th class="num">Cost / lead</th><th>Note</th><th></th></tr>` +
+      wk.map((w) => `<tr><td>${fmtDate(new Date(w.id + "T00:00:00"))}</td><td class="num">${w.monthly || 0}</td><td class="num">${w.yearly || 0}</td><td class="num">${w.lifetime || 0}</td><td class="num">${thb(w.revenue)}</td><td class="num">${thb(w.adSpend || 0)}</td><td class="num">${thb(w.revenue - (w.adSpend || 0))}</td><td class="num">${w.leads || 0}</td><td class="num">${w.leads ? thb((w.adSpend || 0) / w.leads) : "–"}</td><td style="white-space:normal;min-width:160px">${esc(w.note)}</td><td><button class="ghost" data-edit="${esc(w.id)}">Edit</button></td></tr>`).join("")
+    : `<tr><td class="empty">No weeks entered yet.</td></tr>`;
+  document.querySelectorAll("[data-edit]").forEach((b) => b.addEventListener("click", () => {
+    const w = weeks.find((x) => x.id === b.dataset.edit); if (!w) return;
+    $("mWeek").value = w.id; $("mMonthly").value = w.monthly || 0; $("mYearly").value = w.yearly || 0; $("mLifetime").value = w.lifetime || 0;
+    $("mAds").value = w.adSpend || 0; $("mLeads").value = w.leads || 0; $("mNote").value = w.note || "";
+    $("mWeek").scrollIntoView({ behavior: "smooth", block: "center" });
+  }));
+}
+
+function renderUsers() {
+  const now = new Date(), q = $("search").value.trim().toLowerCase(), f = $("filter").value;
+  const list = users.filter((u) => (u.email || "").toLowerCase().includes(q)).filter((u) => {
+    const p = isPremium(u, now);
+    return f === "all" || (f === "premium" && p) || (f === "free" && u.plan === "free") || (f === "ended" && u.plan !== "free" && !p);
+  }).sort((a, b) => (toDate(b.createdAt) || 0) - (toDate(a.createdAt) || 0));
+  $("userCount").textContent = `${list.length} of ${users.length}`;
+  $("users").innerHTML = list.length
+    ? `<tr><th>Email</th><th>Plan</th><th>Until</th><th>Joined</th><th>Last opened</th><th class="num">Playlists today</th><th>Give plan</th></tr>` + list.map((u) => {
+        const p = isPremium(u, now), until = toDate(u.premiumUntil);
+        const pill = u.plan === "free" ? `<span class="pill">Free</span>` : `<span class="pill ${p ? "premium" : "ended"}">${PLANS[u.plan]?.label || esc(u.plan)}${p ? "" : " (ended)"}</span>`;
+        return `<tr><td>${esc(u.email)}</td><td>${pill}</td><td>${u.plan === "lifetime" ? "forever" : fmtDate(until)}</td><td>${fmtDate(toDate(u.createdAt))}</td><td>${esc(u.lastOpened || "–")}</td><td class="num">${u.usageDate === dayKey(now) ? (u.usageCount || 0) : 0}</td>
+          <td class="actions">${["monthly", "yearly", "lifetime"].map((pl) => `<button class="ghost" data-give="${esc(u.id)}" data-plan="${pl}">${PLANS[pl].label}</button>`).join("")}<button class="ghost" data-give="${esc(u.id)}" data-plan="free">Free</button></td></tr>`;
+      }).join("")
+    : `<tr><td class="empty">No users match.</td></tr>`;
+  document.querySelectorAll("[data-give]").forEach((b) => b.addEventListener("click", () => givePlan(b.dataset.give, b.dataset.plan)));
+}
+$("search").addEventListener("input", renderUsers);
+$("filter").addEventListener("change", renderUsers);
+
+// Same rule as the app: buying again adds to the time already paid for.
+async function givePlan(uid, plan) {
+  const u = users.find((x) => x.id === uid); if (!u) return;
+  const P = PLANS[plan], m = $("userMsg");
+  const ask = plan === "free" ? `Set ${u.email} back to Free?` : `Give ${u.email} ${P.label} (${thb(P.thb)} / ${usd(P.usd)})? This also records the sale.`;
+  if (!confirm(ask)) return;
+  const now = new Date(), cur = toDate(u.premiumUntil);
+  let until = null;
+  if (P.days) { const from = cur && cur > now ? cur : now; until = new Date(from.getTime() + P.days * 864e5); }
+  try {
+    const batch = writeBatch(db);
+    batch.update(doc(db, "users", uid), { plan, premiumUntil: until ? Timestamp.fromDate(until) : null });
+    if (plan !== "free") batch.set(doc(collection(db, "payments")), { uid, email: u.email, plan, usd: P.usd, thb: P.thb, at: serverTimestamp() });
+    await batch.commit();
+    m.className = "msg ok"; m.textContent = `${u.email} is now on ${P.label}${until ? " until " + fmtDate(until) : ""}.`;
+  } catch (err) { m.className = "msg err"; m.textContent = "Could not change the plan: " + (err.code || err.message); }
+}
+
+$("saleDate").value = dayKey(new Date());
+$("saleForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const P = PLANS[$("salePlan").value], m = $("saleMsg");
+  const email = $("saleEmail").value.trim(), u = users.find((x) => (x.email || "").toLowerCase() === email.toLowerCase());
+  try {
+    await addDoc(collection(db, "payments"), { uid: u ? u.id : null, email, plan: $("salePlan").value, usd: P.usd, thb: P.thb,
+      at: Timestamp.fromDate(new Date($("saleDate").value + "T12:00:00")), manual: true });
+    m.className = "msg ok"; m.textContent = "Sale added."; $("saleEmail").value = "";
+  } catch (err) { m.className = "msg err"; m.textContent = "Could not add: " + (err.code || err.message); }
+});
+
+$("mWeek").value = dayKey(new Date());
+$("mktForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const m = $("mktMsg"), id = dayKey(monday(new Date($("mWeek").value + "T12:00:00")));
+  const n = (x) => Math.max(0, Math.round(Number($(x).value) || 0));
+  try {
+    await setDoc(doc(db, "marketing", id), { monthly: n("mMonthly"), yearly: n("mYearly"), lifetime: n("mLifetime"),
+      adSpend: n("mAds"), leads: n("mLeads"), note: $("mNote").value.trim().slice(0, 300), updatedAt: serverTimestamp() });
+    m.className = "msg ok"; m.textContent = `Saved the week of ${fmtDate(new Date(id + "T00:00:00"))}.`;
+  } catch (err) { m.className = "msg err"; m.textContent = "Could not save: " + (err.code || err.message); }
+});
+</script>
+</body>
+</html>

@@ -1,11 +1,29 @@
 /// What a user has paid for. Prices are shown in US dollars.
 enum Plan {
-  free('Free', price: null, duration: null),
-  monthly('Monthly', price: '\$4.99', duration: Duration(days: 30)),
-  yearly('Yearly', price: '\$39.99', duration: Duration(days: 365)),
-  lifetime('Lifetime', price: '\$49.99', duration: null);
+  free('Free', price: null, duration: null, usd: 0, thb: 0),
+  monthly(
+    'Monthly',
+    price: '\$4.99',
+    duration: Duration(days: 30),
+    usd: 4.99,
+    thb: 179,
+  ),
+  yearly(
+    'Yearly',
+    price: '\$39.99',
+    duration: Duration(days: 365),
+    usd: 39.99,
+    thb: 1390,
+  ),
+  lifetime('Lifetime', price: '\$49.99', duration: null, usd: 49.99, thb: 1790);
 
-  const Plan(this.label, {required this.price, required this.duration});
+  const Plan(
+    this.label, {
+    required this.price,
+    required this.duration,
+    required this.usd,
+    required this.thb,
+  });
 
   final String label;
 
@@ -14,6 +32,11 @@ enum Plan {
 
   /// How long one purchase lasts; null for Free and Lifetime.
   final Duration? duration;
+
+  /// Price for income reports: dollars, and the approximate baht price
+  /// shown on the sales page.
+  final double usd;
+  final int thb;
 
   bool get isPaid => this != free;
 }
@@ -37,6 +60,7 @@ class Account {
     this.usageDate,
     this.usageCount = 0,
     this.createdAt,
+    this.lastOpened,
   });
 
   final String uid;
@@ -50,6 +74,10 @@ class Account {
   final String? usageDate;
   final int usageCount;
   final DateTime? createdAt;
+
+  /// Last day ([dayKey]) the app was opened, for the admin's active-user
+  /// counts. Only the date is stored.
+  final String? lastOpened;
 
   /// Lifetime never ends; Monthly and Yearly last until [premiumUntil].
   bool isPremium(DateTime now) => switch (plan) {

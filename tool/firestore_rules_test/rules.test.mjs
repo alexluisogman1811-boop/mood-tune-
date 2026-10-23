@@ -163,6 +163,37 @@ test('users can delete their own account, not others', async () => {
   await assertSucceeds(deleteDoc(doc(alice(), 'users/alice')));
 });
 
+test('users can save the day they opened the app, nothing else with it', async () => {
+  await seed('alice', freeAlice);
+  await assertSucceeds(
+    updateDoc(doc(alice(), 'users/alice'), { lastOpened: '2026-10-23' }),
+  );
+  await assertFails(
+    updateDoc(doc(alice(), 'users/alice'), {
+      lastOpened: '2026-10-24',
+      plan: 'lifetime',
+    }),
+  );
+  await assertFails(
+    updateDoc(doc(alice(), 'users/alice'), { lastOpened: 'yesterday at 9pm' }),
+  );
+});
+
+test('only the admin can read and write payments and marketing', async () => {
+  const sale = { uid: 'alice', email: 'alice@example.com', plan: 'yearly',
+    usd: 39.99, thb: 1390, at: serverTimestamp() };
+  await assertFails(setDoc(doc(alice(), 'payments/p1'), sale));
+  await assertFails(getDocs(collection(alice(), 'payments')));
+  await assertFails(setDoc(doc(alice(), 'marketing/2026-10-19'), { leads: 5 }));
+  await assertSucceeds(setDoc(doc(admin(), 'payments/p1'), sale));
+  await assertSucceeds(getDocs(collection(admin(), 'payments')));
+  await assertSucceeds(setDoc(doc(admin(), 'marketing/2026-10-19'), { leads: 5 }));
+  await assertSucceeds(getDocs(collection(admin(), 'marketing')));
+  const fake = user('impostor', ADMIN, false);
+  await assertFails(getDocs(collection(fake, 'payments')));
+});
+
 test('other collections are closed', async () => {
-  await assertFails(setDoc(doc(alice(), 'payments/x'), { amount: 1 }));
+  await assertFails(setDoc(doc(alice(), 'secrets/x'), { amount: 1 }));
+  await assertFails(getDocs(collection(admin(), 'secrets')));
 });

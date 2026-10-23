@@ -38,7 +38,8 @@ service cloud.firestore {
 
       // Users may only count one more playlist (today), never change their
       // plan. The admin may change plans.
-      allow update: if isAdmin() || (isOwner(uid) && countsOnePlaylist());
+      allow update: if isAdmin()
+        || (isOwner(uid) && (countsOnePlaylist() || marksOpened()));
 
       // Users can delete their own account (PDPA); the admin can too.
       allow delete: if isOwner(uid) || isAdmin();
@@ -57,6 +58,24 @@ service cloud.firestore {
           // New day: starts again at one.
           || (after.usageDate != before.usageDate && after.usageCount == 1)
         );
+    }
+
+    // The day the app was last opened (date only), for active-user counts.
+    function marksOpened() {
+      let after = request.resource.data;
+      return after.diff(resource.data).affectedKeys().hasOnly(['lastOpened'])
+        && after.lastOpened is string
+        && after.lastOpened.size() == 10;
+    }
+
+    // Sales recorded when the admin gives a plan; income reports.
+    match /payments/{id} {
+      allow read, write: if isAdmin();
+    }
+
+    // Weekly marketing numbers entered on the admin website.
+    match /marketing/{week} {
+      allow read, write: if isAdmin();
     }
 
     // Everything else is closed.

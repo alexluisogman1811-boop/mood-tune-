@@ -62,6 +62,20 @@ final entitlementsProvider = Provider<Entitlements>((ref) {
   );
 });
 
+/// Saves the day the app was opened (date only) for the admin's
+/// active-user counts. Watched once at the app's root.
+final openTrackerProvider = Provider<void>((ref) {
+  ref.listen(accountProvider, (_, next) {
+    final account = next.value;
+    final repo = ref.read(accountRepositoryProvider);
+    if (account == null || repo == null) return;
+    final now = ref.read(clockProvider)();
+    if (account.lastOpened == Account.dayKey(now)) return;
+    // Best effort: a failed write only makes the statistics a little low.
+    repo.markOpened(account, now).catchError((Object _) {});
+  }, fireImmediately: true);
+});
+
 /// Uses one of today's playlists. Returns false when a Free user has none
 /// left, so the caller can show the upgrade screen instead.
 ///

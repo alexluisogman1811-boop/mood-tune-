@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../core/l10n/app_language.dart';
+import '../features/account/application/account_providers.dart';
 import '../features/settings/application/theme_controller.dart';
 import 'router.dart';
 import 'theme/app_theme.dart';
@@ -12,6 +13,7 @@ class MoodScapeApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
+    ref.watch(openTrackerProvider);
     return MaterialApp.router(
       title: 'MoodScape',
       debugShowCheckedModeBanner: false,
