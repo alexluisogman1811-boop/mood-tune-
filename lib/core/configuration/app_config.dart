@@ -19,7 +19,7 @@ class AppConfig {
     this.firebaseAuthDomain = '',
     this.adminEmails = '',
     this.paymentInfo = '',
-    this.lineId = '',
+    this.messengerUrl = '',
   });
 
   factory AppConfig.fromEnvironment() => const AppConfig(
@@ -40,7 +40,7 @@ class AppConfig {
     firebaseAuthDomain: String.fromEnvironment('FIREBASE_AUTH_DOMAIN'),
     adminEmails: String.fromEnvironment('ADMIN_EMAILS'),
     paymentInfo: String.fromEnvironment('PAYMENT_INFO'),
-    lineId: String.fromEnvironment('LINE_ID'),
+    messengerUrl: String.fromEnvironment('MESSENGER_URL'),
   );
 
   final String spotifyClientId;
@@ -69,8 +69,9 @@ class AppConfig {
   /// How to pay, shown on the upgrade screen (e.g. PromptPay number).
   final String paymentInfo;
 
-  /// LINE ID where buyers send payment slips and ask for payment details.
-  final String lineId;
+  /// Facebook Messenger link (m.me/...) where buyers send payment slips and
+  /// ask for payment details.
+  final String messengerUrl;
 
   bool get hasSpotify =>
       spotifyClientId.isNotEmpty && spotifyRedirectUri.isNotEmpty;

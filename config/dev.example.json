@@ -11,6 +11,6 @@
   "FIREBASE_MESSAGING_SENDER_ID": "",
   "FIREBASE_AUTH_DOMAIN": "",
   "ADMIN_EMAILS": "",
-  "LINE_ID": "",
+  "MESSENGER_URL": "",
   "PAYMENT_INFO": ""
 }

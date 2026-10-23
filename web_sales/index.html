@@ -17,7 +17,7 @@
     --night: #0e0c1a; --dusk: #1b1730; --plum: #2a1f3d;
     --seed: #7c6cf2; --glow: #b6a8ff; --text: #f2efff; --muted: #b9b3d6;
     --card: rgba(255,255,255,.05); --line: rgba(182,168,255,.18);
-    --line-green: #06c755;
+    --msgr: #0866ff;
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
@@ -57,7 +57,7 @@
   .btn:hover { transform: translateY(-2px); }
   .btn-primary { background: var(--glow); color: #1a1433; box-shadow: 0 8px 30px rgba(182,168,255,.35); }
   .btn-ghost { border-color: var(--line); color: var(--text); background: var(--card); }
-  .btn-line { background: var(--line-green); color: #fff; }
+  .btn-msgr { background: var(--msgr); color: #fff; }
 
   /* Hero */
   .hero {
@@ -164,7 +164,7 @@
   ol.howto b { display: block; }
   ol.howto span { color: var(--muted); font-size: .95rem; }
   .lineid { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 16px 0; }
-  .lineid code { font-size: 1.4rem; font-weight: 800; color: var(--text); background: rgba(6,199,85,.12); border: 1px solid rgba(6,199,85,.4); padding: 6px 14px; border-radius: 12px; font-family: inherit; }
+  .lineid code { font-size: 1.4rem; font-weight: 800; color: var(--text); background: rgba(8,102,255,.14); border: 1px solid rgba(8,102,255,.5); padding: 6px 14px; border-radius: 12px; font-family: inherit; }
   .copy { background: none; border: 1px solid var(--line); color: var(--text); border-radius: 999px; padding: 6px 14px; cursor: pointer; font: inherit; font-size: .85rem; }
   .pay { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
   .pay span { font-size: .85rem; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
@@ -338,10 +338,10 @@
           <h3 data-t="line_h"></h3>
           <p class="sub" style="margin:0" data-t="line_p"></p>
           <div class="lineid">
-            <code id="lineid">company181113</code>
+            <code id="lineid">m.me/Moodscape1</code>
             <button class="copy" type="button" id="copyline" data-t="copy"></button>
           </div>
-          <a class="btn btn-line" id="linebtn" href="https://line.me/R/ti/p/~company181113" target="_blank" rel="noopener" data-t="open_line"></a>
+          <a class="btn btn-msgr" id="linebtn" href="https://m.me/Moodscape1" target="_blank" rel="noopener" data-t="open_line"></a>
           <p style="margin:20px 0 4px;font-weight:700" data-t="we_accept"></p>
           <div class="pay"><span>PromptPay</span><span data-t="bank"></span><span>TrueMoney</span><span>PayPal</span></div>
           <p class="note" style="text-align:left" id="chosen"></p>
@@ -377,7 +377,7 @@
 <footer>
   <div class="wrap">
     <span>© 2026 MoodScape</span>
-    <span><a href="../#/privacy" data-t="privacy"></a> · LINE: company181113</span>
+    <span><a href="../#/privacy" data-t="privacy"></a> · Messenger: <a href="https://m.me/Moodscape1">m.me/Moodscape1</a></span>
   </div>
 </footer>
 <div class="toast" id="toast" role="status"></div>
@@ -414,21 +414,21 @@ const T = {
     thb_note: "Baht prices are approximate (≈ 36 ฿ per $). Pay in baht or dollars — whichever is easier.",
     r1: "Playlists per day", r2: "Songs per playlist", r3: "Photo analysis", r4: "Mood + activity matching", r5: "Thai / English songs", r6: "Feedback & support",
     unlimited: "Unlimited",
-    buy_h: "How to buy Premium", buy_sub: "Payment is handled personally over LINE, so you can pay in the way that suits you.",
+    buy_h: "How to buy Premium", buy_sub: "Payment is handled personally over Facebook Messenger, so you can pay in the way that suits you.",
     b1h: "Create a free account", b1p: "Open the app and sign up with your email. Confirm the email we send you.",
-    b2h: "Message us on LINE", b2p: "Tell us the plan you want. We'll reply with PromptPay / bank / PayPal details.",
+    b2h: "Message our Facebook Page", b2p: "Tell us the plan you want. We'll reply with PromptPay / bank / PayPal details.",
     b3h: "Pay and send the slip", b3p: "Send the payment slip together with your account email.",
     b4h: "Premium switches on", b4p: "Usually within a day. Reopen the app to see your new plan.",
-    line_h: "Our LINE", line_p: "Add us as a friend and send a message:",
-    copy: "Copy", open_line: "Open LINE", we_accept: "We accept", bank: "Bank transfer",
-    copied: "Copied!", chosen: "You chose: {p}. Mention it in your LINE message.",
+    line_h: "Our Messenger", line_p: "Message our Facebook Page, MoodScape:",
+    copy: "Copy", open_line: "Open Messenger", we_accept: "We accept", bank: "Bank transfer",
+    copied: "Copied!", chosen: "You chose: {p}. Mention it in your Messenger message.",
     faq_h: "Questions",
     q1: "Do I need to pay to try it?", a1: "No. Every account gets 3 playlists a day for free, forever. No card needed.",
     q2: "How long does activation take?", a2: "Usually within a day after we receive your slip. Monthly and Yearly start from the day they are activated.",
     q3: "What happens when Monthly or Yearly ends?", a3: "Your account goes back to Free. Nothing is deleted. Renew any time and the new period is added on top of any time you still have.",
     q4: "Does it play the music itself?", a4: "MoodScape picks the songs and explains why. You listen in Spotify, YouTube or your favourite player.",
     q5: "What about my photos?", a5: "Photos are analysed for light, colour and weather and are not uploaded or stored. You can delete your account any time from the Account page.",
-    q6: "Can I get a refund?", a6: "If Premium doesn't work for you, message us on LINE within 7 days of paying and we'll sort it out.",
+    q6: "Can I get a refund?", a6: "If Premium doesn't work for you, message us on Messenger within 7 days of paying and we'll sort it out.",
     final_h: "Ready to hear your moment?", final_p: "Start free in your browser or install the Android app.",
     open_web: "Open MoodScape", get_apk: "Download Android app", privacy: "Privacy"
   },
@@ -462,21 +462,21 @@ const T = {
     thb_note: "ราคาเงินบาทเป็นราคาโดยประมาณ (≈ 36 ฿ ต่อ $) จ่ายเป็นบาทหรือดอลลาร์ก็ได้",
     r1: "เพลย์ลิสต์ต่อวัน", r2: "จำนวนเพลงต่อเพลย์ลิสต์", r3: "วิเคราะห์จากรูป", r4: "จับคู่ตามอารมณ์ + กิจกรรม", r5: "เพลงไทย / สากล", r6: "ส่งความคิดเห็นและการช่วยเหลือ",
     unlimited: "ไม่จำกัด",
-    buy_h: "วิธีซื้อ Premium", buy_sub: "ชำระเงินผ่าน LINE กับเราโดยตรง เลือกช่องทางที่สะดวกได้เลย",
+    buy_h: "วิธีซื้อ Premium", buy_sub: "ชำระเงินผ่าน Messenger ของเพจเราโดยตรง เลือกช่องทางที่สะดวกได้เลย",
     b1h: "สมัครบัญชีฟรี", b1p: "เปิดแอปแล้วสมัครด้วยอีเมล จากนั้นกดยืนยันในอีเมลที่เราส่งไป",
-    b2h: "ทักเราทาง LINE", b2p: "บอกแพ็กเกจที่ต้องการ เราจะส่งเลขพร้อมเพย์ / บัญชีธนาคาร / PayPal ให้",
+    b2h: "ทักเพจทาง Messenger", b2p: "บอกแพ็กเกจที่ต้องการ เราจะส่งเลขพร้อมเพย์ / บัญชีธนาคาร / PayPal ให้",
     b3h: "โอนเงินและส่งสลิป", b3p: "ส่งสลิปพร้อมอีเมลที่ใช้สมัครบัญชี",
     b4h: "เปิดใช้ Premium", b4p: "ปกติภายใน 1 วัน เปิดแอปใหม่เพื่อดูแพ็กเกจของคุณ",
-    line_h: "LINE ของเรา", line_p: "เพิ่มเพื่อนแล้วทักมาได้เลย:",
-    copy: "คัดลอก", open_line: "เปิด LINE", we_accept: "ช่องทางชำระเงิน", bank: "โอนผ่านธนาคาร",
-    copied: "คัดลอกแล้ว!", chosen: "คุณเลือก: {p} บอกชื่อแพ็กเกจนี้ในข้อความ LINE ได้เลย",
+    line_h: "Messenger ของเรา", line_p: "ทักเพจ MoodScape บน Facebook ได้เลย:",
+    copy: "คัดลอก", open_line: "เปิด Messenger", we_accept: "ช่องทางชำระเงิน", bank: "โอนผ่านธนาคาร",
+    copied: "คัดลอกแล้ว!", chosen: "คุณเลือก: {p} บอกชื่อแพ็กเกจนี้ในข้อความ Messenger ได้เลย",
     faq_h: "คำถามที่พบบ่อย",
     q1: "ต้องจ่ายเงินก่อนลองไหม?", a1: "ไม่ต้อง ทุกบัญชีใช้ฟรีได้วันละ 3 เพลย์ลิสต์ตลอดไป ไม่ต้องใช้บัตร",
     q2: "เปิดใช้งานนานแค่ไหน?", a2: "ปกติภายใน 1 วันหลังได้รับสลิป แพ็กเกจรายเดือนและรายปีเริ่มนับจากวันที่เปิดใช้",
     q3: "หมดอายุรายเดือน/รายปีแล้วเป็นยังไง?", a3: "บัญชีกลับเป็นแบบฟรี ไม่มีอะไรถูกลบ ต่ออายุได้ทุกเมื่อ และเวลาที่เหลืออยู่จะถูกบวกเพิ่มให้",
     q4: "แอปเล่นเพลงเองไหม?", a4: "MoodScape เลือกเพลงและอธิบายว่าทำไมถึงเข้ากัน คุณฟังผ่าน Spotify, YouTube หรือแอปที่ชอบ",
     q5: "รูปของฉันปลอดภัยไหม?", a5: "รูปถูกวิเคราะห์แค่แสง สี และสภาพอากาศ ไม่ถูกอัปโหลดหรือเก็บไว้ และลบบัญชีได้ทุกเมื่อในหน้าบัญชี",
-    q6: "ขอคืนเงินได้ไหม?", a6: "ถ้า Premium ไม่ตอบโจทย์ ทักเราทาง LINE ภายใน 7 วันหลังชำระเงิน แล้วเราจะช่วยดูให้",
+    q6: "ขอคืนเงินได้ไหม?", a6: "ถ้า Premium ไม่ตอบโจทย์ ทักเพจทาง Messenger ภายใน 7 วันหลังชำระเงิน แล้วเราจะช่วยดูให้",
     final_h: "พร้อมฟังเพลงของช่วงเวลานี้หรือยัง?", final_p: "เริ่มฟรีในเบราว์เซอร์ หรือติดตั้งแอป Android",
     open_web: "เปิด MoodScape", get_apk: "ดาวน์โหลดแอป Android", privacy: "ความเป็นส่วนตัว"
   }
@@ -515,7 +515,7 @@ function toast(msg) {
   setTimeout(() => t.classList.remove("show"), 1600);
 }
 document.getElementById("copyline").addEventListener("click", async () => {
-  try { await navigator.clipboard.writeText("company181113"); toast(T[lang].copied); }
+  try { await navigator.clipboard.writeText("https://m.me/Moodscape1"); toast(T[lang].copied); }
   catch (e) {
     const r = document.createRange(); r.selectNodeContents(document.getElementById("lineid"));
     const s = getSelection(); s.removeAllRanges(); s.addRange(r);

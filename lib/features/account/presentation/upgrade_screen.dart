@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/configuration/config_provider.dart';
 import '../../../core/l10n/l10n.dart';
@@ -25,7 +26,7 @@ class UpgradeScreen extends ConsumerWidget {
     final email = ref.watch(authUserProvider).value?.email ?? '';
     final config = ref.watch(appConfigProvider);
     final paymentInfo = config.paymentInfo;
-    final lineId = config.lineId;
+    final messengerUrl = config.messengerUrl;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -78,9 +79,9 @@ class UpgradeScreen extends ConsumerWidget {
                       Text(
                         paymentInfo.isNotEmpty
                             ? paymentInfo
-                            : lineId.isNotEmpty
+                            : messengerUrl.isNotEmpty
                             ? context.tr(
-                                'Message us on LINE for payment details: '
+                                'Message us on Messenger for payment details: '
                                 'PromptPay, bank transfer or PayPal.',
                               )
                             : context.tr(
@@ -88,19 +89,20 @@ class UpgradeScreen extends ConsumerWidget {
                                 'build yet.',
                               ),
                       ),
-                      if (lineId.isNotEmpty) ...[
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            const Icon(Icons.chat_outlined),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: SelectableText(
-                                context.tr('LINE ID: {id}', {'id': lineId}),
-                                style: theme.textTheme.titleMedium,
-                              ),
-                            ),
-                          ],
+                      if (messengerUrl.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        FilledButton.icon(
+                          onPressed: () => launchUrl(
+                            Uri.parse(messengerUrl),
+                            mode: LaunchMode.externalApplication,
+                          ),
+                          icon: const Icon(Icons.chat_outlined),
+                          label: Text(context.tr('Open Messenger')),
+                        ),
+                        const SizedBox(height: 4),
+                        SelectableText(
+                          messengerUrl.replaceFirst('https://', ''),
+                          style: theme.textTheme.bodyMedium,
                         ),
                       ],
                       const SizedBox(height: 12),

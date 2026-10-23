@@ -371,7 +371,7 @@ them (development builds) everything is unlocked and no sign-in is shown.
 | Lifetime | $49.99 (≈1,790 ฿) | Premium forever |
 
 Premium = unlimited playlists, photo analysis, 20/30-song playlists.
-Payment is manual: the buyer pays (details over LINE, `LINE_ID`, or the text in
+Payment is manual: the buyer pays (details over Facebook Messenger, `MESSENGER_URL`, or the text in
 `PAYMENT_INFO`), sends the slip with their account email, and an admin
 (a verified email in `ADMIN_EMAILS`) opens Account › Admin dashboard and gives
 the plan. `firestore.rules` enforces the same: users can create only a Free
