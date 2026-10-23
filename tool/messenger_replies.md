@@ -15,10 +15,10 @@ Hi 👋 Thanks for messaging MoodScape. Type "price", "pay" or "download", or ta
 **ราคาเท่าไหร่ / Prices?**
 แพ็กเกจ MoodScape ครับ
 • ฟรี: วันละ 3 เพลย์ลิสต์ เพลย์ลิสต์ละ 10 เพลง
-• รายเดือน $4.99 (≈179 ฿) • รายปี $39.99 (≈1,390 ฿) ⭐ • ตลอดชีพ $49.99 (≈1,790 ฿)
+• รายเดือน $2.99 (≈109 ฿) • รายปี $24.99 (≈899 ฿) ⭐ • ตลอดชีพ $39.99 (≈1,449 ฿)
 Premium = เพลย์ลิสต์ไม่จำกัด + วิเคราะห์จากรูป + 20/30 เพลง
 
-Free: 3 playlists/day. Monthly $4.99 · Yearly $39.99 · Lifetime $49.99. Premium = unlimited playlists, photo analysis, 20/30 songs.
+Free: 3 playlists/day. Monthly $2.99 · Yearly $24.99 · Lifetime $39.99. Premium = unlimited playlists, photo analysis, 20/30 songs.
 
 **ซื้อ Premium ยังไง / How to buy?**
 1. สมัครบัญชีฟรีในแอป 2. แจ้งแพ็กเกจที่ต้องการในแชทนี้ แอดมินจะส่งเลขพร้อมเพย์ / บัญชีธนาคาร / PayPal ให้ 3. โอนแล้วส่งสลิป + อีเมลที่ใช้สมัคร 4. เปิดใช้ภายใน 1 วันครับ

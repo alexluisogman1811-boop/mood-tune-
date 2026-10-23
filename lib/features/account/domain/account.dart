@@ -3,19 +3,19 @@ enum Plan {
   free('Free', price: null, duration: null, usd: 0, thb: 0),
   monthly(
     'Monthly',
-    price: '\$4.99',
+    price: '\$2.99',
     duration: Duration(days: 30),
-    usd: 4.99,
-    thb: 179,
+    usd: 2.99,
+    thb: 109,
   ),
   yearly(
     'Yearly',
-    price: '\$39.99',
+    price: '\$24.99',
     duration: Duration(days: 365),
-    usd: 39.99,
-    thb: 1390,
+    usd: 24.99,
+    thb: 899,
   ),
-  lifetime('Lifetime', price: '\$49.99', duration: null, usd: 49.99, thb: 1790);
+  lifetime('Lifetime', price: '\$39.99', duration: null, usd: 39.99, thb: 1449);
 
   const Plan(
     this.label, {

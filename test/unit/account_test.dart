@@ -70,9 +70,9 @@ void main() {
     });
 
     test('plan prices match what is sold', () {
-      expect(Plan.monthly.price, r'$4.99');
-      expect(Plan.yearly.price, r'$39.99');
-      expect(Plan.lifetime.price, r'$49.99');
+      expect(Plan.monthly.price, r'$2.99');
+      expect(Plan.yearly.price, r'$24.99');
+      expect(Plan.lifetime.price, r'$39.99');
       expect(Plan.free.isPaid, isFalse);
     });
   });
@@ -180,8 +180,8 @@ void main() {
         _now,
       );
       expect(repo.payments, [('buyer@example.com', Plan.yearly)]);
-      expect(Plan.yearly.thb, 1390);
-      expect(Plan.lifetime.usd, 49.99);
+      expect(Plan.yearly.thb, 899);
+      expect(Plan.lifetime.usd, 39.99);
     });
 
     test('Premium users are never limited', () async {

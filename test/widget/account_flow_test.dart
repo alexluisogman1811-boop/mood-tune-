@@ -114,7 +114,7 @@ void main() {
     await tester.pumpAndSettle();
     c.read(routerProvider).push(AppRoutes.upgrade);
     await tester.pumpAndSettle();
-    for (final price in [r'$4.99', r'$39.99', r'$49.99']) {
+    for (final price in [r'$2.99', r'$24.99', r'$39.99']) {
       expect(find.text(price), findsOneWidget);
     }
     await tester.scrollUntilVisible(

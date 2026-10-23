@@ -366,9 +366,9 @@ them (development builds) everything is unlocked and no sign-in is shown.
 | Plan | Price | What you get |
 |---|---|---|
 | Free | $0 | 3 playlists a day, 10 songs, no photo analysis |
-| Monthly | $4.99 (≈179 ฿) | Premium for 30 days |
-| Yearly | $39.99 (≈1,390 ฿) | Premium for 365 days |
-| Lifetime | $49.99 (≈1,790 ฿) | Premium forever |
+| Monthly | $2.99 (≈109 ฿) | Premium for 30 days |
+| Yearly | $24.99 (≈899 ฿) | Premium for 365 days |
+| Lifetime | $39.99 (≈1,449 ฿) | Premium forever |
 
 Premium = unlimited playlists, photo analysis, 20/30-song playlists.
 Payment is manual: the buyer pays (details over Facebook Messenger, `MESSENGER_URL`, or the text in

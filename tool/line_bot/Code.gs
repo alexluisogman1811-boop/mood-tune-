@@ -38,8 +38,8 @@ var ANSWERS = {
     en: 'Hi 👋 Welcome to MoodScape, the app that builds a playlist for your mood and surroundings.\n\nAsk anything, e.g. "price", "how to pay", "download", or tap a button below.',
   },
   price: {
-    th: 'แพ็กเกจ MoodScape{p}\n\n• ฟรี: วันละ 3 เพลย์ลิสต์ เพลย์ลิสต์ละ 10 เพลง\n• รายเดือน: $4.99 (≈179 ฿) / 30 วัน\n• รายปี: $39.99 (≈1,390 ฿) / 365 วัน ⭐ คุ้มที่สุด\n• ตลอดชีพ: $49.99 (≈1,790 ฿) จ่ายครั้งเดียว\n\nPremium = เพลย์ลิสต์ไม่จำกัด + วิเคราะห์จากรูป + เพลย์ลิสต์ 20/30 เพลง\nสนใจแพ็กเกจไหน พิมพ์ "วิธีจ่าย" ได้เลย{p}',
-    en: 'MoodScape plans:\n\n• Free: 3 playlists a day, 10 songs each\n• Monthly: $4.99 (≈179 ฿) for 30 days\n• Yearly: $39.99 (≈1,390 ฿) for 365 days ⭐ best value\n• Lifetime: $49.99 (≈1,790 ฿), pay once\n\nPremium = unlimited playlists + photo analysis + 20/30-song playlists.\nType "how to pay" when you are ready.',
+    th: 'แพ็กเกจ MoodScape{p}\n\n• ฟรี: วันละ 3 เพลย์ลิสต์ เพลย์ลิสต์ละ 10 เพลง\n• รายเดือน: $2.99 (≈109 ฿) / 30 วัน\n• รายปี: $24.99 (≈899 ฿) / 365 วัน ⭐ คุ้มที่สุด\n• ตลอดชีพ: $39.99 (≈1,449 ฿) จ่ายครั้งเดียว\n\nPremium = เพลย์ลิสต์ไม่จำกัด + วิเคราะห์จากรูป + เพลย์ลิสต์ 20/30 เพลง\nสนใจแพ็กเกจไหน พิมพ์ "วิธีจ่าย" ได้เลย{p}',
+    en: 'MoodScape plans:\n\n• Free: 3 playlists a day, 10 songs each\n• Monthly: $2.99 (≈109 ฿) for 30 days\n• Yearly: $24.99 (≈899 ฿) for 365 days ⭐ best value\n• Lifetime: $39.99 (≈1,449 ฿), pay once\n\nPremium = unlimited playlists + photo analysis + 20/30-song playlists.\nType "how to pay" when you are ready.',
   },
   pay: {
     th: 'วิธีอัปเกรดเป็น Premium{p}\n\n1. สมัครบัญชีฟรีในแอปก่อน (ถ้ายังไม่มี)\n2. ชำระเงินตามแพ็กเกจที่เลือก\n{payment}\n3. ส่งสลิป + อีเมลที่ใช้สมัครในแชทนี้\n4. แอดมินเปิดใช้ให้ ปกติภายใน 1 วัน{p}',

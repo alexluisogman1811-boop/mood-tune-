@@ -138,7 +138,7 @@
     <!-- MONEY -->
     <div data-view="money" class="hidden">
       <h1>Money</h1>
-      <p class="sub">Income from plans you switched on. Baht uses the sales-page prices (179 / 1,390 / 1,790 ฿).</p>
+      <p class="sub">Income from plans you switched on. Baht uses the sales-page prices (109 / 899 / 1,449 ฿).</p>
       <div class="grid" id="moneyKpis"></div>
 
       <section class="card chart">
@@ -220,9 +220,9 @@ import { getFirestore, collection, onSnapshot, doc, setDoc, addDoc, writeBatch,
 const cfg = window.MS_CONFIG;
 const PLANS = {
   free: { label: "Free", usd: 0, thb: 0, days: null },
-  monthly: { label: "Monthly", usd: 4.99, thb: 179, days: 30 },
-  yearly: { label: "Yearly", usd: 39.99, thb: 1390, days: 365 },
-  lifetime: { label: "Lifetime", usd: 49.99, thb: 1790, days: null },
+  monthly: { label: "Monthly", usd: 2.99, thb: 109, days: 30 },
+  yearly: { label: "Yearly", usd: 24.99, thb: 899, days: 365 },
+  lifetime: { label: "Lifetime", usd: 39.99, thb: 1449, days: null },
 };
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -359,7 +359,7 @@ function render() {
   const sum = (list, k) => list.reduce((n, p) => n + (Number(p[k]) || 0), 0);
   const thisMonth = sales.filter((p) => monthKey(p.date) === monthKey(now));
   const last30 = sales.filter((p) => p.date >= monthAgo);
-  const mkt = weeks.map((w) => ({ ...w, revenue: (w.monthly || 0) * 179 + (w.yearly || 0) * 1390 + (w.lifetime || 0) * 1790 }));
+  const mkt = weeks.map((w) => ({ ...w, revenue: ["monthly", "yearly", "lifetime"].reduce((n, p) => n + (w[p] || 0) * PLANS[p].thb, 0) }));
   const adTotal = mkt.reduce((n, w) => n + (Number(w.adSpend) || 0), 0);
   $("moneyKpis").innerHTML = [
     kpi("Total income", thb(sum(sales, "thb")), usd(sum(sales, "usd")), true),

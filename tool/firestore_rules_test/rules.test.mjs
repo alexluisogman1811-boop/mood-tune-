@@ -181,7 +181,7 @@ test('users can save the day they opened the app, nothing else with it', async (
 
 test('only the admin can read and write payments and marketing', async () => {
   const sale = { uid: 'alice', email: 'alice@example.com', plan: 'yearly',
-    usd: 39.99, thb: 1390, at: serverTimestamp() };
+    usd: 24.99, thb: 899, at: serverTimestamp() };
   await assertFails(setDoc(doc(alice(), 'payments/p1'), sale));
   await assertFails(getDocs(collection(alice(), 'payments')));
   await assertFails(setDoc(doc(alice(), 'marketing/2026-10-19'), { leads: 5 }));

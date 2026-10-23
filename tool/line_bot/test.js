@@ -49,8 +49,8 @@ for (const key of Object.keys(ctx.ANSWERS)) {
   }
 }
 assert.ok(ctx.replyText('pay', 'th', 'พร้อมเพย์ 000').includes('พร้อมเพย์ 000'));
-assert.ok(ctx.replyText('price', 'th', '').includes('≈179 ฿'));
-assert.ok(ctx.replyText('price', 'en', '').includes('$49.99'));
+assert.ok(ctx.replyText('price', 'th', '').includes('≈109 ฿'));
+assert.ok(ctx.replyText('price', 'en', '').includes('$39.99'));
 
 // LINE allows at most 13 quick-reply buttons with labels up to 20 characters.
 for (const lang of ['th', 'en']) {
