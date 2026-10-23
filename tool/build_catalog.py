@@ -52,13 +52,17 @@ APPLE_COUNTRIES = {
 DEEZER_QUERIES = {
     "thai": ["thai hits", "เพลงไทย", "thai pop", "thai indie", "thai acoustic",
              "thai chill", "thai party", "thai rock", "thai workout",
-             "thai love songs", "เพลงชิล", "เพลงฮิต"],
+             "thai love songs", "เพลงชิล", "เพลงฮิต", "เพลงรัก", "เพลงเศร้า",
+             "เพลงอกหัก", "ลูกทุ่ง", "luk thung", "thai hip hop", "t-pop",
+             "thai r&b", "เพลงเพื่อชีวิต", "thai 90s", "thai cafe",
+             "เพลงวัยรุ่น", "thai ost", "thai band"],
     "korean": ["top k-pop", "k-pop hits", "k-drama ost", "korean ballad",
                "korean indie", "k-pop workout", "k-pop chill", "k-pop party",
                "korean r&b", "k-pop dance"],
     "japanese": ["j-pop hits", "anime hits", "city pop", "japanese acoustic",
                  "j-rock", "anime workout", "j-pop chill", "vocaloid",
-                 "japanese drive"],
+                 "japanese drive", "j-pop ballad", "anime opening",
+                 "japanese indie", "j-pop study"],
     "spanish": ["éxitos latinos", "baladas en español", "rock en español",
                 "pop en español", "música para entrenar", "reggaeton fiesta",
                 "música para manejar", "chill en español",
@@ -76,7 +80,9 @@ DEEZER_QUERIES = {
     "instrumental": ["piano study", "lofi study beats", "classical focus",
                      "ambient study", "solo piano", "instrumental focus",
                      "deep focus", "sleep piano", "peaceful piano",
-                     "work focus instrumental", "chillhop"],
+                     "work focus instrumental", "chillhop", "jazz cafe",
+                     "acoustic guitar instrumental", "workout instrumental",
+                     "rain sounds piano", "film scores", "bossa nova jazz"],
 }
 
 # ---- Language rules ---------------------------------------------------------
@@ -238,7 +244,7 @@ def verified(track: dict, language: str | None, instrumental: bool) -> bool:
     return True
 
 
-def collect(per_language: int) -> list[dict]:
+def collect(per_language: int, playlists_per_query: int = 2) -> list[dict]:
     found: dict[int, dict] = {}
 
     def add(track: dict, language: str | None, instrumental: bool,
@@ -270,7 +276,8 @@ def collect(per_language: int) -> list[dict]:
     for lang, queries in DEEZER_QUERIES.items():
         for q in queries:
             pls = get_json("https://api.deezer.com/search/playlist",
-                           {"q": q, "limit": 2}).get("data", [])
+                           {"q": q, "limit": playlists_per_query}
+                           ).get("data", [])
             for pl in pls:
                 tracks = get_json(f"https://api.deezer.com/playlist/{pl['id']}"
                                   "/tracks", {"limit": 100}).get("data", [])
@@ -425,9 +432,10 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--per-language", type=int, default=150)
     ap.add_argument("--workers", type=int, default=4)
+    ap.add_argument("--playlists-per-query", type=int, default=2)
     args = ap.parse_args()
 
-    chosen = collect(args.per_language)
+    chosen = collect(args.per_language, args.playlists_per_query)
     print(f"analysing {len(chosen)} previews…", flush=True)
     feats: dict[int, dict] = {}
     with cf.ProcessPoolExecutor(args.workers) as pool:
@@ -445,8 +453,9 @@ def main() -> None:
                 print(f"  {i}/{len(chosen)} analysed", flush=True)
 
     catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
-    # Keep hand-curated songs; replace earlier analysed ones.
-    kept = [t for t in catalog["tracks"] if t.get("analysis") != "preview"]
+    # Add to the catalogue: keep every song already in it (previews from older
+    # runs may have expired, so they cannot always be measured again).
+    kept = list(catalog["tracks"])
     seen = {norm(t["title"]) + "|" + norm(t["artist"])[:6] for t in kept}
     added = []
     for e in chosen:
