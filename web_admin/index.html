@@ -213,7 +213,7 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut,
-  sendPasswordResetEmail, connectAuthEmulator } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+  sendPasswordResetEmail, sendEmailVerification, connectAuthEmulator } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
 import { getFirestore, collection, onSnapshot, doc, setDoc, addDoc, writeBatch,
   Timestamp, serverTimestamp, connectFirestoreEmulator } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
@@ -254,7 +254,8 @@ let users = [], payments = [], weeks = [], unsub = [];
 $("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const m = $("loginMsg"); m.className = "msg"; m.textContent = "Signing in…";
-  try { await signInWithEmailAndPassword(auth, $("email").value.trim(), $("password").value); m.textContent = ""; }
+  // On success the auth listener below shows the dashboard or says why not.
+  try { await signInWithEmailAndPassword(auth, $("email").value.trim(), $("password").value); }
   catch (err) { m.className = "msg err"; m.textContent = /invalid|wrong|user-not-found/i.test(err.code || "") ? "Wrong email or password." : "Could not sign in: " + (err.code || err.message); }
 });
 $("forgot").addEventListener("click", async () => {
@@ -268,12 +269,22 @@ $("signOut").addEventListener("click", () => signOut(auth));
 onAuthStateChanged(auth, (user) => {
   unsub.forEach((u) => u()); unsub = [];
   if (!user) { $("appView").classList.add("hidden"); $("loginView").classList.remove("hidden"); return; }
-  const ok = user.emailVerified && admins.includes((user.email || "").toLowerCase());
-  if (!ok) {
-    $("loginMsg").className = "msg err";
-    $("loginMsg").textContent = user.emailVerified ? "This email is not an admin." : "Confirm your email first (check your inbox), then sign in again.";
-    signOut(auth); return;
+  const isListed = admins.includes((user.email || "").toLowerCase());
+  if (!isListed || !user.emailVerified) {
+    const m = $("loginMsg"); m.className = "msg err";
+    if (!isListed) {
+      m.textContent = `${user.email} is not an admin email.`;
+      signOut(auth);
+    } else {
+      m.textContent = "Your email is not confirmed yet. Sending you a confirmation email…";
+      sendEmailVerification(user)
+        .then(() => { m.textContent = `We sent a confirmation email to ${user.email}. Click the link in it (check Spam too), then sign in here again.`; })
+        .catch((err) => { m.textContent = `Your email is not confirmed yet. Use the link in the email MoodScape sent you, then sign in again. (${err.code || err.message})`; })
+        .finally(() => signOut(auth));
+    }
+    return;
   }
+  $("loginMsg").textContent = "";
   $("loginView").classList.add("hidden"); $("appView").classList.remove("hidden");
   const fail = (what) => (err) => { $("loadMsg").className = "msg err"; $("loadMsg").textContent = `Could not load ${what}: ${err.code || err.message}`; };
   unsub.push(onSnapshot(collection(db, "users"), (s) => { users = s.docs.map((d) => ({ id: d.id, ...d.data() })); render(); }, fail("users")));
