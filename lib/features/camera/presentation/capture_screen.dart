@@ -6,7 +6,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../app/router.dart';
-import '../../account/application/account_providers.dart';
 import '../../../core/errors/app_failure.dart';
 import '../../../core/l10n/l10n.dart';
 import '../../../shared/platform/temp_file.dart';
@@ -36,18 +35,8 @@ class _CaptureScreenState extends ConsumerState<CaptureScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _initializing = false;
-    // Free plan: photo analysis is Premium, so the camera only starts once
-    // the plan is known to allow it (the account may still be loading).
-    ref.listenManual(entitlementsProvider, (_, next) {
-      if (next.canUsePhoto && !_cameraStarted) {
-        _cameraStarted = true;
-        _initCamera();
-      }
-    }, fireImmediately: true);
+    _initCamera();
   }
-
-  bool _cameraStarted = false;
 
   @override
   void dispose() {
@@ -216,64 +205,8 @@ class _CaptureScreenState extends ConsumerState<CaptureScreen>
     context.push(AppRoutes.mood);
   }
 
-  /// Shown to Free users instead of the camera.
-  Widget _premiumLock() {
-    final theme = Theme.of(context);
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(title: Text(context.tr('Capture your surroundings'))),
-      body: GradientBackground(
-        child: SafeArea(
-          child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.lock_outline,
-                    size: 48,
-                    color: theme.colorScheme.primary,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    context.tr('Photo analysis is a Premium feature'),
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.titleLarge,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    context.tr(
-                      'Premium reads the light, colour and weather around '
-                      'you to pick better songs. You can still continue '
-                      'with your activity and mood.',
-                    ),
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.bodyMedium,
-                  ),
-                  const SizedBox(height: 24),
-                  FilledButton.icon(
-                    onPressed: () => context.push(AppRoutes.upgrade),
-                    icon: const Icon(Icons.workspace_premium_outlined),
-                    label: Text(context.tr('Upgrade to Premium')),
-                  ),
-                  const SizedBox(height: 8),
-                  TextButton(
-                    onPressed: _skip,
-                    child: Text(context.tr('Continue without a photo')),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (!ref.watch(entitlementsProvider).canUsePhoto) return _premiumLock();
     final review = _review;
     return Scaffold(
       extendBodyBehindAppBar: true,

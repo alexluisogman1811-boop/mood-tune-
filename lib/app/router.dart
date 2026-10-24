@@ -1,12 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:material_ui/material_ui.dart';
 
-import '../features/account/application/account_providers.dart';
-import '../features/account/presentation/account_screen.dart';
-import '../features/account/presentation/admin_screen.dart';
-import '../features/account/presentation/login_screen.dart';
-import '../features/account/presentation/upgrade_screen.dart';
 import '../features/atmosphere/presentation/analysis_screen.dart';
 import '../features/camera/presentation/capture_screen.dart';
 import '../features/feedback/presentation/feedback_screen.dart';
@@ -33,51 +27,13 @@ abstract final class AppRoutes {
   static const results = '/results';
   static const settings = '/settings';
   static const feedback = '/feedback';
-  static const login = '/login';
-  static const account = '/account';
-  static const upgrade = '/upgrade';
-  static const admin = '/admin';
   static String track(String id) => '/results/track/${Uri.encodeComponent(id)}';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
-  // Re-check where the user may go whenever they sign in or out.
-  final authChanged = ValueNotifier(0);
-  ref
-    ..listen(authUserProvider, (_, _) => authChanged.value++)
-    ..onDispose(authChanged.dispose);
-
   final router = GoRouter(
     initialLocation: AppRoutes.welcome,
-    refreshListenable: authChanged,
-    redirect: (context, state) {
-      if (!ref.read(accountsEnabledProvider)) return null;
-      final auth = ref.read(authUserProvider);
-      if (auth.isLoading) return null;
-      final signedIn = auth.value != null;
-      final path = state.matchedLocation;
-      final open = path == AppRoutes.login || path == AppRoutes.privacy;
-      if (!signedIn && !open) return AppRoutes.login;
-      if (signedIn && path == AppRoutes.login) return AppRoutes.welcome;
-      return null;
-    },
     routes: [
-      GoRoute(
-        path: AppRoutes.login,
-        builder: (context, state) => const LoginScreen(),
-      ),
-      GoRoute(
-        path: AppRoutes.account,
-        builder: (context, state) => const AccountScreen(),
-      ),
-      GoRoute(
-        path: AppRoutes.upgrade,
-        builder: (context, state) => const UpgradeScreen(),
-      ),
-      GoRoute(
-        path: AppRoutes.admin,
-        builder: (context, state) => const AdminScreen(),
-      ),
       GoRoute(
         path: AppRoutes.welcome,
         builder: (context, state) => const WelcomeScreen(),

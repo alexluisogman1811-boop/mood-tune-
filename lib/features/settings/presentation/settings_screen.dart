@@ -4,7 +4,6 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../../app/router.dart';
 import '../../../core/configuration/config_provider.dart';
-import '../../account/application/account_providers.dart';
 import '../../../core/l10n/app_language.dart';
 import '../../../core/l10n/l10n.dart';
 import '../../../core/privacy/photo_consent.dart';
@@ -40,18 +39,6 @@ class SettingsScreen extends ConsumerWidget {
           child: ListView(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 32),
             children: [
-              if (ref.watch(accountsEnabledProvider)) ...[
-                section('Account'),
-                Card(
-                  child: ListTile(
-                    leading: const Icon(Icons.account_circle_outlined),
-                    title: Text(context.tr('Your account')),
-                    subtitle: Text(context.tr('Plan, Premium, sign out')),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () => context.push(AppRoutes.account),
-                  ),
-                ),
-              ],
               section('Language'),
               const _LanguagePicker(),
               section('Appearance'),

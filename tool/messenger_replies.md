@@ -1,3 +1,6 @@
+> Note (1.12.0): MoodScape is now free with no sign-in. Replies about prices,
+> payment slips and accounts are no longer used.
+
 # Messenger auto-replies (Meta Business Suite)
 
 Set in Meta Business Suite › Inbox › Automations for the Facebook Page

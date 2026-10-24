@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MoodScape Premium</title>
+<title>MoodScape — Free</title>
 <meta name="description" content="MoodScape builds a playlist for your mood, your activity and the place you are in. ฟังเพลงที่เข้ากับอารมณ์และบรรยากาศของคุณ">
 <meta property="og:title" content="MoodScape — music that fits your moment">
-<meta property="og:description" content="Free: 3 playlists a day. Premium from $2.99 (≈109 ฿).">
+<meta property="og:description" content="100% free: unlimited playlists for your mood, activity and surroundings.">
 <meta property="og:image" content="../icons/Icon-512.png">
 <link rel="icon" href="../favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -197,8 +197,8 @@
     <a class="brand" href="#top"><img src="../icons/Icon-192.png" alt="">MoodScape</a>
     <nav>
       <a class="link" href="#how" data-t="nav_how"></a>
-      <a class="link" href="#pricing" data-t="nav_pricing"></a>
-      <a class="link" href="#buy" data-t="nav_buy"></a>
+      <a class="link" href="#features" data-t="nav_pricing"></a>
+      <a class="link" href="#faq" data-t="nav_buy"></a>
       <button class="lang" id="lang" type="button" aria-label="Switch language">English</button>
     </nav>
   </div>
@@ -213,7 +213,7 @@
         <p class="lead" data-t="lead"></p>
         <div class="cta">
           <a class="btn btn-primary" href="../" data-t="try"></a>
-          <a class="btn btn-ghost" href="#pricing" data-t="see_plans"></a>
+          <a class="btn btn-ghost" href="#free" data-t="see_plans"></a>
         </div>
         <div class="trust">
           <span data-t="t1"></span><span data-t="t2"></span><span data-t="t3"></span>
@@ -244,7 +244,7 @@
     </div>
   </section>
 
-  <section class="alt">
+  <section class="alt" id="features">
     <div class="wrap">
       <h2 data-t="feat_h"></h2>
       <p class="sub" data-t="feat_sub"></p>
@@ -259,93 +259,22 @@
     </div>
   </section>
 
-  <section id="pricing">
+  <section id="free">
     <div class="wrap">
       <div class="center">
-        <h2 data-t="price_h"></h2>
-        <p class="sub" data-t="price_sub"></p>
+        <h2 data-t="free_h"></h2>
+        <p class="sub" data-t="free_sub"></p>
       </div>
-      <div class="plans">
-        <div class="card plan">
-          <h3 data-t="free"></h3>
-          <div class="price">$0</div>
-          <div class="thb">0 ฿</div>
-          <div class="per" data-t="forever"></div>
-          <ul>
-            <li data-t="pf1"></li><li data-t="pf2"></li>
-            <li class="no" data-t="pf3"></li><li class="no" data-t="pf4"></li>
-          </ul>
-          <a class="btn btn-ghost" href="../" data-t="start_free"></a>
-        </div>
-        <div class="card plan">
-          <h3 data-t="monthly"></h3>
-          <div class="price">$2.99</div>
-          <div class="thb">≈ 109 ฿</div>
-          <div class="per" data-t="per_month"></div>
-          <ul><li data-t="pp1"></li><li data-t="pp2"></li><li data-t="pp3"></li><li data-t="pm4"></li></ul>
-          <a class="btn btn-ghost" href="#buy" data-plan="monthly" data-t="choose"></a>
-        </div>
-        <div class="card plan best">
-          <span class="badge" data-t="best"></span>
-          <h3 data-t="yearly"></h3>
-          <div class="price">$24.99</div>
-          <div class="thb">≈ 899 ฿</div>
-          <div class="per" data-t="per_year"></div>
-          <ul><li data-t="pp1"></li><li data-t="pp2"></li><li data-t="pp3"></li><li data-t="py4"></li></ul>
-          <a class="btn btn-primary" href="#buy" data-plan="yearly" data-t="choose"></a>
-        </div>
-        <div class="card plan">
-          <h3 data-t="lifetime"></h3>
-          <div class="price">$39.99</div>
-          <div class="thb">≈ 1,449 ฿</div>
-          <div class="per" data-t="once"></div>
-          <ul><li data-t="pp1"></li><li data-t="pp2"></li><li data-t="pp3"></li><li data-t="pl4"></li></ul>
-          <a class="btn btn-ghost" href="#buy" data-plan="lifetime" data-t="choose"></a>
-        </div>
+      <div class="features">
+        <div class="card"><div class="num">✓</div><h3 data-t="fr1h"></h3><p data-t="fr1p"></p></div>
+        <div class="card"><div class="num">✓</div><h3 data-t="fr2h"></h3><p data-t="fr2p"></p></div>
+        <div class="card"><div class="num">✓</div><h3 data-t="fr3h"></h3><p data-t="fr3p"></p></div>
+        <div class="card"><div class="num">✓</div><h3 data-t="fr4h"></h3><p data-t="fr4p"></p></div>
+        <div class="card"><div class="num">✓</div><h3 data-t="fr5h"></h3><p data-t="fr5p"></p></div>
+        <div class="card"><div class="num">✓</div><h3 data-t="fr6h"></h3><p data-t="fr6p"></p></div>
       </div>
-      <p class="note" data-t="thb_note"></p>
-
-      <div class="tablewrap">
-        <table>
-          <thead><tr><th></th><th data-t="free"></th><th>Premium</th></tr></thead>
-          <tbody>
-            <tr><td data-t="r1"></td><td>3</td><td data-t="unlimited"></td></tr>
-            <tr><td data-t="r2"></td><td>10</td><td>10 / 20 / 30</td></tr>
-            <tr><td data-t="r3"></td><td>–</td><td>✓</td></tr>
-            <tr><td data-t="r4"></td><td>✓</td><td>✓</td></tr>
-            <tr><td data-t="r5"></td><td>✓</td><td>✓</td></tr>
-            <tr><td data-t="r6"></td><td>✓</td><td>✓</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <section id="buy" class="alt">
-    <div class="wrap">
-      <h2 data-t="buy_h"></h2>
-      <p class="sub" data-t="buy_sub"></p>
-      <div class="buy">
-        <div class="card">
-          <ol class="howto">
-            <li><b data-t="b1h"></b><span data-t="b1p"></span></li>
-            <li><b data-t="b2h"></b><span data-t="b2p"></span></li>
-            <li><b data-t="b3h"></b><span data-t="b3p"></span></li>
-            <li><b data-t="b4h"></b><span data-t="b4p"></span></li>
-          </ol>
-        </div>
-        <div class="card">
-          <h3 data-t="line_h"></h3>
-          <p class="sub" style="margin:0" data-t="line_p"></p>
-          <div class="lineid">
-            <code id="lineid">m.me/Moodscape1</code>
-            <button class="copy" type="button" id="copyline" data-t="copy"></button>
-          </div>
-          <a class="btn btn-msgr" id="linebtn" href="https://m.me/Moodscape1" target="_blank" rel="noopener" data-t="open_line"></a>
-          <p style="margin:20px 0 4px;font-weight:700" data-t="we_accept"></p>
-          <div class="pay"><span>PromptPay</span><span data-t="bank"></span><span>TrueMoney</span><span>PayPal</span></div>
-          <p class="note" style="text-align:left" id="chosen"></p>
-        </div>
+      <div class="cta" style="justify-content:center;margin-top:32px">
+        <a class="btn btn-primary" href="../" data-t="open_web"></a>
       </div>
     </div>
   </section>
@@ -385,17 +314,31 @@
 <script>
 const T = {
   en: {
-    nav_how: "How it works", nav_pricing: "Pricing", nav_buy: "How to buy",
-    pill: "🎵 Free to start · no card needed",
+    fr6p: "Works in the browser on iPhone and Android, plus an Android app.",
+    fr6h: "Phone or web",
+    fr5p: "No email, no password. Nothing to create before you start.",
+    fr5h: "No sign-up",
+    fr4p: "Thai, English, K-pop, J-pop, Spanish, French, Portuguese and instrumental.",
+    fr4h: "8,000+ songs",
+    fr3p: "Pick 10, 20 or 30 songs per playlist.",
+    fr3h: "20 or 30 songs",
+    fr2p: "Snap the sky or your room and the music follows the scene.",
+    fr2h: "Photo analysis",
+    fr1p: "Make as many as you want, every day.",
+    fr1h: "Unlimited playlists",
+    free_sub: "No account, no payment, no limits. Open it and start listening.",
+    free_h: "Everything is free",
+    nav_how: "How it works", nav_pricing: "Features", nav_buy: "FAQ",
+    pill: "🎵 100% free · no sign-up",
     h1: "Music that fits <em>your moment</em>",
     lead: "Tell MoodScape how you feel and what you're doing — or snap the sky, the room, the street — and get a playlist that matches in seconds.",
-    try: "Try it free", see_plans: "See plans",
-    t1: "3 free playlists every day", t2: "Thai + English songs", t3: "Photos never leave your phone",
+    try: "Try it free", see_plans: "What's free?",
+    t1: "Free, no limits", t2: "Thai + English songs", t3: "Photos never leave your phone",
     mock_for: "For: reading · calm · rainy evening", mock_title: "Soft Rain Focus",
     mock_c1: "Calm", mock_c2: "Warm light", mock_c3: "Thai + English",
     how_h: "How it works", how_sub: "Three taps from \"I don't know what to listen to\" to the right playlist.",
     s1h: "Pick your mood and activity", s1p: "Reading, working out, studying, relaxing… plus how you feel right now.",
-    s2h: "Snap your surroundings (Premium)", s2p: "MoodScape reads the light, colour and weather of the scene — never faces.",
+    s2h: "Snap your surroundings (optional)", s2p: "MoodScape reads the light, colour and weather of the scene — never faces.",
     s3h: "Get your playlist", s3p: "Each song shows a match score and why it fits. Open it in Spotify or YouTube.",
     feat_h: "Made for how you really listen", feat_sub: "Built from 8,000+ analysed songs, matched by energy, tempo, mood and language.",
     f1h: "Smart matching", f1p: "Energy, tempo and mood are scored against your moment, not just a genre.",
@@ -423,27 +366,41 @@ const T = {
     copy: "Copy", open_line: "Open Messenger", we_accept: "We accept", bank: "Bank transfer",
     copied: "Copied!", chosen: "You chose: {p}. Mention it in your Messenger message.",
     faq_h: "Questions",
-    q1: "Do I need to pay to try it?", a1: "No. Every account gets 3 playlists a day for free, forever. No card needed.",
-    q2: "How long does activation take?", a2: "Usually within a day after we receive your slip. Monthly and Yearly start from the day they are activated.",
-    q3: "What happens when Monthly or Yearly ends?", a3: "Your account goes back to Free. Nothing is deleted. Renew any time and the new period is added on top of any time you still have.",
-    q4: "Does it play the music itself?", a4: "MoodScape picks the songs and explains why. You listen in Spotify, YouTube or your favourite player.",
-    q5: "What about my photos?", a5: "Photos are analysed for light, colour and weather and are not uploaded or stored. You can delete your account any time from the Account page.",
-    q6: "Can I get a refund?", a6: "If Premium doesn't work for you, message us on Messenger within 7 days of paying and we'll sort it out.",
-    final_h: "Ready to hear your moment?", final_p: "Start free in your browser or install the Android app.",
+    q1: "Is it really free?", a1: "Yes. Every feature is free, with no limits and nothing to buy.",
+    q2: "Do I need an account?", a2: "No. Just open the app and start. Your settings stay on your phone.",
+    q3: "Does it play the music itself?", a3: "MoodScape picks the songs and explains why. You listen in Spotify or Apple Music.",
+    q4: "What about my photos?", a4: "Photos are analysed for light, colour and weather only, on your phone. They are not uploaded or stored.",
+    q5: "Does it work on iPhone?", a5: "Yes, open the link in Safari or any browser. There is also an Android app to download.",
+    q6: "How can I contact you?", a6: "Message our Facebook Page: m.me/Moodscape1.",
+    final_h: "Ready to hear your moment?", final_p: "Free, in your browser or as an Android app.",
     open_web: "Open MoodScape", get_apk: "Download Android app", privacy: "Privacy"
   },
   th: {
-    nav_how: "ใช้งานยังไง", nav_pricing: "ราคา", nav_buy: "วิธีซื้อ",
-    pill: "🎵 เริ่มใช้ฟรี · ไม่ต้องใช้บัตร",
+    fr6p: "ใช้ในเบราว์เซอร์ได้ทั้ง iPhone และ Android และมีแอป Android ให้โหลด",
+    fr6h: "มือถือหรือเว็บ",
+    fr5p: "ไม่ต้องใช้อีเมลหรือรหัสผ่าน เปิดแล้วเริ่มได้ทันที",
+    fr5h: "ไม่ต้องสมัคร",
+    fr4p: "ไทย สากล K-pop J-pop สเปน ฝรั่งเศส โปรตุเกส และบรรเลง",
+    fr4h: "กว่า 8,000 เพลง",
+    fr3p: "เลือกได้ 10, 20 หรือ 30 เพลงต่อเพลย์ลิสต์",
+    fr3h: "20 หรือ 30 เพลง",
+    fr2p: "ถ่ายท้องฟ้าหรือห้องของคุณ แล้วเพลงจะเปลี่ยนตามบรรยากาศ",
+    fr2h: "วิเคราะห์จากรูป",
+    fr1p: "สร้างได้เท่าที่ต้องการ ทุกวัน",
+    fr1h: "เพลย์ลิสต์ไม่จำกัด",
+    free_sub: "ไม่ต้องสมัคร ไม่ต้องจ่าย ไม่จำกัด เปิดแล้วฟังได้เลย",
+    free_h: "ทุกอย่างฟรี",
+    nav_how: "ใช้งานยังไง", nav_pricing: "ฟีเจอร์", nav_buy: "คำถาม",
+    pill: "🎵 ฟรี 100% · ไม่ต้องสมัคร",
     h1: "เพลงที่ใช่ <em>ในทุกช่วงเวลา</em>",
     lead: "บอก MoodScape ว่าคุณรู้สึกยังไงและกำลังทำอะไร หรือถ่ายรูปท้องฟ้า ห้อง ถนนรอบตัว แล้วรับเพลย์ลิสต์ที่เข้ากับคุณในไม่กี่วินาที",
-    try: "ลองใช้ฟรี", see_plans: "ดูแพ็กเกจ",
-    t1: "ฟรีวันละ 3 เพลย์ลิสต์", t2: "เพลงไทย + สากล", t3: "รูปไม่ออกจากมือถือคุณ",
+    try: "ลองใช้ฟรี", see_plans: "ฟรีอะไรบ้าง?",
+    t1: "ฟรี ไม่จำกัด", t2: "เพลงไทย + สากล", t3: "รูปไม่ออกจากมือถือคุณ",
     mock_for: "สำหรับ: อ่านหนังสือ · สงบ · ค่ำวันฝนตก", mock_title: "Soft Rain Focus",
     mock_c1: "สงบ", mock_c2: "แสงอุ่น", mock_c3: "ไทย + สากล",
     how_h: "ใช้งานยังไง", how_sub: "แตะแค่ 3 ครั้ง จาก \"ไม่รู้จะฟังอะไร\" สู่เพลย์ลิสต์ที่ใช่",
     s1h: "เลือกอารมณ์และกิจกรรม", s1p: "อ่านหนังสือ ออกกำลังกาย ติวหนังสือ พักผ่อน… และความรู้สึกตอนนี้",
-    s2h: "ถ่ายรูปบรรยากาศ (Premium)", s2p: "MoodScape อ่านแสง สี และสภาพอากาศของภาพ ไม่ดูใบหน้าคน",
+    s2h: "ถ่ายรูปบรรยากาศ (ไม่บังคับ)", s2p: "MoodScape อ่านแสง สี และสภาพอากาศของภาพ ไม่ดูใบหน้าคน",
     s3h: "รับเพลย์ลิสต์", s3p: "ทุกเพลงมีคะแนนความเข้ากันและเหตุผล เปิดฟังใน Spotify หรือ YouTube ได้เลย",
     feat_h: "ออกแบบมาให้เข้ากับการฟังจริงของคุณ", feat_sub: "วิเคราะห์จากเพลงกว่า 8,000 เพลง จับคู่ด้วยพลังงาน จังหวะ อารมณ์ และภาษา",
     f1h: "จับคู่อัจฉริยะ", f1p: "ให้คะแนนพลังงาน จังหวะ และอารมณ์ของเพลงเทียบกับช่วงเวลาของคุณ ไม่ใช่แค่แนวเพลง",
@@ -471,20 +428,19 @@ const T = {
     copy: "คัดลอก", open_line: "เปิด Messenger", we_accept: "ช่องทางชำระเงิน", bank: "โอนผ่านธนาคาร",
     copied: "คัดลอกแล้ว!", chosen: "คุณเลือก: {p} บอกชื่อแพ็กเกจนี้ในข้อความ Messenger ได้เลย",
     faq_h: "คำถามที่พบบ่อย",
-    q1: "ต้องจ่ายเงินก่อนลองไหม?", a1: "ไม่ต้อง ทุกบัญชีใช้ฟรีได้วันละ 3 เพลย์ลิสต์ตลอดไป ไม่ต้องใช้บัตร",
-    q2: "เปิดใช้งานนานแค่ไหน?", a2: "ปกติภายใน 1 วันหลังได้รับสลิป แพ็กเกจรายเดือนและรายปีเริ่มนับจากวันที่เปิดใช้",
-    q3: "หมดอายุรายเดือน/รายปีแล้วเป็นยังไง?", a3: "บัญชีกลับเป็นแบบฟรี ไม่มีอะไรถูกลบ ต่ออายุได้ทุกเมื่อ และเวลาที่เหลืออยู่จะถูกบวกเพิ่มให้",
-    q4: "แอปเล่นเพลงเองไหม?", a4: "MoodScape เลือกเพลงและอธิบายว่าทำไมถึงเข้ากัน คุณฟังผ่าน Spotify, YouTube หรือแอปที่ชอบ",
-    q5: "รูปของฉันปลอดภัยไหม?", a5: "รูปถูกวิเคราะห์แค่แสง สี และสภาพอากาศ ไม่ถูกอัปโหลดหรือเก็บไว้ และลบบัญชีได้ทุกเมื่อในหน้าบัญชี",
-    q6: "ขอคืนเงินได้ไหม?", a6: "ถ้า Premium ไม่ตอบโจทย์ ทักเพจทาง Messenger ภายใน 7 วันหลังชำระเงิน แล้วเราจะช่วยดูให้",
-    final_h: "พร้อมฟังเพลงของช่วงเวลานี้หรือยัง?", final_p: "เริ่มฟรีในเบราว์เซอร์ หรือติดตั้งแอป Android",
+    q1: "ฟรีจริงไหม?", a1: "ฟรีจริง ทุกฟีเจอร์ ไม่จำกัด ไม่มีอะไรต้องซื้อ",
+    q2: "ต้องสมัครบัญชีไหม?", a2: "ไม่ต้อง เปิดแอปแล้วใช้ได้เลย การตั้งค่าเก็บไว้ในมือถือของคุณ",
+    q3: "แอปเล่นเพลงเองไหม?", a3: "MoodScape เลือกเพลงและอธิบายว่าทำไมถึงเข้ากัน คุณฟังผ่าน Spotify หรือ Apple Music",
+    q4: "รูปของฉันปลอดภัยไหม?", a4: "รูปถูกวิเคราะห์แค่แสง สี และสภาพอากาศในมือถือของคุณ ไม่ถูกอัปโหลดหรือเก็บไว้",
+    q5: "ใช้บน iPhone ได้ไหม?", a5: "ได้ เปิดลิงก์ใน Safari หรือเบราว์เซอร์ใดก็ได้ และมีแอป Android ให้ดาวน์โหลด",
+    q6: "ติดต่อเราได้ทางไหน?", a6: "ทักเพจ Facebook ของเรา: m.me/Moodscape1",
+    final_h: "พร้อมฟังเพลงของช่วงเวลานี้หรือยัง?", final_p: "ฟรี ใช้ในเบราว์เซอร์หรือแอป Android",
     open_web: "เปิด MoodScape", get_apk: "ดาวน์โหลดแอป Android", privacy: "ความเป็นส่วนตัว"
   }
 };
 
 let lang = (navigator.language || "").startsWith("th") ? "th" : "en";
 try { lang = localStorage.getItem("ms-lang") || lang; } catch (e) {}
-let chosenPlan = null;
 
 function apply() {
   const d = T[lang];
@@ -495,8 +451,6 @@ function apply() {
     if (el.hasAttribute("data-html")) el.innerHTML = v; else el.textContent = v;
   });
   document.getElementById("lang").textContent = lang === "th" ? "English" : "ไทย";
-  const c = document.getElementById("chosen");
-  c.textContent = chosenPlan ? d.chosen.replace("{p}", d[chosenPlan]) : "";
 }
 
 document.getElementById("lang").addEventListener("click", () => {
@@ -505,22 +459,12 @@ document.getElementById("lang").addEventListener("click", () => {
   apply();
 });
 
-document.querySelectorAll("[data-plan]").forEach(a => a.addEventListener("click", () => {
-  chosenPlan = a.dataset.plan; apply();
-}));
 
 function toast(msg) {
   const t = document.getElementById("toast");
   t.textContent = msg; t.classList.add("show");
   setTimeout(() => t.classList.remove("show"), 1600);
 }
-document.getElementById("copyline").addEventListener("click", async () => {
-  try { await navigator.clipboard.writeText("https://m.me/Moodscape1"); toast(T[lang].copied); }
-  catch (e) {
-    const r = document.createRange(); r.selectNodeContents(document.getElementById("lineid"));
-    const s = getSelection(); s.removeAllRanges(); s.addRange(r);
-  }
-});
 
 apply();
 </script>

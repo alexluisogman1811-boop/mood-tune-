@@ -3,8 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../app/router.dart';
-import '../../account/application/account_providers.dart';
-import '../../account/domain/account.dart';
 import '../../../app/theme/app_theme.dart';
 import '../../../core/l10n/l10n.dart';
 import '../../../core/privacy/photo_consent.dart';
@@ -56,29 +54,6 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
         .run(allowRemote: allowRemote);
   }
 
-  /// Uses one of today's playlists; Free users who have none left see the
-  /// upgrade screen instead.
-  Future<void> _seeMusic() async {
-    final messenger = ScaffoldMessenger.of(context);
-    final lang = context.languageCode;
-    final allowed = await ref.read(playlistUsageProvider)();
-    if (!mounted) return;
-    if (allowed) {
-      context.push(AppRoutes.results);
-      return;
-    }
-    messenger.showSnackBar(
-      SnackBar(
-        content: Text(
-          translate('You have used your {count} free playlists today.', lang, {
-            'count': FreeLimits.playlistsPerDay,
-          }),
-        ),
-      ),
-    );
-    context.push(AppRoutes.upgrade);
-  }
-
   void _retry() {
     ref.read(analysisControllerProvider.notifier).reset();
     _start();
@@ -87,9 +62,6 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(analysisControllerProvider);
-    // Keep the account loaded while this screen is open: unwatched data is
-    // paused, and "See my music" needs it to count today's playlists.
-    ref.watch(accountProvider);
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(title: Text(context.tr('Your atmosphere'))),
@@ -127,7 +99,7 @@ class _AnalysisScreenState extends ConsumerState<AnalysisScreen> {
                   ],
                   const SizedBox(height: 24),
                   FilledButton(
-                    onPressed: _seeMusic,
+                    onPressed: () => context.push(AppRoutes.results),
                     child: Text(context.tr('See my music')),
                   ),
                   if (outcome.usedFallback) ...[

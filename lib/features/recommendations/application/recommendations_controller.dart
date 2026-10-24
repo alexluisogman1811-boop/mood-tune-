@@ -8,7 +8,6 @@ import '../../mood/application/mood_controller.dart';
 import '../../music_platform/application/apple_music_providers.dart';
 import '../../music_platform/application/platform_providers.dart';
 import '../../preferences/application/preferences_controller.dart';
-import '../../account/application/account_providers.dart';
 import '../../activity/application/activity_controller.dart';
 import '../../feedback/application/feedback_controller.dart';
 import '../data/demo_track_source.dart';
@@ -130,12 +129,7 @@ class RecommendationsController extends AsyncNotifier<Recommendations> {
           .rank(
             _candidates,
             ctx,
-            // Only Premium changes the length; usage counts must not reload.
-            limit: ref.watch(entitlementsProvider.select((e) => e.premium))
-                ? ctx.preferences.playlistLength
-                : ref
-                      .read(entitlementsProvider)
-                      .maxPlaylistLength(ctx.preferences.playlistLength),
+            limit: ctx.preferences.playlistLength,
             // Read, not watch: dislikes update the list in place below.
             exclude: ref.read(dislikedTracksProvider),
           ),
@@ -158,9 +152,7 @@ class RecommendationsController extends AsyncNotifier<Recommendations> {
             .regenerate(
               _candidates,
               ctx,
-              limit: ref
-                  .read(entitlementsProvider)
-                  .maxPlaylistLength(ctx.preferences.playlistLength),
+              limit: ctx.preferences.playlistLength,
               shown: {for (final m in current.matches) m.track.id},
               exclude: ref.read(dislikedTracksProvider),
             ),

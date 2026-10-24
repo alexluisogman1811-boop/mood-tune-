@@ -357,33 +357,11 @@ admin dashboard; see `tool/feedback_backend/README.md`. Release builds pass
 the web app URL with `--dart-define-from-file=config/prod.json`
 (`{"FEEDBACK_URL": "https://script.google.com/macros/s/…/exec"}`, not committed).
 
-### Accounts and plans
-When `FIREBASE_*` values are set, people sign in with email and password
-(Firebase Authentication) and each account has a record in Firestore
-(`users/{uid}`: email, plan, premiumUntil, today's playlist count). Without
-them (development builds) everything is unlocked and no sign-in is shown.
+### Free for everyone
+MoodScape has no sign-in and no paid plans: every feature (unlimited
+playlists, photo analysis, 20/30-song playlists) is free. The sales page,
+`web_sales/index.html`, is published next to the web app at `/moodscape/buy/`.
 
-| Plan | Price | What you get |
-|---|---|---|
-| Free | $0 | 3 playlists a day, 10 songs, no photo analysis |
-| Monthly | $2.99 (≈109 ฿) | Premium for 30 days |
-| Yearly | $24.99 (≈899 ฿) | Premium for 365 days |
-| Lifetime | $39.99 (≈1,449 ฿) | Premium forever |
-
-Premium = unlimited playlists, photo analysis, 20/30-song playlists.
-Payment is manual: the buyer pays (details over Facebook Messenger, `MESSENGER_URL`, or the text in
-`PAYMENT_INFO`), sends the slip with their account email, and an admin
-(a verified email in `ADMIN_EMAILS`) opens Account › Admin dashboard and gives
-the plan. `firestore.rules` enforces the same: users can create only a Free
-record and can only count playlists; only admins can change plans or list users.
-
-Rules tests run against the local Firebase emulator (needs Node and Java 21):
-`cd tool/firestore_rules_test && npm install && npm test`.
-A web build that talks to the emulator: `flutter build web
---dart-define-from-file=config/emulator.json` (with `USE_FIREBASE_EMULATORS: true`).
-
-The sales page is a static file, `web_sales/index.html` (Thai/English), published
-next to the web app at `/moodscape/buy/`.
 ### "Not for me"
 Every song has a 👎 **Not for me** button, on its card and on the details
 screen. Tapping it:
