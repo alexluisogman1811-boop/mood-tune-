@@ -5,6 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../../app/router.dart';
 import '../../../core/l10n/l10n.dart';
 import '../../../shared/widgets/gradient_background.dart';
+import '../application/artist_catalog.dart';
 import '../application/preferences_controller.dart';
 import '../domain/music_preferences.dart';
 
@@ -99,6 +100,14 @@ class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
                     ),
                 ],
               ),
+              heading('Bands you like', 'Search and tap to add. Optional.'),
+              _ArtistPicker(
+                picked: d.artists,
+                only: d.artistsOnly,
+                languages: d.languages,
+                onChanged: (artists, only) =>
+                    _update(d.copyWith(artists: artists, artistsOnly: only)),
+              ),
               heading('Vocals'),
               _Segmented<VocalPreference>(
                 values: VocalPreference.values,
@@ -148,6 +157,147 @@ class _PreferencesScreenState extends ConsumerState<PreferencesScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Picks bands from the catalogue. Only names the catalogue actually has
+/// can be added, so a pick always matches at least one song.
+class _ArtistPicker extends ConsumerStatefulWidget {
+  const _ArtistPicker({
+    required this.picked,
+    required this.only,
+    required this.languages,
+    required this.onChanged,
+  });
+
+  final Set<String> picked;
+  final bool only;
+  final Set<MusicLanguage> languages;
+  final void Function(Set<String> artists, bool only) onChanged;
+
+  @override
+  ConsumerState<_ArtistPicker> createState() => _ArtistPickerState();
+}
+
+class _ArtistPickerState extends ConsumerState<_ArtistPicker> {
+  final _search = TextEditingController();
+  String _query = '';
+
+  @override
+  void dispose() {
+    _search.dispose();
+    super.dispose();
+  }
+
+  void _add(String name) {
+    if (widget.picked.length >= MusicPreferences.maxArtists) return;
+    widget.onChanged({...widget.picked, name}, widget.only);
+    _search.clear();
+    setState(() => _query = '');
+  }
+
+  void _remove(String name) {
+    final key = MusicPreferences.artistKey(name);
+    final next = {
+      for (final a in widget.picked)
+        if (MusicPreferences.artistKey(a) != key) a,
+    };
+    // "Only these bands" means nothing once none are picked.
+    widget.onChanged(next, next.isEmpty ? false : widget.only);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final all = ref.watch(artistCatalogProvider).value ?? const [];
+    final full = widget.picked.length >= MusicPreferences.maxArtists;
+    final suggestions = suggestArtists(
+      all,
+      query: _query,
+      picked: widget.picked,
+      languages: widget.languages,
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextField(
+          controller: _search,
+          enabled: !full,
+          decoration: InputDecoration(
+            labelText: context.tr('Search for a band'),
+            prefixIcon: const Icon(Icons.search),
+            border: const OutlineInputBorder(),
+          ),
+          onChanged: (v) => setState(() => _query = v),
+        ),
+        if (widget.picked.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final name in widget.picked)
+                InputChip(
+                  label: Text(name),
+                  onDeleted: () => _remove(name),
+                  deleteButtonTooltipMessage: context.tr('Remove'),
+                ),
+            ],
+          ),
+        ],
+        if (full)
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Text(
+              context.tr('You can pick up to {count} bands.', {
+                'count': MusicPreferences.maxArtists,
+              }),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          )
+        else if (suggestions.isEmpty && _query.trim().isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Text(
+              context.tr('No band with that name is in the catalogue.'),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          )
+        else if (suggestions.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final a in suggestions)
+                ActionChip(
+                  avatar: const Icon(Icons.add, size: 18),
+                  // A name and a song count need no translating.
+                  label: Text('${a.name} · ${a.songs}'),
+                  onPressed: () => _add(a.name),
+                ),
+            ],
+          ),
+        ],
+        if (widget.picked.isNotEmpty)
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(context.tr('Only these bands')),
+            subtitle: Text(
+              context.tr(
+                'On: only their songs, so the playlist may be shorter.',
+              ),
+            ),
+            value: widget.only,
+            onChanged: (v) => widget.onChanged(widget.picked, v),
+          ),
+      ],
     );
   }
 }

@@ -24,6 +24,7 @@ class RecommendationEngine {
         if (!exclude.contains(t.id) &&
             seen.add(t.id) &&
             (ctx.preferences.allowExplicit || t.isExplicit != true) &&
+            byChosenArtist(t, ctx.preferences) &&
             inChosenLanguage(t, ctx.preferences.languages))
           t,
     ];
@@ -31,6 +32,12 @@ class RecommendationEngine {
       ..sort(compare);
     return scored.take(limit).toList(growable: false);
   }
+
+  /// "Only these bands" keeps songs by the picked artists and nothing else.
+  /// Preferring them instead leaves every song in; the score then lifts
+  /// their songs up the list.
+  static bool byChosenArtist(Track t, MusicPreferences p) =>
+      !p.artistsOnly || p.artists.isEmpty || p.likesArtist(t.artist);
 
   /// Choosing languages asks for songs sung in them, so instrumentals and
   /// songs in other languages are left out. Songs whose language is unknown

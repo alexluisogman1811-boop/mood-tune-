@@ -37,6 +37,7 @@ import requests
 
 ROOT = Path(__file__).resolve().parent.parent
 CATALOG = ROOT / "assets" / "demo" / "demo_catalog.json"
+ARTISTS = ROOT / "assets" / "demo" / "artists.json"
 CACHE = Path(tempfile.gettempdir()) / "mscat"
 
 # ---- Sources ----------------------------------------------------------------
@@ -534,6 +535,39 @@ def main() -> None:
         counts[k] = counts.get(k, 0) + 1
     print(f"catalogue: {len(catalog['tracks'])} songs ({len(added)} analysed)")
     print(json.dumps(counts, ensure_ascii=False))
+    write_artists(catalog["tracks"])
+
+
+def write_artists(tracks: list[dict]) -> None:
+    """Index for the app's band picker: name, song count, main language.
+
+    Names are grouped the way the app compares them (trimmed, lower case),
+    so a pick here always matches the catalogue.
+    """
+    by_key: dict[str, dict] = {}
+    for t in tracks:
+        name = (t.get("artist") or "").strip()
+        if not name:
+            continue
+        e = by_key.setdefault(name.lower(), {"n": name, "c": 0, "langs": {}})
+        e["c"] += 1
+        lang = t.get("language")
+        if lang:
+            e["langs"][lang] = e["langs"].get(lang, 0) + 1
+    out = []
+    for e in by_key.values():
+        langs = e.pop("langs")
+        if langs:
+            e["l"] = max(langs, key=lambda k: langs[k])
+        out.append(e)
+    out.sort(key=lambda e: (-e["c"], e["n"].lower()))
+    ARTISTS.write_text(
+        json.dumps({"artists": out}, ensure_ascii=False, separators=(",", ":"))
+        + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
+    print(f"artists: {len(out)}")
 
 
 if __name__ == "__main__":

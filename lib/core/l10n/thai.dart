@@ -172,6 +172,16 @@ const thaiStrings = <String, String>{
       'ไม่บังคับทั้งหมด กดข้ามเพื่อใช้ค่าเริ่มต้นแบบสมดุล',
   'Favourite genres': 'แนวเพลงที่ชอบ',
   'Preferred language': 'ภาษาของเพลง',
+  'Bands you like': 'วงหรือศิลปินที่ชอบ',
+  'Search and tap to add. Optional.': 'ค้นหาแล้วแตะเพื่อเพิ่ม ไม่บังคับ',
+  'Search for a band': 'ค้นหาชื่อวงหรือศิลปิน',
+  'Remove': 'เอาออก',
+  'You can pick up to {count} bands.': 'เลือกได้สูงสุด {count} วง',
+  'No band with that name is in the catalogue.':
+      'ไม่พบวงหรือศิลปินชื่อนี้ในคลังเพลง',
+  'Only these bands': 'เฉพาะวงที่เลือก',
+  'On: only their songs, so the playlist may be shorter.':
+      'เปิด: ใช้เฉพาะเพลงของวงที่เลือก เพลย์ลิสต์อาจสั้นลง',
   'None selected means any.': 'ถ้าไม่เลือก หมายถึงภาษาใดก็ได้',
   'Vocals': 'เสียงร้อง',
   'Familiar or new?': 'เพลงคุ้นหูหรือเพลงใหม่?',

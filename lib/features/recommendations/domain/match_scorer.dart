@@ -94,6 +94,7 @@ enum ReasonKind {
   sceneFeel,
   sceneEnergy,
   genre,
+  artist,
   preferences,
   activity,
   energy,
@@ -249,6 +250,7 @@ class MatchScorer {
       if (activityCheck) t.isInstrumental! ? 100 : 30,
       if (p.genres.isNotEmpty && t.genres.isNotEmpty)
         p.genres.intersection(t.genres).isNotEmpty ? 100 : 0,
+      if (p.artists.isNotEmpty) p.likesArtist(t.artist) ? 100 : 0,
       if (p.languages.isNotEmpty &&
           t.isInstrumental != true &&
           t.language != null)
@@ -327,7 +329,10 @@ class MatchScorer {
         for (final g in Genre.values)
           if (prefs.genres.contains(g) && t.genres.contains(g)) g.label,
       ];
-      if (liked.isNotEmpty) {
+      if (prefs.likesArtist(t.artist)) {
+        // A band the user picked themselves says more than its genre.
+        reasons.add(MatchReason(ReasonKind.artist, [t.artist]));
+      } else if (liked.isNotEmpty) {
         reasons.add(MatchReason(ReasonKind.genre, [liked.first]));
       } else if (prefs.hasTastePreferences) {
         reasons.add(const MatchReason(ReasonKind.preferences));
@@ -370,6 +375,8 @@ class MatchScorer {
               'เหมาะกับบรรยากาศ${_joinThai(r.items.map(tag))}ในฉากของคุณ',
             ReasonKind.sceneEnergy => 'เข้ากับพลังของสิ่งรอบตัวคุณ',
             ReasonKind.genre => 'เป็นแนว${tr(r.items.first)}ตามที่คุณต้องการ',
+            // An artist's name is never translated.
+            ReasonKind.artist => 'เป็นเพลงของ ${r.items.first} ที่คุณเลือกไว้',
             ReasonKind.preferences => 'ตรงกับความชอบในการฟังของคุณ',
             ReasonKind.activity => tr(r.items.first),
             ReasonKind.energy => 'มีพลังแบบ${tr(r.items.first)}ที่คุณต้องการ',
@@ -386,6 +393,7 @@ class MatchScorer {
             'suits the ${_joinAll(r.items)} feel of your scene',
           ReasonKind.sceneEnergy => 'matches the energy of your surroundings',
           ReasonKind.genre => 'is ${r.items.first} like you asked for',
+          ReasonKind.artist => 'is by ${r.items.first}, a band you picked',
           ReasonKind.preferences => 'lines up with your listening preferences',
           ReasonKind.activity => r.items.first,
           ReasonKind.energy =>

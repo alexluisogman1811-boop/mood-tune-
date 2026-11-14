@@ -75,6 +75,8 @@ class MusicPreferences {
   const MusicPreferences({
     this.genres = const {},
     this.languages = const {},
+    this.artists = const {},
+    this.artistsOnly = false,
     this.vocal = VocalPreference.any,
     this.discovery = DiscoveryPreference.balanced,
     this.energy,
@@ -88,6 +90,18 @@ class MusicPreferences {
 
   /// Empty means any language.
   final Set<MusicLanguage> languages;
+
+  /// Bands or artists the user picked, by name as the catalogue spells them.
+  /// Empty means they picked none.
+  final Set<String> artists;
+
+  /// True: play only [artists]. False: prefer them, but fill the playlist
+  /// with other songs that fit too.
+  final bool artistsOnly;
+
+  /// At most this many bands can be picked, so the stored list stays small.
+  static const maxArtists = 20;
+
   final VocalPreference vocal;
   final DiscoveryPreference discovery;
 
@@ -100,12 +114,26 @@ class MusicPreferences {
   bool get hasTastePreferences =>
       genres.isNotEmpty ||
       languages.isNotEmpty ||
+      artists.isNotEmpty ||
       vocal != VocalPreference.any ||
       discovery != DiscoveryPreference.balanced;
+
+  /// Names are compared without case or surrounding spaces, so a band
+  /// typed by hand still matches the catalogue's spelling.
+  static String artistKey(String name) => name.trim().toLowerCase();
+
+  /// True when [artist] is one of the picked bands.
+  bool likesArtist(String? artist) {
+    if (artist == null || artists.isEmpty) return false;
+    final key = artistKey(artist);
+    return artists.any((a) => artistKey(a) == key);
+  }
 
   MusicPreferences copyWith({
     Set<Genre>? genres,
     Set<MusicLanguage>? languages,
+    Set<String>? artists,
+    bool? artistsOnly,
     VocalPreference? vocal,
     DiscoveryPreference? discovery,
     EnergyPreference? Function()? energy,
@@ -114,6 +142,8 @@ class MusicPreferences {
   }) => MusicPreferences(
     genres: genres ?? this.genres,
     languages: languages ?? this.languages,
+    artists: artists ?? this.artists,
+    artistsOnly: artistsOnly ?? this.artistsOnly,
     vocal: vocal ?? this.vocal,
     discovery: discovery ?? this.discovery,
     energy: energy != null ? energy() : this.energy,
@@ -124,6 +154,8 @@ class MusicPreferences {
   Map<String, Object?> toJson() => {
     'genres': [for (final g in genres) g.name],
     'languages': [for (final l in languages) l.name],
+    'artists': [...artists],
+    'artistsOnly': artistsOnly,
     'vocal': vocal.name,
     'discovery': discovery.name,
     'energy': energy?.name,
@@ -143,6 +175,12 @@ class MusicPreferences {
     return MusicPreferences(
       genres: set(Genre.values, json['genres']),
       languages: set(MusicLanguage.values, json['languages']),
+      artists: {
+        if (json['artists'] case final List raw)
+          for (final a in raw.take(maxArtists))
+            if (a is String && a.trim().isNotEmpty) a.trim(),
+      },
+      artistsOnly: json['artistsOnly'] == true,
       vocal:
           _byName(VocalPreference.values, json['vocal']) ?? VocalPreference.any,
       discovery:

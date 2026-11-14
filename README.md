@@ -317,8 +317,14 @@ matchScore = moodMatch·0.40 + atmosphereMatch·0.25 + preferenceMatch·0.20 + e
 - **Atmosphere:** compares the scene's energy with the track's energy and
   counts shared atmosphere and weather tags. The result is pulled toward 50
   in proportion to how unsure the analysis was.
-- **Preferences:** genre, language, vocals, and familiar-or-new; only the
-  checks the track's metadata supports are used.
+- **Preferences:** genre, language, bands, vocals, and familiar-or-new; only
+  the checks the track's metadata supports are used.
+- **Bands:** people can search the catalogue for bands they like
+  (`assets/demo/artists.json`, an index `tool/build_catalog.py` writes beside
+  the catalogue). Picked bands count as a taste check, so their songs rise up
+  the list; "Only these bands" makes it a filter instead, which can leave a
+  playlist shorter than asked for. Only names the catalogue holds can be
+  picked, so a choice always matches at least one song.
 - **Energy:** distance from the requested relaxing (25), balanced (50) or
   energetic (80) target. With no requested energy, the energy that suits
   the activity is used (falling asleep 10, studying and reading 25, chilling
