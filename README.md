@@ -324,7 +324,11 @@ matchScore = moodMatch·0.40 + atmosphereMatch·0.25 + preferenceMatch·0.20 + e
   the catalogue). Picked bands count as a taste check, so their songs rise up
   the list; "Only these bands" makes it a filter instead, which can leave a
   playlist shorter than asked for. Only names the catalogue holds can be
-  picked, so a choice always matches at least one song.
+  picked, so a choice always matches at least one song. `tool/add_artists.py`
+  is what puts the world's best-known names in there: it walks Deezer's
+  related artists out from the catalogue's own busiest ones, so it reaches
+  every language the app lists rather than only English, ranks what it finds
+  by worldwide fan count, and gives the top names a few songs each.
 - **Energy:** distance from the requested relaxing (25), balanced (50) or
   energetic (80) target. With no requested energy, the energy that suits
   the activity is used (falling asleep 10, studying and reading 25, chilling
