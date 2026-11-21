@@ -72,6 +72,45 @@ void main() {
     });
   });
 
+  group('which links must stay in a browser', () {
+    test('a Spotify search link does', () {
+      final uri = TrackLinks.spotify(
+        _track(title: 'Thunderstruck', artist: 'AC/DC'),
+      );
+
+      expect(TrackLinks.needsBrowser(uri), isTrue);
+    });
+
+    test('a Spotify link to one track does not', () {
+      final uri = TrackLinks.spotify(
+        _track(
+          title: 'Any',
+          artist: 'Any',
+          provider: MusicProvider.spotify,
+          externalUrl: Uri.parse('https://open.spotify.com/track/abc'),
+        ),
+      );
+
+      expect(TrackLinks.needsBrowser(uri), isFalse);
+    });
+
+    test('an Apple Music search link does not', () {
+      final uri = TrackLinks.appleMusic(
+        _track(title: 'Thunderstruck', artist: 'AC/DC'),
+      );
+
+      // Apple Music opens search in its own app correctly.
+      expect(TrackLinks.needsBrowser(uri), isFalse);
+    });
+
+    test('a preview audio link does not', () {
+      expect(
+        TrackLinks.needsBrowser(Uri.parse('https://cdn.deezer.com/p/1.mp3')),
+        isFalse,
+      );
+    });
+  });
+
   group('Apple Music search link', () {
     test('the words go in the term parameter', () {
       final uri = TrackLinks.appleMusic(
