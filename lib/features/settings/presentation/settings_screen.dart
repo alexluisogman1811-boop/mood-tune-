@@ -10,6 +10,7 @@ import '../../../core/privacy/photo_consent.dart';
 import '../../../shared/widgets/gradient_background.dart';
 import '../../music_platform/application/apple_music_providers.dart';
 import '../../music_platform/application/platform_providers.dart';
+import '../../feedback/presentation/open_feedback.dart';
 import '../../recommendations/application/disliked_tracks.dart';
 import '../../recommendations/application/recommendations_controller.dart';
 import '../application/data_controls.dart';
@@ -57,8 +58,8 @@ class SettingsScreen extends ConsumerWidget {
                   subtitle: Text(
                     context.tr('Rate MoodScape and tell us what to improve'),
                   ),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => context.push(AppRoutes.feedback),
+                  trailing: const Icon(Icons.open_in_new_rounded),
+                  onTap: () => openFeedback(context, ref),
                 ),
               ),
               section('About'),

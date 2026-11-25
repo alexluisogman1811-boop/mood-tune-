@@ -1,10 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../../../app/router.dart';
 import '../../../core/l10n/l10n.dart';
 import '../application/feedback_controller.dart';
+import 'open_feedback.dart';
 
 /// After a day of use, invites the user to rate the app. Easy to dismiss.
 class FeedbackInvite extends ConsumerWidget {
@@ -54,8 +53,8 @@ class FeedbackInvite extends ConsumerWidget {
                   ),
                   FilledButton.tonalIcon(
                     style: FilledButton.styleFrom(minimumSize: compact),
-                    onPressed: () => context.push(AppRoutes.feedback),
-                    icon: const Icon(Icons.star_rounded),
+                    onPressed: () => openFeedback(context, ref),
+                    icon: const Icon(Icons.open_in_new_rounded),
                     label: Text(context.tr('Rate MoodScape')),
                   ),
                 ],

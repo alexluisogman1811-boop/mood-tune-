@@ -26,7 +26,9 @@ class AppConfig {
   final String analysisBackendUrl;
   final String appleMusicDeveloperTokenUrl;
 
-  /// Google Apps Script web app that collects feedback (tool/feedback_backend).
+  /// Web page that collects feedback (web/feedback, documented in
+  /// tool/feedback_form). The app links to it rather than posting answers
+  /// itself.
   final String feedbackUrl;
 
   bool get hasSpotify =>
@@ -37,7 +39,7 @@ class AppConfig {
 
   bool get hasAppleMusicTokenService => _isHttps(appleMusicDeveloperTokenUrl);
 
-  bool get hasFeedbackBackend => _isHttps(feedbackUrl);
+  bool get hasFeedbackSite => _isHttps(feedbackUrl);
 
   static bool _isHttps(String url) {
     final uri = Uri.tryParse(url);

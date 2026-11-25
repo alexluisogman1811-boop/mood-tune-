@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 
 import '../features/atmosphere/presentation/analysis_screen.dart';
 import '../features/camera/presentation/capture_screen.dart';
-import '../features/feedback/presentation/feedback_screen.dart';
 import '../features/mood/presentation/mood_screen.dart';
 import '../features/music_platform/presentation/platform_screen.dart';
 import '../features/onboarding/presentation/privacy_screen.dart';
@@ -26,7 +25,6 @@ abstract final class AppRoutes {
   static const analysis = '/analysis';
   static const results = '/results';
   static const settings = '/settings';
-  static const feedback = '/feedback';
   static String track(String id) => '/results/track/${Uri.encodeComponent(id)}';
 }
 
@@ -45,10 +43,6 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.settings,
         builder: (context, state) => const SettingsScreen(),
-      ),
-      GoRoute(
-        path: AppRoutes.feedback,
-        builder: (context, state) => const FeedbackScreen(),
       ),
       GoRoute(
         path: AppRoutes.activity,

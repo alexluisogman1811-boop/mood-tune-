@@ -3,5 +3,5 @@
   "SPOTIFY_REDIRECT_URI": "moodscape://spotify-callback",
   "ANALYSIS_BACKEND_URL": "",
   "APPLE_MUSIC_DEVELOPER_TOKEN_URL": "",
-  "FEEDBACK_URL": ""
+  "FEEDBACK_URL": "https://alexluisogman1811-boop.github.io/moodscape/feedback/"
 }

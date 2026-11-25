@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../core/l10n/l10n.dart';
+import '../../../core/links/url_opener.dart';
 import '../../../shared/widgets/artwork.dart';
 import '../../../shared/widgets/gradient_background.dart';
 import '../application/playlist_controller.dart';

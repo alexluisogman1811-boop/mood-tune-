@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:moodscape/core/links/url_opener.dart';
 import 'package:moodscape/features/recommendations/data/track_links.dart';
 import 'package:moodscape/features/recommendations/domain/track.dart';
 
@@ -78,7 +79,7 @@ void main() {
         _track(title: 'Thunderstruck', artist: 'AC/DC'),
       );
 
-      expect(TrackLinks.needsBrowser(uri), isTrue);
+      expect(needsBrowser(uri), isTrue);
     });
 
     test('a Spotify link to one track does not', () {
@@ -91,7 +92,7 @@ void main() {
         ),
       );
 
-      expect(TrackLinks.needsBrowser(uri), isFalse);
+      expect(needsBrowser(uri), isFalse);
     });
 
     test('an Apple Music search link does not', () {
@@ -100,12 +101,12 @@ void main() {
       );
 
       // Apple Music opens search in its own app correctly.
-      expect(TrackLinks.needsBrowser(uri), isFalse);
+      expect(needsBrowser(uri), isFalse);
     });
 
     test('a preview audio link does not', () {
       expect(
-        TrackLinks.needsBrowser(Uri.parse('https://cdn.deezer.com/p/1.mp3')),
+        needsBrowser(Uri.parse('https://cdn.deezer.com/p/1.mp3')),
         isFalse,
       );
     });

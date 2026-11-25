@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../../core/l10n/l10n.dart';
-import '../data/track_links.dart';
+import '../../../core/links/url_opener.dart';
 import '../domain/playlist_export.dart';
 import '../domain/track.dart';
 

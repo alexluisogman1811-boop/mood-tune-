@@ -8,7 +8,7 @@ import 'package:moodscape/core/storage/storage_providers.dart';
 import 'package:moodscape/features/mood/application/mood_controller.dart';
 import 'package:moodscape/features/mood/domain/mood.dart';
 import 'package:moodscape/features/recommendations/application/recommendations_controller.dart';
-import 'package:moodscape/features/recommendations/data/track_links.dart';
+import 'package:moodscape/core/links/url_opener.dart';
 import 'package:moodscape/features/recommendations/data/track_source.dart';
 import 'package:moodscape/features/recommendations/domain/match_scorer.dart';
 import 'package:moodscape/features/recommendations/domain/track.dart';

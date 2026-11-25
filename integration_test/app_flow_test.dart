@@ -9,7 +9,7 @@ import 'package:moodscape/features/camera/application/camera_providers.dart';
 import 'package:moodscape/features/preferences/application/preferences_controller.dart';
 import 'package:moodscape/features/preferences/domain/music_preferences.dart';
 import 'package:moodscape/features/recommendations/application/recommendations_controller.dart';
-import 'package:moodscape/features/recommendations/data/track_links.dart';
+import 'package:moodscape/core/links/url_opener.dart';
 import 'package:moodscape/features/recommendations/presentation/track_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
