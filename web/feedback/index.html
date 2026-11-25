@@ -18,15 +18,15 @@
   the project owner can read. Nothing is stored on this page or on GitHub
   Pages, and no identity is collected.
 
-  === SETUP: fill in FORM below ============================================
-  1. Build the Google Form exactly as described in tool/feedback_form/README.md.
-  2. In the Form: ⋮ menu -> "Get pre-filled link", answer every question with
-     anything, then "Get link".
-  3. The link contains the form id and one entry.NNNNN number per question.
-     Copy them into FORM.id and FORM.fields below.
-  Until FORM.id is filled in, the page shows a setup notice and the Send
-  button stays disabled, so nobody's answers are silently thrown away.
-  ==========================================================================
+  The form, its questions and the ids below are documented in
+  tool/feedback_form/README.md, along with the link to the responses sheet.
+
+  Editing a question in the Google Form changes its entry id and silently
+  breaks submission from here. After any such edit, take a fresh pre-filled
+  link (⋮ menu -> "Get pre-filled link") and update FORM.fields.
+
+  If FORM.id is ever blanked out, the page shows a setup notice and keeps the
+  send button disabled, so nobody's answers are thrown away in silence.
 -->
 
 <style>
@@ -402,15 +402,15 @@ footer a { color: var(--glow); }
 
   // === SETUP: see the comment at the top of this file =====================
   var FORM = {
-    id: "",                 // the part between /d/e/ and /viewform
+    id: "1FAIpQLSdpeW-KAPEH4r3hbv9a0OXy0alwIQGH-UCYlOEoAJWfCT_fVQ",
     fields: {
-      overall:      "",     // entry.NNNNNNN  — Linear scale 1-5
-      songMatch:    "",     // entry.NNNNNNN  — Linear scale 1-5
-      easeOfUse:    "",     // entry.NNNNNNN  — Linear scale 1-5
-      improvements: "",     // entry.NNNNNNN  — Checkboxes
-      device:       "",     // entry.NNNNNNN  — Multiple choice
-      recommend:    "",     // entry.NNNNNNN  — Multiple choice
-      comment:      ""      // entry.NNNNNNN  — Paragraph
+      overall:      "entry.1906909060",   // Linear scale 1-5
+      songMatch:    "entry.1176732093",   // Linear scale 1-5
+      easeOfUse:    "entry.591524347",    // Linear scale 1-5
+      improvements: "entry.1144367209",   // Checkboxes
+      device:       "entry.1974165989",   // Multiple choice
+      recommend:    "entry.927788562",    // Multiple choice
+      comment:      "entry.668946540"     // Paragraph
     }
   };
   // =======================================================================
