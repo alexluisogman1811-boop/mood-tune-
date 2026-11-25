@@ -361,11 +361,24 @@ in Thai too.
 
 ### Feedback
 After a day of use the results screen invites people to rate the app
-(Settings › Feedback always works). Answers are anonymous and go to a Google
-Sheet through a free Apps Script web app that also serves a password-protected
-admin dashboard; see `tool/feedback_backend/README.md`. Release builds pass
-the web app URL with `--dart-define-from-file=config/prod.json`
-(`{"FEEDBACK_URL": "https://script.google.com/macros/s/…/exec"}`, not committed).
+(Settings › Feedback always works). Both buttons open the feedback page at
+`/moodscape/feedback/`, built from `web/feedback/`, which posts the answers
+to a Google Form that writes them into a Google Sheet. Answers are anonymous:
+the form collects no email and asks for no name. Anyone can answer without
+signing in to anything, and it costs nothing to run.
+See `tool/feedback_form/README.md` for the questions, their entry ids and the
+links to the form and the sheet.
+
+The app no longer submits anything itself. It used to post to an Apps Script
+web app (`tool/feedback_backend/`, now unused) which never received the
+answers: Apps Script replies to a POST with a redirect and cannot answer a
+CORS preflight, so browsers dropped the request and every answer collected in
+a "pending" list that could not drain. All the app still decides is when to
+ask, and because it cannot see whether someone finished the questions on the
+web, being taken there is what stops it asking again.
+
+`FEEDBACK_URL` is a public page, so it is in `config/dev.example.json`;
+release builds pass it with `--dart-define-from-file=config/prod.json`.
 
 ### Free for everyone
 MoodScape has no sign-in and no paid plans: every feature (unlimited

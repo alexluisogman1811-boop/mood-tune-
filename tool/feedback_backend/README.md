@@ -1,6 +1,18 @@
-# Feedback backend and admin dashboard (free)
+# Feedback backend and admin dashboard (free) — NO LONGER USED
 
-The app's **Feedback** screen sends anonymous answers (stars, what to
+> **The app does not use this any more.** Feedback is collected on a web
+> page instead: see [`tool/feedback_form/README.md`](../feedback_form/README.md).
+>
+> Answers sent this way never arrived. Apps Script replies to a POST with a
+> redirect and cannot answer a CORS preflight, so browsers dropped the
+> request before it reached the script, and every answer collected in a
+> "pending" list on the device that could not drain.
+>
+> Kept only for the admin dashboard code and for reference. Nothing in the
+> app reads it, and the instructions below describe a setup that is no
+> longer wired to anything.
+
+The app's **Feedback** screen sent anonymous answers (stars, what to
 improve, a comment) to a Google Sheet through this Apps Script. The same
 script shows a password-protected **admin dashboard**.
 
