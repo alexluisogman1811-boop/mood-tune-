@@ -370,10 +370,12 @@ See `tool/feedback_form/README.md` for the questions, their entry ids and the
 links to the form and the sheet.
 
 The app no longer submits anything itself. It used to post to an Apps Script
-web app (`tool/feedback_backend/`, now unused) which never received the
-answers: Apps Script replies to a POST with a redirect and cannot answer a
-CORS preflight, so browsers dropped the request and every answer collected in
-a "pending" list that could not drain. All the app still decides is when to
+web app which never received the answers: Apps Script replies to a POST with
+a redirect and cannot answer a CORS preflight, so browsers dropped the
+request and every answer collected in a "pending" list that could not drain.
+That script also served a password-protected admin dashboard; the responses
+sheet does the same job now, so it was deleted (see `git log -- tool/feedback_backend`
+to read it). All the app still decides is when to
 ask, and because it cannot see whether someone finished the questions on the
 web, being taken there is what stops it asking again.
 
